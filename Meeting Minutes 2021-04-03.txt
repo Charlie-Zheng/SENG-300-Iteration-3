@@ -9,6 +9,7 @@ Mahmoud
 Marilyn
 Nick
 Vianney
+Harpbrah
 
 Goals this meeting: Decide which group's code base to use as a base, assign teams
 
