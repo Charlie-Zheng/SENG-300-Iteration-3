@@ -1,0 +1,50 @@
+Meeting Minutes: Discord Meeting April 3, 2021
+
+Attendance:
+Abraham
+Alejandro
+Charlie
+Jae
+Mahmoud
+Marilyn
+Nick
+Vianney
+Harpbrah
+
+Goals this meeting: Decide which group's code base to use as a base, assign teams
+
+Results: Use U08-2 group's code as base
+
+Nick: Testing
+Alejandro: 	Implementation
+Charlie: 	Implementation
+Jae: 		Testing
+Mahmound: 	Testing
+Marilyn: 	Implementation + Testing GUI
+Vianney: 	Implementation + Testing GUI
+Abraham: 	Diagram
+Harpbrah: 	Implementation
+People not here:	Diagram
+
+
+Team Size:
+Implementation: 
+	Software:	5~7
+	GUI:		2
+Diagram:		2~3
+Testing:		4~5
+Presentation:		?
+
+Timeline:
+Overall design document draft: April 4th, night
+Diagrams:	Iteration 1+2: Next week weekend (April 8)
+Implementation:	Additional iteration 3 use cases done by April 8
+		Iteration 1+2: GUI April 8
+Testing:
+		(Expected to start around the 8th) April 14th, when we submit
+Presentation:	Probably start when we submit the other stuff
+
+
+Next meeting:
+Charlie+Alejandro+Harpbrah Meet April 4th 20:30 MST
+General Meeting April 8th 21:30 MST
