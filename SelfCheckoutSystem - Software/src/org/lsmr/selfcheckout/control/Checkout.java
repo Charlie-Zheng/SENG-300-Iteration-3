@@ -21,6 +21,7 @@ import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
+import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.external.CardIssuer;
@@ -701,37 +702,42 @@ public class Checkout {
 	
 	/**
 	 * Attendant adds paper to receipt printer
+	 * 
+	 * @param quantity
+	 * 				The amount of paper being added
 	 */
-	public void addPaper() {
-		
+	public void paperAddition(int quantity) {
+		checkoutStation.printer.addPaper(quantity);
 	}
 	
 	/**
 	 * Attendant adds ink to receipt printer
+	 * 
+	 * @param quantity
+	 * 				The amount of ink being added
 	 */
-	public void addInk() {
-		
+	public void inkAddition(int quantity) {
+		checkoutStation.printer.addInk(quantity);
 	}
 	
 	/**
 	 * Attendant empties the coin storage unit
 	 */
 	public void emptyCoinStorage() {
-		
+		checkoutStation.coinStorage.unload();
 	}
 	
 	/**
 	 * Attendant empties the banknote storage unit
 	 */
 	public void emptyBanknoteStorage() {
-		
+		checkoutStation.banknoteStorage.unload();
 	}
 
 	/**
 	 * Attendant refills the coin dispenser
 	 */
 	public void refillCoinDispenser() {
-		
 	}
 	
 	/**
