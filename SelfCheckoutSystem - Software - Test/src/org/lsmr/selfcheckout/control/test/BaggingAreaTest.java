@@ -35,14 +35,14 @@ public class BaggingAreaTest extends BaseTest {
 
 				// barcode 12345 -> price $123.45
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 				BigDecimal expected = new BigDecimal(12345).divide(new BigDecimal(100));
 				multiTestAssertEquals(expected, c.getBalance());
 
 				// barcode 30040321 -> price $3.97
 				item = new BarcodedItem(new Barcode("30040321"), 397);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 				expected = new BigDecimal(12345 + 397).divide(new BigDecimal(100));
 				multiTestAssertEquals(expected, c.getBalance());
@@ -66,12 +66,12 @@ public class BaggingAreaTest extends BaseTest {
 
 				// barcode 12345 -> price $123.45
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 
 				// barcode 30040321 -> price $3.97
 				item = new BarcodedItem(new Barcode("30040321"), 397);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 			} catch (CheckoutException e) {
 				fail();
@@ -98,7 +98,7 @@ public class BaggingAreaTest extends BaseTest {
 		// initial balance is 0
 		multiTestAssertEquals(new BigDecimal(0), c.getBalance());
 		BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-		c.scanItem(item);
+		c.scanItemUntilSuccessful(item);
 		c.addItemToBaggingArea(item);
 
 	}
@@ -122,7 +122,7 @@ public class BaggingAreaTest extends BaseTest {
 				// barcode 12345 -> price $123.45
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 
 				multiTestAssertEquals(123, c.getWeightOnScale(), 0.00001);
@@ -130,7 +130,7 @@ public class BaggingAreaTest extends BaseTest {
 				// barcode 30040321 -> price $3.97
 				item = new BarcodedItem(new Barcode("30040321"), 397);
 
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 
 				// 123+397=520
@@ -162,7 +162,7 @@ public class BaggingAreaTest extends BaseTest {
 
 
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-			c.scanItem(item);
+			c.scanItemUntilSuccessful(item);
 
 			try {
 				c.addItemToBaggingArea(item);
@@ -188,9 +188,9 @@ public class BaggingAreaTest extends BaseTest {
 				BarcodedItem item1 = new BarcodedItem(new Barcode("30040321"), 397);
 				BarcodedItem item2 = new BarcodedItem(new Barcode("12345"), 123);
 
-				c.scanItem(item1);
+				c.scanItemUntilSuccessful(item1);
 				//scan item without adding another
-				c.scanItem(item2);
+				c.scanItemUntilSuccessful(item2);
 				fail();
 			} catch (CheckoutException e) {
 				success();
@@ -203,11 +203,11 @@ public class BaggingAreaTest extends BaseTest {
 				BarcodedItem item1 = new BarcodedItem(new Barcode("30040321"), 397);
 				BarcodedItem item2 = new BarcodedItem(new Barcode("12345"), 123);
 
-				c.scanItem(item1);
+				c.scanItemUntilSuccessful(item1);
 
 				// adds an item with the wrong weight to the bagging area
 				c.addItemToBaggingArea(item2);
-				c.scanItem(item2);
+				c.scanItemUntilSuccessful(item2);
 				fail();
 			} catch (CheckoutException e) {
 				success();
@@ -228,7 +228,7 @@ public class BaggingAreaTest extends BaseTest {
 			Checkout c = makeNewDefaultCheckout();
 			BarcodedItem item1 = new BarcodedItem(new Barcode("30040321"), 397);
 
-			c.scanItem(item1);
+			c.scanItemUntilSuccessful(item1);
 			multiTestAssertEquals(true, c.isPaused());
 
 		}
@@ -248,7 +248,7 @@ public class BaggingAreaTest extends BaseTest {
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item1 = new BarcodedItem(new Barcode("12345"), 123);
 
-				c.scanItem(item1);
+				c.scanItemUntilSuccessful(item1);
 				multiTestAssertEquals(true, c.isPaused());
 
 				c.addItemToBaggingArea(item1);

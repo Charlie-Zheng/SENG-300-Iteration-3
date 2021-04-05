@@ -37,7 +37,7 @@ public class CashPaymentTest extends BaseTest {
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				//balance is 123.45
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				//Has to add item to bagging area first
 				try {
@@ -101,7 +101,7 @@ public class CashPaymentTest extends BaseTest {
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				//balance is 3.97
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				//Has to add item to bagging area first
 				try {
@@ -157,7 +157,7 @@ public class CashPaymentTest extends BaseTest {
 				Checkout c = new Checkout(station);
 
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -207,7 +207,7 @@ public class CashPaymentTest extends BaseTest {
 
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				// balance is 123.45
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -252,7 +252,7 @@ public class CashPaymentTest extends BaseTest {
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				// balance is 123.45
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				//Has to add item to bagging area first
 				try {
@@ -292,7 +292,7 @@ public class CashPaymentTest extends BaseTest {
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				// balance is 123.45
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -367,7 +367,7 @@ public class CashPaymentTest extends BaseTest {
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				// balance is 3.97
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				//Has to add item to bagging area first
 				try {
@@ -422,7 +422,7 @@ public class CashPaymentTest extends BaseTest {
 
 				Checkout c = new Checkout(station);
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -467,7 +467,7 @@ public class CashPaymentTest extends BaseTest {
 				Currency cad = Currency.getInstance("CAD");
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -506,7 +506,7 @@ public class CashPaymentTest extends BaseTest {
 				Currency usd = Currency.getInstance("USD");
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -546,7 +546,7 @@ public class CashPaymentTest extends BaseTest {
 				Currency cad = Currency.getInstance("CAD");
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				try {
 					c.addItemToBaggingArea(item);
 				} catch (OverloadException e) {

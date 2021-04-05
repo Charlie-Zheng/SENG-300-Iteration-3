@@ -34,7 +34,7 @@ public abstract class BaseTest {
 
 	protected int totalTests;
 	protected int successfulTests;
-	protected final int REPEAT = 100;
+	protected final int REPEAT = 5;
 
 	/**
 	 * Setup method that is invoked before each test method, initializing product

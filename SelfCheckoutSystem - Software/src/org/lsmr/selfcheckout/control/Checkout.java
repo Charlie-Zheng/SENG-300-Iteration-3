@@ -24,6 +24,7 @@ import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.external.CardIssuer;
+import org.lsmr.selfcheckout.products.Product;
 
 /**
  * Creates a Checkout instance for a checkoutStation. Uses the devices in the
@@ -67,7 +68,7 @@ public class Checkout {
 
 	private GiveChange giveChange;
 
-	private ArrayList<Item> itemsScanned = new ArrayList<Item>(); //Wanna keep track of what was scanned
+	private ArrayList<Product> productsAdded = new ArrayList<Product>(); //Wanna keep track of what was scanned
 
 	private String loggedInMemberName = null;
 
@@ -85,7 +86,7 @@ public class Checkout {
 		currentBalance = new BigDecimal(0);
 		this.checkoutStation = checkoutStation;
 
-		BarcodeScannerBalanceUpdateListener scannerListener = new BarcodeScannerBalanceUpdateListener(this);
+		BarcodeScannerUpdateListener scannerListener = new BarcodeScannerUpdateListener(this);
 		checkoutStation.mainScanner.register(scannerListener);
 		checkoutStation.handheldScanner.register(scannerListener);
 
@@ -141,6 +142,10 @@ public class Checkout {
 		currentBalance = currentBalance.add(pricePerUnit);
 	}
 
+	
+	protected void addProductToList(Product p) {
+		productsAdded.add(p);
+	}
 	/**
 	 * Add a customer's own bag to the bagging area.
 	 * 
@@ -559,6 +564,33 @@ public class Checkout {
 	public void scanItem(Item item) throws CheckoutException {
 		if (isScanning()) {
 			checkoutStation.mainScanner.scan(item);
+			if (Math.abs(getWeightOnScale() - expectedWeight) <= WEIGHT_TOLERANCE) {
+				state = CheckoutState.Scanning;
+			} else {
+				state = CheckoutState.Paused;
+			}
+		} else if (isPaused()) {
+			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
+		}
+	}
+	
+	/**
+	 * Scan an item. If in the scanning state and not paused, the unit price of the
+	 * product is added to the balance. If paused, throws a CheckoutException,
+	 * otherwise nothing happens
+	 * 
+	 * @param item
+	 *            The item to scan
+	 * @throws CheckoutException
+	 *             if previously scanned items have not been added to the bagging
+	 *             area
+	 */
+	public void scanItemUntilSuccessful(Item item) throws CheckoutException {
+		if (isScanning()) {
+			int initialSize = productsAdded.size();
+			while(productsAdded.size() == initialSize) {
+				checkoutStation.mainScanner.scan(item);
+			}
 			if (Math.abs(getWeightOnScale() - expectedWeight) <= WEIGHT_TOLERANCE) {
 				state = CheckoutState.Scanning;
 			} else {

@@ -31,13 +31,13 @@ public class ScanItemTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			Checkout c = makeNewDefaultCheckout();
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-			c.scanItem(item);
+			c.scanItemUntilSuccessful(item);
 
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Checkout c = makeNewDefaultCheckout();
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-			c.scanItem(item);
+			c.scanItemUntilSuccessful(item);
 
 		}
 
@@ -53,7 +53,7 @@ public class ScanItemTest extends BaseTest {
 			try {
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("00000"), 123);
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				BigDecimal expected = new BigDecimal(0);
 				multiTestAssertEquals(expected, c.getBalance());
@@ -75,7 +75,7 @@ public class ScanItemTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			Checkout c = makeNewDefaultCheckout();
 			BarcodedItem item = new BarcodedItem(new Barcode("00000"), 156);
-			c.scanItem(item);
+			c.scanItemUntilSuccessful(item);
 		}
 
 	}
@@ -92,7 +92,7 @@ public class ScanItemTest extends BaseTest {
 			Checkout c = makeNewDefaultCheckout();
 			Item item = new Item(156) {
 			};
-			c.scanItem(item);
+			c.scanItemUntilSuccessful(item);
 		}
 
 	}

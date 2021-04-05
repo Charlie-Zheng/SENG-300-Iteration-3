@@ -17,10 +17,10 @@ import org.lsmr.selfcheckout.products.BarcodedProduct;
  * @author Group U08-2
  * @date Mar 11, 2021
  */
-public class BarcodeScannerBalanceUpdateListener implements BarcodeScannerListener {
+public class BarcodeScannerUpdateListener implements BarcodeScannerListener {
 	private Checkout checkout;
 
-	public BarcodeScannerBalanceUpdateListener(Checkout checkout) {
+	public BarcodeScannerUpdateListener(Checkout checkout) {
 		this.checkout = checkout;
 	}
 
@@ -43,6 +43,7 @@ public class BarcodeScannerBalanceUpdateListener implements BarcodeScannerListen
 			//barcoded products are always per unit
 			checkout.addBalanceUnit(product.getPrice());
 			checkout.addExpectedWeightOnScale(ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(barcode));
+			checkout.addProductToList(product);
 		}
 	}
 

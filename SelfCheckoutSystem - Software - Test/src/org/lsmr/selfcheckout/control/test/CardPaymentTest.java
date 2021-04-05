@@ -52,7 +52,7 @@ public class CardPaymentTest extends BaseTest {
 			c.setCardIssuer(issuer);
 
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
@@ -80,7 +80,7 @@ public class CardPaymentTest extends BaseTest {
 
 
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -107,7 +107,7 @@ public class CardPaymentTest extends BaseTest {
 
 
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
@@ -149,7 +149,7 @@ public class CardPaymentTest extends BaseTest {
 			// tap
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
-			c.scanItem(item);
+			c.scanItemUntilSuccessful(item);
 
 			//Has to add item to bagging area first
 			try {
@@ -174,7 +174,7 @@ public class CardPaymentTest extends BaseTest {
 			// tap
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
-			c.scanItem(item);
+			c.scanItemUntilSuccessful(item);
 
 			//Has to add item to bagging area first
 			try {
@@ -199,7 +199,7 @@ public class CardPaymentTest extends BaseTest {
 			// tap
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
-			c.scanItem(item);
+			c.scanItemUntilSuccessful(item);
 
 			//Has to add item to bagging area first
 			try {
@@ -238,7 +238,7 @@ public class CardPaymentTest extends BaseTest {
 			c.setCardIssuer(issuer);
 
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -265,7 +265,7 @@ public class CardPaymentTest extends BaseTest {
 			c.setCardIssuer(issuer);
 			
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -291,7 +291,7 @@ public class CardPaymentTest extends BaseTest {
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -328,7 +328,7 @@ public class CardPaymentTest extends BaseTest {
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Credit);
@@ -354,7 +354,7 @@ public class CardPaymentTest extends BaseTest {
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -380,7 +380,7 @@ public class CardPaymentTest extends BaseTest {
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -415,7 +415,7 @@ public class CardPaymentTest extends BaseTest {
 			Checkout c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Credit);
@@ -449,7 +449,7 @@ public class CardPaymentTest extends BaseTest {
 			Checkout c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.payByInsertingCard(card, "0909");
@@ -482,7 +482,7 @@ public class CardPaymentTest extends BaseTest {
 			Checkout c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.payByInsertingCard(card, "9999");
@@ -521,7 +521,7 @@ public class CardPaymentTest extends BaseTest {
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Credit);
@@ -547,7 +547,7 @@ public class CardPaymentTest extends BaseTest {
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -573,7 +573,7 @@ public class CardPaymentTest extends BaseTest {
 			c = makeNewDefaultCheckout();
 			c.setCardIssuer(issuer);
 			try {
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -616,7 +616,7 @@ public class CardPaymentTest extends BaseTest {
 
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				Checkout c = makeNewDefaultCheckout();
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 
 				c.setCardIssuer(issuer);
@@ -630,7 +630,7 @@ public class CardPaymentTest extends BaseTest {
 
 				// insert the card (no chip)
 				c = makeNewDefaultCheckout();
-				c.scanItem(item);
+				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 
 				c.setCardIssuer(issuer);

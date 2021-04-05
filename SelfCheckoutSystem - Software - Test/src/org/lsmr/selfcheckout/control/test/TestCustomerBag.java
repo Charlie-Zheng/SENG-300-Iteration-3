@@ -72,9 +72,9 @@ public class TestCustomerBag extends BaseTest {
 				BarcodedItem i1 = new BarcodedItem(new Barcode("12345"), 123);
 				BarcodedItem i2 = new BarcodedItem(new Barcode("30040321"), 397);
 
-				checkout.scanItem(i1);
+				checkout.scanItemUntilSuccessful(i1);
 				checkout.addItemToBaggingArea(i1);
-				checkout.scanItem(i2);
+				checkout.scanItemUntilSuccessful(i2);
 				checkout.addItemToBaggingArea(i2);
 				checkout.addCustomerBag(weightb);
 				multiTestAssertEquals(true, checkout.usingCustomerBag());
