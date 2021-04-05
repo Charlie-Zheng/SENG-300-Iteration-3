@@ -18,6 +18,8 @@ import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.Item;
 import org.lsmr.selfcheckout.control.CardPayment.CardError;
 import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
+import org.lsmr.selfcheckout.devices.BanknoteDispenser;
+import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
@@ -56,8 +58,10 @@ public class Checkout {
 	};
 
 	private BanknoteDispenserSlotListener bankNoteOutputListener;
+	private BanknoteDispenser banknoteDispenser;
 	private CardIssuer cardIssuer;
 	private CardPayment cardPayment;
+	private CoinDispenser coinDispenser;
 	private SelfCheckoutStation checkoutStation;
 	private BigDecimal currentBalance;
 	private final double WEIGHT_TOLERANCE = 10;
@@ -736,15 +740,40 @@ public class Checkout {
 
 	/**
 	 * Attendant refills the coin dispenser
+	 * 
+	 * @param coin
+	 * 			The coin to be added
+	 * @throws CheckoutException 
+	 * 			Coin inserted was not real, dispenser was overloaded or if the dispenser was disabled
+	 * 
 	 */
-	public void refillCoinDispenser() {
+	public void refillCoinDispenser(Coin coin) throws CheckoutException {
+		try {
+			coinDispenser.load(coin);
+			coinDispenser.accept(coin);
+		} catch (SimulationException e) {
+			throw new CheckoutException("A real coin was not inserted");
+		} catch (OverloadException e) {
+			throw new CheckoutException("The coin dispenser is overloaded");
+		} catch (DisabledException e) {
+			throw new CheckoutException("The coin dispenser is disabled");
+		}
 	}
 	
 	/**
 	 * Attendant refills the banknote dispenser
+	 * 
+	 * @throws CheckoutException 
+	 * 			Banknote inserted was not real or the dispenser was overloaded
 	 */
-	public void refillBanknoteDispenser() {
-		
+	public void refillBanknoteDispenser(Banknote banknote) throws CheckoutException {
+		try {
+			banknoteDispenser.load(banknote);
+		} catch (SimulationException e) {
+			throw new CheckoutException("A real banknote was not inserted");
+		} catch (OverloadException e) {
+			throw new CheckoutException("The banknote dispenser is overloaded");
+		}
 	}
 
 }
