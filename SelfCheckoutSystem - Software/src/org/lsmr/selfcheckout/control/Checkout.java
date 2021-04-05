@@ -698,5 +698,47 @@ public class Checkout {
 	public boolean usingCustomerBag() {
 		return customerBag;
 	}
+	
+	/**
+	 * Attendant adds paper to receipt printer
+	 */
+	public void addPaper() {
+		
+	}
+	
+	/**
+	 * Attendant adds ink to receipt printer
+	 */
+	public void addInk() {
+		
+	}
+	
+	/**
+	 * Attendant empties the coin storage unit
+	 */
+	public void emptyCoinStorage() {
+		
+	}
+	
+	/**
+	 * Attendant empties the banknote storage unit
+	 */
+	public void emptyBanknoteStorage() {
+		
+	}
+
+	/**
+	 * Attendant refills the coin dispenser
+	 */
+	public void refillCoinDispenser() {
+		
+	}
+	
+	/**
+	 * Attendant refills the banknote dispenser
+	 */
+	public void refillBanknoteDispenser() {
+		
+	}
 
 }
