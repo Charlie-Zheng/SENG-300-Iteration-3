@@ -64,6 +64,9 @@ public class Checkout {
 	private CoinDispenser coinDispenser;
 	private SelfCheckoutStation checkoutStation;
 	private BigDecimal currentBalance;
+	private int inkTotal = 0;
+	private int paperTotal = 0;
+	
 	private final double WEIGHT_TOLERANCE = 10;
 
 	private boolean customerBag;
@@ -705,26 +708,6 @@ public class Checkout {
 	}
 	
 	/**
-	 * Attendant adds paper to receipt printer
-	 * 
-	 * @param quantity
-	 * 				The amount of paper being added
-	 */
-	public void paperAddition(int quantity) {
-		checkoutStation.printer.addPaper(quantity);
-	}
-	
-	/**
-	 * Attendant adds ink to receipt printer
-	 * 
-	 * @param quantity
-	 * 				The amount of ink being added
-	 */
-	public void inkAddition(int quantity) {
-		checkoutStation.printer.addInk(quantity);
-	}
-	
-	/**
 	 * Attendant empties the coin storage unit
 	 */
 	public void emptyCoinStorage() {
@@ -774,6 +757,58 @@ public class Checkout {
 		} catch (OverloadException e) {
 			throw new CheckoutException("The banknote dispenser is overloaded");
 		}
+	}
+	
+	/**
+	 * Attendant adds paper to receipt printer
+	 * 
+	 * @param quantity
+	 * 				The amount of paper being added
+	 */
+	public void paperAddition(int quantity) {
+		checkoutStation.printer.addPaper(quantity);
+		paperTotal += quantity;
+	}
+	
+	/**
+	 * Attendant adds ink to receipt printer
+	 * 
+	 * @param quantity
+	 * 				The amount of ink being added
+	 */
+	public void inkAddition(int quantity) {
+		checkoutStation.printer.addInk(quantity);
+		inkTotal += quantity;
+	}
+	
+	/**
+	 * Detects if the paper or ink in the receipt printer is low
+	 * 
+	 * @param c
+	 * 			The same character that will be printed in the print method
+	 * 			from the ReceiptPrinter class
+	 * 
+	 */
+	public void detectsPrinterLow(char c) {
+		if(c == '\n') {
+			paperTotal--;
+		}
+		
+		else if(c != ' ' && Character.isWhitespace(c))
+			return;
+		
+		if(!Character.isWhitespace(c)) {
+			inkTotal--;
+		}
+		
+		if(paperTotal < 100) {
+			System.out.println("The paper supply is low, please refill paper!");
+		}
+		
+		if(inkTotal < 50000) {
+			System.out.println("The ink supply is low, please refill ink!");
+		}
+		
 	}
 
 }
