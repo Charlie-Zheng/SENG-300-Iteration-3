@@ -132,6 +132,7 @@ public class GUI implements ActionListener{
 		scannedTable.setFillsViewportHeight(true);
 		scannedTable.setPreferredSize(tableSize);
 		scannedTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		scannedTable.getTableHeader().setReorderingAllowed(false);
 		
 		// dynamic, so we only adjust the model and everything should work
 		for (int i = 0; i < tableModel.getColumnCount(); i++) {
