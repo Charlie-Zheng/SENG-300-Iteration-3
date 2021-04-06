@@ -21,12 +21,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
+import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+
 public class GUI implements ActionListener{
+	
+	private Checkout checkout;
 	
 	private JFrame frame;
 	private ProductTableModel tableModel;
 		
 	public GUI() {
+		
+		//checkout = new Checkout(new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, scaleMaximumWeight, scaleSensitivity))
 
 		
 		frame = new JFrame();
@@ -148,6 +154,8 @@ public class GUI implements ActionListener{
 		container.setPreferredSize(new Dimension(tableSize.width + scrollBarWidth, tableSize.height));
 		return container;
 	}
+	
+	// keypad:  use GridLayout
 
 	public static void main(String[] args) {
 
