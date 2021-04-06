@@ -24,6 +24,9 @@ import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.external.CardIssuer;
+import org.lsmr.selfcheckout.external.ProductDatabases;
+import org.lsmr.selfcheckout.products.BarcodedProduct;
+import org.lsmr.selfcheckout.products.PLUCodedProduct;
 import org.lsmr.selfcheckout.products.Product;
 
 /**
@@ -62,7 +65,8 @@ public class Checkout {
 	private BigDecimal currentBalance;
 	private final double WEIGHT_TOLERANCE = 10;
 
-	private boolean customerBag;
+	private boolean customerBag = false;
+	private boolean paidCash = false;
 
 	private double expectedWeight = 0;
 
@@ -142,10 +146,10 @@ public class Checkout {
 		currentBalance = currentBalance.add(pricePerUnit);
 	}
 
-	
 	protected void addProductToList(Product p) {
 		productsAdded.add(p);
 	}
+
 	/**
 	 * Add a customer's own bag to the bagging area.
 	 * 
@@ -196,6 +200,52 @@ public class Checkout {
 						+ " deviation from expected weight)");
 			}
 		}
+	}
+
+	/**
+	 * The customer chooses not to add the last scanned item to the bagging area.
+	 * The expected weight is reduced by the weight of the product
+	 * 
+	 * @throws CheckoutException
+	 *             if the last added item was not a scanned item
+	 */
+	public void doNotBagLastItem() throws CheckoutException {
+		Product lastAdded = productsAdded.get(productsAdded.size() - 1);
+		if (lastAdded instanceof BarcodedProduct) {
+			Barcode bar = ((BarcodedProduct) lastAdded).getBarcode();
+			expectedWeight -= ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(bar);
+		} else {
+			throw new CheckoutException("last added item was not scanned");
+		}
+
+		if (isPaused()) {
+			if (Math.abs(getWeightOnScale() - expectedWeight) <= WEIGHT_TOLERANCE) {
+				state = CheckoutState.Scanning;
+			}
+		}
+	}
+
+	/**
+	 * Returns an array list of products with descriptions that contain the search
+	 * string
+	 * 
+	 * @param name
+	 * @return A list of products that match the search
+	 */
+	public ArrayList<Product> searchProductDatabase(String name) {
+		name = name.toLowerCase();
+		ArrayList<Product> results = new ArrayList<Product>();
+		for (PLUCodedProduct p : ProductDatabases.PLU_PRODUCT_DATABASE.values()) {
+			if (p.getDescription().toLowerCase().contains(name)) {
+				results.add(p);
+			}
+		}
+		for (BarcodedProduct p : ProductDatabases.BARCODED_PRODUCT_DATABASE.values()) {
+			if (p.getDescription().toLowerCase().contains(name)) {
+				results.add(p);
+			}
+		}
+		return results;
 	}
 
 	/**
@@ -407,6 +457,7 @@ public class Checkout {
 			}
 		} else {
 			currentBalance = new BigDecimal("0.00");
+			state = CheckoutState.PrintingReceipt;
 		}
 	}
 
@@ -443,6 +494,7 @@ public class Checkout {
 			}
 		} else {
 			currentBalance = new BigDecimal("0.00");
+			state = CheckoutState.PrintingReceipt;
 		}
 	}
 
@@ -479,6 +531,7 @@ public class Checkout {
 			}
 		} else {
 			currentBalance = new BigDecimal("0.00");
+			state = CheckoutState.PrintingReceipt;
 		}
 	}
 
@@ -502,6 +555,7 @@ public class Checkout {
 		if (isPaying()) {
 			try {
 				checkoutStation.banknoteInput.accept(banknote);
+				paidCash = true;
 			} catch (DisabledException e) {
 				throw new CheckoutException("Cannot pay with banknote because the banknote input is out of order");
 			}
@@ -529,6 +583,7 @@ public class Checkout {
 		if (isPaying()) {
 			try {
 				checkoutStation.coinSlot.accept(coin);
+				paidCash = true;
 			} catch (DisabledException e) {
 				//should not happen
 				throw new CheckoutException("Cannot pay with coin because coin slot is out of order");
@@ -537,6 +592,30 @@ public class Checkout {
 			throw new CheckoutException("Cannot pay with coin because the user has not chosen to pay yet");
 		} else {
 			throw new CheckoutException("Cannot pay with coin because the user has finished paying");
+		}
+	}
+
+	/**
+	 * Cancels the payment process and returns to scanning. Cannot cancel while not
+	 * in payment state. Cannot cancel after already paying some coins/banknotes
+	 * into the checkout
+	 * 
+	 * @throws CheckoutException
+	 *             If some cash has already been paid, or if the current state is
+	 *             not a payment state
+	 */
+	public void cancelPayment() throws CheckoutException {
+		switch (state) {
+		case Paying_Cash:
+			if (paidCash) {
+				throw new CheckoutException("Already paid some cash. Cannot cancel.");
+			}
+		case Paying_Credit:
+		case Paying_Debit:
+			state = CheckoutState.Scanning;
+			break;
+		default:
+			throw new CheckoutException("Cannot cancel payment while not in payment state");
 		}
 	}
 
@@ -573,7 +652,7 @@ public class Checkout {
 			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
 		}
 	}
-	
+
 	/**
 	 * Scan an item. If in the scanning state and not paused, the unit price of the
 	 * product is added to the balance. If paused, throws a CheckoutException,
@@ -588,7 +667,7 @@ public class Checkout {
 	public void scanItemUntilSuccessful(Item item) throws CheckoutException {
 		if (isScanning()) {
 			int initialSize = productsAdded.size();
-			while(productsAdded.size() == initialSize) {
+			while (productsAdded.size() == initialSize) {
 				checkoutStation.mainScanner.scan(item);
 			}
 			if (Math.abs(getWeightOnScale() - expectedWeight) <= WEIGHT_TOLERANCE) {
