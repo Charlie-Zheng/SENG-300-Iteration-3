@@ -43,7 +43,7 @@ public class BarcodeScannerUpdateListener implements BarcodeScannerListener {
 			//barcoded products are always per unit
 			checkout.addBalanceUnit(product.getPrice());
 			checkout.addExpectedWeightOnScale(ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(barcode));
-			checkout.addProductToList(product);
+			checkout.addBarcodedProductToList(product);
 		}
 	}
 

@@ -12,6 +12,7 @@ import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Card;
+import org.lsmr.selfcheckout.control.CardIssuerDatabase;
 import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.CheckoutException;
 import org.lsmr.selfcheckout.control.Checkout.PayingState;
@@ -41,7 +42,8 @@ public class CardPaymentTest extends BaseTest {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -62,12 +64,15 @@ public class CardPaymentTest extends BaseTest {
 			} catch (CheckoutException | OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -89,12 +94,15 @@ public class CardPaymentTest extends BaseTest {
 			} catch (CheckoutException | OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -117,6 +125,8 @@ public class CardPaymentTest extends BaseTest {
 			} catch (CheckoutException | OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -140,7 +150,8 @@ public class CardPaymentTest extends BaseTest {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -160,12 +171,15 @@ public class CardPaymentTest extends BaseTest {
 			} catch (CheckoutException | OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -185,12 +199,15 @@ public class CardPaymentTest extends BaseTest {
 			} catch (CheckoutException | OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -210,6 +227,8 @@ public class CardPaymentTest extends BaseTest {
 			} catch (CheckoutException | OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -227,7 +246,8 @@ public class CardPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
-
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -249,10 +269,13 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
 			Checkout c;
@@ -276,10 +299,13 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
 			Checkout c;
@@ -302,6 +328,8 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -318,7 +346,8 @@ public class CardPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
-
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -339,10 +368,13 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
 			Checkout c;
@@ -365,10 +397,13 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
 			Checkout c;
@@ -391,6 +426,8 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -408,6 +445,8 @@ public class CardPaymentTest extends BaseTest {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(9, 2023), "123", BigDecimal.ONE);
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Initialize state before payment
@@ -426,6 +465,8 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -443,6 +484,7 @@ public class CardPaymentTest extends BaseTest {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(9, 2023), "123", BigDecimal.ONE);
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Initialize state before payment
@@ -459,6 +501,8 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -476,6 +520,7 @@ public class CardPaymentTest extends BaseTest {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "1111", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(9, 2023), "123", new BigDecimal(9999));
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Initialize state before payment
@@ -492,6 +537,8 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -511,7 +558,8 @@ public class CardPaymentTest extends BaseTest {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -532,12 +580,15 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -558,12 +609,15 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
-
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
+			
 			Checkout c;
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
@@ -584,6 +638,8 @@ public class CardPaymentTest extends BaseTest {
 			} catch (OverloadException e) {
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -614,6 +670,9 @@ public class CardPaymentTest extends BaseTest {
 				issuer.addCardData("1111222233334444", "John Doe", getCalendar(9, 2023), "123", new BigDecimal(9999));
 				issuer.addCardData("1111111155555555", "John Doe", getCalendar(9, 2023), "123", new BigDecimal(9999));
 
+				CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
+				CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+				
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				Checkout c = makeNewDefaultCheckout();
 				c.scanItemUntilSuccessful(item);
@@ -646,6 +705,8 @@ public class CardPaymentTest extends BaseTest {
 				// fail because the exception is not related to what's causing the issue
 				fail();
 			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 		}
 	}
 }

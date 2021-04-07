@@ -16,6 +16,7 @@ import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.Item;
+import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.CardPayment.CardError;
 import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
 import org.lsmr.selfcheckout.devices.DisabledException;
@@ -51,11 +52,11 @@ import org.lsmr.selfcheckout.products.Product;
  */
 public class Checkout {
 	private enum CheckoutState {
-		GivingChange, Paused, Paying_Cash, Paying_Credit, Paying_Debit, PrintingReceipt, Scanning
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done
 	};
 
 	public enum PayingState {
-		Cash, Credit, Debit
+		Cash, Credit, Debit, Gift
 	};
 
 	private BanknoteDispenserSlotListener bankNoteOutputListener;
@@ -64,29 +65,24 @@ public class Checkout {
 	private SelfCheckoutStation checkoutStation;
 	private BigDecimal currentBalance;
 	private final double WEIGHT_TOLERANCE = 10;
-
 	private boolean customerBag = false;
 	private boolean paidCash = false;
-
-	private double expectedWeight = 0;
-
+	private double expectedWeightOnBaggingArea = 0;
 	private GiveChange giveChange;
-
-	private ArrayList<Product> productsAdded = new ArrayList<Product>(); //Wanna keep track of what was scanned
-
+	private ArrayList<ReceiptItem> productsAdded = new ArrayList<ReceiptItem>(); //Wanna keep track of what was scanned
+	private ArrayList<Item> itemsAdded = new ArrayList<Item>(); //keep track of items added so they can be removed
 	private String loggedInMemberName = null;
-
 	private String loggedInMemberNumber = null;
-
 	private CheckoutState state = CheckoutState.Scanning;
-
-	private double weightOnScale;
+	private double weightOnBaggingArea = 0;
+	private double weightOnScanScale = 0;
+	private static BigDecimal pricePerPlasticBag;
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
 			throw new SimulationException(new NullPointerException("Argument may not be null."));
 		}
-		weightOnScale = 0;
+		weightOnBaggingArea = 0;
 		currentBalance = new BigDecimal(0);
 		this.checkoutStation = checkoutStation;
 
@@ -146,8 +142,19 @@ public class Checkout {
 		currentBalance = currentBalance.add(pricePerUnit);
 	}
 
-	protected void addProductToList(Product p) {
-		productsAdded.add(p);
+	protected void addBarcodedProductToList(BarcodedProduct p) {
+		productsAdded.add(new ReceiptItem(p, p.getPrice(), Double.NaN, null));
+	}
+
+	private static BarcodedProduct plasticBags = new BarcodedProduct(null, "Plastic Bag", pricePerPlasticBag);
+
+	protected void addBagsToList(BigDecimal totalPrice, int number) {
+		productsAdded.add(new ReceiptItem(plasticBags, totalPrice, number, pricePerPlasticBag));
+	}
+
+	protected void addPLUProductToList(PLUCodedProduct p, BigDecimal totalPrice, double weightInGrams,
+			BigDecimal pricePerKilo) {
+		productsAdded.add(new ReceiptItem(p, totalPrice, weightInGrams, pricePerKilo));
 	}
 
 	/**
@@ -164,7 +171,7 @@ public class Checkout {
 		if (isScanning()) {
 			Barcode b = new Barcode("000"); //N/A
 			BarcodedItem cbag = new BarcodedItem(b, weight);
-			expectedWeight += weight;
+			expectedWeightOnBaggingArea += weight;
 			addItemToBaggingArea(cbag);
 			customerBag = true;
 		} else if (isPaused()) {
@@ -172,7 +179,6 @@ public class Checkout {
 		} else {
 			throw new CheckoutException("Cannot add bag outside scanning process");
 		}
-
 	}
 
 	/**
@@ -189,17 +195,37 @@ public class Checkout {
 	 */
 	public void addItemToBaggingArea(Item item) throws OverloadException, CheckoutException {
 		checkoutStation.baggingArea.add(item);
-		if (Double.isNaN(getWeightOnScale())) {
+		itemsAdded.add(item);
+		if (Double.isNaN(getWeightOnBaggingArea())) {
 			throw new OverloadException("The scale is over weight");
 		}
 		if (isScanning() || isPaused()) {
-			if (Math.abs(getWeightOnScale() - expectedWeight) <= WEIGHT_TOLERANCE) {
+			if (Math.abs(getWeightOnBaggingArea() - expectedWeightOnBaggingArea) <= WEIGHT_TOLERANCE) {
 				state = CheckoutState.Scanning;
 			} else {
 				throw new CheckoutException("Weight on bagging area is incorrect (greater than " + WEIGHT_TOLERANCE
 						+ " deviation from expected weight)");
 			}
 		}
+	}
+
+	/**
+	 * Removes all the previously added items from the bagging area. If the checkout
+	 * is currently done printing the receipt, the checkout will be ready for
+	 * scanning after this is called
+	 * 
+	 * @return The list of items removed from bagging area
+	 */
+	public List<Item> removePurchasedItemFromBaggingArea() {
+		//		checkoutStation.baggingArea
+
+		for (Item item : itemsAdded) {
+			checkoutStation.baggingArea.remove(item);
+		}
+		if (state == CheckoutState.Done) {
+			state = CheckoutState.Scanning;
+		}
+		return new ArrayList<Item>(itemsAdded);
 	}
 
 	/**
@@ -210,16 +236,16 @@ public class Checkout {
 	 *             if the last added item was not a scanned item
 	 */
 	public void doNotBagLastItem() throws CheckoutException {
-		Product lastAdded = productsAdded.get(productsAdded.size() - 1);
+		Product lastAdded = productsAdded.get(productsAdded.size() - 1).product;
 		if (lastAdded instanceof BarcodedProduct) {
 			Barcode bar = ((BarcodedProduct) lastAdded).getBarcode();
-			expectedWeight -= ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(bar);
+			expectedWeightOnBaggingArea -= ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(bar);
 		} else {
 			throw new CheckoutException("last added item was not scanned");
 		}
 
 		if (isPaused()) {
-			if (Math.abs(getWeightOnScale() - expectedWeight) <= WEIGHT_TOLERANCE) {
+			if (Math.abs(getWeightOnBaggingArea() - expectedWeightOnBaggingArea) <= WEIGHT_TOLERANCE) {
 				state = CheckoutState.Scanning;
 			}
 		}
@@ -246,6 +272,65 @@ public class Checkout {
 			}
 		}
 		return results;
+	}
+
+	/**
+	 * Places an item onto the scale
+	 * 
+	 * @param item
+	 */
+	public void addItemToScale(Item item) {
+		checkoutStation.scale.add(item);
+	}
+
+	/**
+	 * Adds the product specified by the PLUcode to the checkout. The balance is
+	 * incremented by the weight on the scale (in grams) multiplied by the price per
+	 * kilogram of the item, converted appropriately to units match.
+	 * <p>
+	 * Throws a checkout exception if the Checkout is currently paused
+	 * 
+	 * @param code
+	 *            The PLUcode to enter
+	 * @throws CheckoutException
+	 *             if the Checkout is currently paused
+	 */
+	public void enterPLUCode(PriceLookupCode code) throws CheckoutException {
+		if (isScanning()) {
+			PLUCodedProduct product = ProductDatabases.PLU_PRODUCT_DATABASE.get(code);
+			// need to convert price per kilo to price per gram, which is done by divide 1000. However, want to round to whole cents, so round after dividing by 10, then divide by 100.
+			// then do price per gram * totalweightingram
+			BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(weightOnScanScale))
+					.divideToIntegralValue(new BigDecimal(10)).divide(new BigDecimal(100));
+			addBalanceCurr(totalPrice);
+			addPLUProductToList(product, totalPrice, weightOnScanScale, totalPrice);
+			addExpectedWeightOnScale(weightOnScanScale);
+		} else if (isPaused()) {
+			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
+		}
+	}
+
+	/**
+	 * The customer logs in by entering the card number. The member name will
+	 * default to the primary account holder. If the card number is not in the
+	 * membership number list, nothing happens.
+	 * 
+	 * @param number
+	 * @throws CheckoutException
+	 *             If a member is already logged in
+	 */
+	public void enterMembershipCardInfo(String number) throws CheckoutException {
+
+		String check = MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.get(number);
+		if (check != null) {
+			if (this.loggedInMemberName == null) {
+				this.loggedInMemberName = check;
+				this.loggedInMemberNumber = number;
+			} else {
+				throw new CheckoutException("Attempted to log in when a member was already logged in");
+			}
+		}
+
 	}
 
 	/**
@@ -345,8 +430,16 @@ public class Checkout {
 	 * @return The total weight of the items current in the bagging area. If the
 	 *         scale is currently over limit, returns Double.NaN
 	 */
+	public double getWeightOnBaggingArea() {
+		return weightOnBaggingArea;
+	}
+
+	/**
+	 * @return The total weight of the items currently on the Scale. If the scale is
+	 *         currently over limit, returns Double.NaN
+	 */
 	public double getWeightOnScale() {
-		return weightOnScale;
+		return weightOnScanScale;
 	}
 
 	/**
@@ -356,8 +449,7 @@ public class Checkout {
 	 *             if there is an issue initializing the payment machine
 	 */
 	private void initializeCreditPayment() throws CheckoutException {
-		cardPayment.initialize(PaymentType.CREDIT, cardIssuer, currentBalance);
-
+		cardPayment.initialize(PaymentType.CREDIT, currentBalance);
 	}
 
 	/**
@@ -367,8 +459,17 @@ public class Checkout {
 	 *             if there is an issue initializing the payment machine
 	 */
 	private void initializeDebitPayment() throws CheckoutException {
-		cardPayment.initialize(PaymentType.DEBIT, cardIssuer, currentBalance);
+		cardPayment.initialize(PaymentType.DEBIT, currentBalance);
+	}
 
+	/**
+	 * Initializes the machine to prepare to pay with a gift card
+	 * 
+	 * @throws CheckoutException
+	 *             if there is an issue initializing the payment machine
+	 */
+	private void initializeGiftPayment() throws CheckoutException {
+		cardPayment.initialize(PaymentType.GIFT, currentBalance);
 	}
 
 	/**
@@ -414,9 +515,17 @@ public class Checkout {
 	 *             If a member is already logged in
 	 */
 	protected void memberLogIn(String name, String number) throws CheckoutException {
+
 		if (this.loggedInMemberName == null) {
-			this.loggedInMemberName = name;
-			this.loggedInMemberNumber = number;
+			String check = MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.get(number);
+			if (check != null) {
+				if (this.loggedInMemberName == null) {
+					this.loggedInMemberName = name;
+					this.loggedInMemberNumber = number;
+				} else {
+					throw new CheckoutException("Attempted to log in when a member was already logged in");
+				}
+			}
 		} else {
 			throw new CheckoutException("Attempted to log in when a member was already logged in");
 		}
@@ -436,17 +545,17 @@ public class Checkout {
 		if (!cardPayment.isReady())
 			throw new CheckoutException("Card machine not ready. Is it initialized?");
 
-		Pair<CardError, String> p = cardPayment.insert(card, pin);
+		CardError e = cardPayment.insert(card, pin);
 
 		// true if there are errors
-		if (p != null) {
-			CardError e = p.type;
+		if (e != null) {
 			switch (e) {
 			case CHIP_FAILURE:
 				throw new CheckoutException("Error while reading the card's chip");
 			case INVALID_CARD_TYPE:
-				throw new CheckoutException(String.format("User chose %s payment but received %s",
-						cardPayment.getPaymentType().toString(), p.value));
+				throw new CheckoutException(
+						String.format("User chose %s payment but the card used was not the same type",
+								cardPayment.getPaymentType().toString()));
 			case WRONG_PIN:
 				throw new CheckoutException("Wrong pin inputted");
 			case AUTHORIZATION_FAIL:
@@ -475,17 +584,17 @@ public class Checkout {
 		if (!cardPayment.isReady())
 			throw new CheckoutException("Card machine not ready. Is it initialized?");
 
-		Pair<CardError, String> p = cardPayment.swipe(card, signature);
+		CardError e = cardPayment.swipe(card, signature);
 
 		// true if there are errors
-		if (p != null) {
-			CardError e = p.type;
+		if (e != null) {
 			switch (e) {
 			case SWIPE_ERROR:
 				throw new CheckoutException("Error while reading the card's magnetic strip");
 			case INVALID_CARD_TYPE:
-				throw new CheckoutException(String.format("User chose %s payment but received %s",
-						cardPayment.getPaymentType().toString(), p.value));
+				throw new CheckoutException(
+						String.format("User chose %s payment but the card used was not the same type",
+								cardPayment.getPaymentType().toString()));
 			case AUTHORIZATION_FAIL:
 				throw new CheckoutException("Unable to authorize card.");
 
@@ -496,6 +605,14 @@ public class Checkout {
 			currentBalance = new BigDecimal("0.00");
 			state = CheckoutState.PrintingReceipt;
 		}
+	}
+
+	/**
+	 * @param n
+	 */
+	public void usePlasticBags(int n) {
+		addBalanceCurr(pricePerPlasticBag.multiply(new BigDecimal(n)));
+
 	}
 
 	/**
@@ -510,18 +627,18 @@ public class Checkout {
 		if (!cardPayment.isReady())
 			throw new CheckoutException("Card machine not ready. Is it initialized?");
 
-		Pair<CardError, String> p = cardPayment.tap(card);
+		CardError e = cardPayment.tap(card);
 
 		// true if there are errors
-		if (p != null) {
-			CardError e = p.type;
+		if (e != null) {
 
 			switch (e) {
 			case CHIP_FAILURE:
 				throw new CheckoutException("Error while reading the card's chip");
 			case INVALID_CARD_TYPE:
-				throw new CheckoutException(String.format("User chose %s payment but received %s",
-						cardPayment.getPaymentType().toString(), p.value));
+				throw new CheckoutException(
+						String.format("User chose %s payment but the card used was not the same type",
+								cardPayment.getPaymentType().toString()));
 			case AUTHORIZATION_FAIL:
 				throw new CheckoutException("Unable to authorize card.");
 			case TAP_FAIL:
@@ -643,11 +760,6 @@ public class Checkout {
 	public void scanItem(Item item) throws CheckoutException {
 		if (isScanning()) {
 			checkoutStation.mainScanner.scan(item);
-			if (Math.abs(getWeightOnScale() - expectedWeight) <= WEIGHT_TOLERANCE) {
-				state = CheckoutState.Scanning;
-			} else {
-				state = CheckoutState.Paused;
-			}
 		} else if (isPaused()) {
 			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
 		}
@@ -670,7 +782,7 @@ public class Checkout {
 			while (productsAdded.size() == initialSize) {
 				checkoutStation.mainScanner.scan(item);
 			}
-			if (Math.abs(getWeightOnScale() - expectedWeight) <= WEIGHT_TOLERANCE) {
+			if (Math.abs(getWeightOnBaggingArea() - expectedWeightOnBaggingArea) <= WEIGHT_TOLERANCE) {
 				state = CheckoutState.Scanning;
 			} else {
 				state = CheckoutState.Paused;
@@ -695,8 +807,18 @@ public class Checkout {
 	 * @param weight
 	 *            The new total weight of the items in the bagging area
 	 */
-	protected void setWeightOnScale(double weight) {
-		weightOnScale = weight;
+	protected void setWeightOnBaggingArea(double weight) {
+		weightOnBaggingArea = weight;
+	}
+
+	/**
+	 * Updates the weight of items on the scale
+	 * 
+	 * @param weight
+	 *            The new total weight of the items in the bagging area
+	 */
+	protected void setWeightOnScanScale(double weight) {
+		weightOnScanScale = weight;
 	}
 
 	/**
@@ -706,7 +828,12 @@ public class Checkout {
 	 *            The new total weight of the items in the bagging area
 	 */
 	protected void addExpectedWeightOnScale(double weight) {
-		expectedWeight += weight;
+		expectedWeightOnBaggingArea += weight;
+		if (Math.abs(getWeightOnBaggingArea() - expectedWeightOnBaggingArea) <= WEIGHT_TOLERANCE) {
+			state = CheckoutState.Scanning;
+		} else {
+			state = CheckoutState.Paused;
+		}
 	}
 
 	/**
@@ -745,6 +872,10 @@ public class Checkout {
 		case Debit:
 			state = CheckoutState.Paying_Debit;
 			initializeDebitPayment();
+			break;
+		case Gift:
+			state = CheckoutState.Paying_Gift;
+			initializeGiftPayment();
 			break;
 		}
 

@@ -51,7 +51,7 @@ public class TestCustomerBag extends BaseTest {
 		Checkout checkout = makeNewDefaultCheckout();
 		checkout.addCustomerBag(weightb);
 		assertTrue(checkout.usingCustomerBag());
-		double weight = checkout.getWeightOnScale();
+		double weight = checkout.getWeightOnBaggingArea();
 		assertTrue(weight == weightb);
 	}
 
@@ -78,7 +78,7 @@ public class TestCustomerBag extends BaseTest {
 				checkout.addItemToBaggingArea(i2);
 				checkout.addCustomerBag(weightb);
 				multiTestAssertEquals(true, checkout.usingCustomerBag());
-				double weight = checkout.getWeightOnScale();
+				double weight = checkout.getWeightOnBaggingArea();
 				multiTestAssertEquals((weightb + 123 + 397), weight, 0.001);
 			} catch (OverloadException | CheckoutException e) {
 				fail();

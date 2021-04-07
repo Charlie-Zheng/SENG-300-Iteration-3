@@ -125,7 +125,7 @@ public class BaggingAreaTest extends BaseTest {
 				c.scanItemUntilSuccessful(item);
 				c.addItemToBaggingArea(item);
 
-				multiTestAssertEquals(123, c.getWeightOnScale(), 0.00001);
+				multiTestAssertEquals(123, c.getWeightOnBaggingArea(), 0.00001);
 
 				// barcode 30040321 -> price $3.97
 				item = new BarcodedItem(new Barcode("30040321"), 397);
@@ -134,7 +134,7 @@ public class BaggingAreaTest extends BaseTest {
 				c.addItemToBaggingArea(item);
 
 				// 123+397=520
-				multiTestAssertEquals(520, c.getWeightOnScale(), 0.00001);
+				multiTestAssertEquals(520, c.getWeightOnBaggingArea(), 0.00001);
 			} catch (CheckoutException e) {
 				fail();
 			}
@@ -169,7 +169,7 @@ public class BaggingAreaTest extends BaseTest {
 			} catch (OverloadException e) {
 
 			}
-			multiTestAssertEquals(true, Double.isNaN(c.getWeightOnScale()));
+			multiTestAssertEquals(true, Double.isNaN(c.getWeightOnBaggingArea()));
 
 		}
 
@@ -270,7 +270,7 @@ public class BaggingAreaTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			Checkout c = makeNewDefaultCheckout();
 
-			multiTestAssertEquals(0, c.getWeightOnScale(), 0.0001);
+			multiTestAssertEquals(0, c.getWeightOnBaggingArea(), 0.0001);
 		}
 	}
 }

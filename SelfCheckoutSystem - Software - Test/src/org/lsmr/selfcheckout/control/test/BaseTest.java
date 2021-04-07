@@ -226,7 +226,7 @@ public abstract class BaseTest {
 		ProductDatabases.BARCODED_PRODUCT_DATABASE.put(temp = new Barcode("12345"),
 				new BarcodedProduct(temp, "Product with barcode of 12345 and price $123.45", new BigDecimal("123.45")));
 		ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.put(temp, 123.0);
-		
+
 		// A product with a barcode of 987654321 and price $98.76
 		ProductDatabases.BARCODED_PRODUCT_DATABASE.put(temp = new Barcode("987654321"), new BarcodedProduct(temp,
 				"Product with barcode of 987654321 and price $98.76", new BigDecimal("98.76")));
@@ -252,9 +252,9 @@ public abstract class BaseTest {
 	 */
 	protected void initMembershipCardDatabase() {
 		MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.clear();
-		MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.add("123456789");
-		MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.add("6541236");
-		MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.add("11111111");
+		MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.put("123456789", "Alice");
+		MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.put("6541236", "Bob");
+		MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.put("11111111", "Charlie");
 
 	}
 }

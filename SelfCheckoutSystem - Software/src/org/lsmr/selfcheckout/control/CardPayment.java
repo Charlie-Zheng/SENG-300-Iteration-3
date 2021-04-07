@@ -3,6 +3,7 @@ package org.lsmr.selfcheckout.control;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Set;
 
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.Card.CardData;
@@ -12,7 +13,8 @@ import org.lsmr.selfcheckout.external.CardIssuer;
 public class CardPayment {
 
 	public enum PaymentType {
-		DEBIT("debit"), CREDIT("credit");
+		//names should be in lowercase
+		DEBIT("debit"), CREDIT("credit"), GIFT("gift");
 
 		private String name;
 
@@ -34,7 +36,6 @@ public class CardPayment {
 	private boolean ready;
 	private SelfCheckoutStation checkoutStation;
 	private PaymentType type = null;
-	private CardIssuer cardIssuer;
 	private BigDecimal amount;
 
 	public CardPayment(SelfCheckoutStation station) {
@@ -53,10 +54,9 @@ public class CardPayment {
 	 *            the balance to pay
 	 * @throws CheckoutException
 	 */
-	public void initialize(PaymentType type, CardIssuer cardIssuer, BigDecimal amt) throws CheckoutException {
+	public void initialize(PaymentType type, BigDecimal amt) throws CheckoutException {
 
 		this.amount = amt;
-		this.cardIssuer = cardIssuer;
 
 		ready = true;
 		checkoutStation.cardReader.enable();
@@ -81,25 +81,15 @@ public class CardPayment {
 	 * @return null if payment succeeded, otherwise a Pair instance of an error type
 	 *         is returned.
 	 */
-	public Pair<CardError, String> swipe(Card card, BufferedImage signature) {
+	public CardError swipe(Card card, BufferedImage signature) {
 		try {
 			CardData data = checkoutStation.cardReader.swipe(card, signature);
 
-			// user specified card is debit/credit but received credit/debit
-			if (!data.getType().toLowerCase().equals(type.name)) {
-				return new Pair<>(CardError.INVALID_CARD_TYPE, data.getType());
-			}
-
-			int holdNum = cardIssuer.authorizeHold(data.getNumber(), amount);
-			if (holdNum == -1) {
-				return new Pair<>(CardError.AUTHORIZATION_FAIL);
-			}
+			return attemptTransaction(data);
 		} catch (IOException e) {
-			return new Pair<>(CardError.SWIPE_ERROR);
+			return CardError.SWIPE_ERROR;
 		}
 
-		reset();
-		return null;
 	}
 
 	/**
@@ -112,27 +102,16 @@ public class CardPayment {
 	 * @return null if payment succeeded, otherwise a Pair instance of an error type
 	 *         is returned.
 	 */
-	public Pair<CardError, String> insert(Card card, String pin) {
+	public CardError insert(Card card, String pin) {
 		try {
 			CardData data = checkoutStation.cardReader.insert(card, pin);
 
-			// user specified card is debit/credit but received credit/debit
-			if (!data.getType().toLowerCase().equals(type.name)) {
-				return new Pair<>(CardError.INVALID_CARD_TYPE);
-			}
-
-			int holdNum = cardIssuer.authorizeHold(data.getNumber(), amount);
-			if (holdNum == -1) {
-				return new Pair<>(CardError.AUTHORIZATION_FAIL);
-			}
+			return attemptTransaction(data);
 
 		} catch (IOException e) {
-			return new Pair<>(CardError.CHIP_FAILURE);
+			return CardError.CHIP_FAILURE;
 		}
 
-		// success
-		reset();
-		return null;
 	}
 
 	/**
@@ -143,30 +122,55 @@ public class CardPayment {
 	 * @return null if payment succeeded, otherwise a Pair instance of an error type
 	 *         is returned.
 	 */
-	public Pair<CardError, String> tap(Card card) {
+	public CardError tap(Card card) {
 		// verify that the machine can read the card
 		try {
 			CardData data = checkoutStation.cardReader.tap(card);
 			if (data != null) {
-				// user specified card is debit/credit but received credit/debit
-				if (!data.getType().toLowerCase().equals(type.name)) {
-					return new Pair<>(CardError.INVALID_CARD_TYPE, data.getType());
-				}
-
-				int holdNum = cardIssuer.authorizeHold(data.getNumber(), amount);
-				if (holdNum == -1) {
-					return new Pair<>(CardError.AUTHORIZATION_FAIL);
-				}
+				return attemptTransaction(data);
 			} else {
-				return new Pair<>(CardError.TAP_FAIL);
+				return CardError.TAP_FAIL;
 			}
 		} catch (IOException e) {
-			return new Pair<>(CardError.CHIP_FAILURE);
+			return CardError.CHIP_FAILURE;
 		}
 
-		// success
+	}
 
+	private CardError attemptTransaction(CardData data) {
+		// user specified card is debit/credit but received credit/debit
+		if (!data.getType().toLowerCase().equals(type.name)) {
+			return CardError.INVALID_CARD_TYPE;
+		}
+
+		int holdNum = -1;
+		Set<CardIssuer> cardIssuerDatabase;
+		switch (type) {
+		case DEBIT:
+			cardIssuerDatabase = CardIssuerDatabase.DEBIT_ISSUER_DATABASE;
+			break;
+		case CREDIT:
+			cardIssuerDatabase = CardIssuerDatabase.CREDIT_ISSUER_DATABASE;
+			break;
+
+		default:
+			//last one left is Gift
+			cardIssuerDatabase = CardIssuerDatabase.GIFT_ISSUER_DATABASE;
+		}
+		for (CardIssuer c : cardIssuerDatabase) {
+			holdNum = c.authorizeHold(data.getNumber(), amount);
+			if (holdNum != -1) {
+				c.postTransaction(data.getNumber(), holdNum, amount);
+				break;
+			}
+		}
+		if (holdNum == -1) {
+			return CardError.AUTHORIZATION_FAIL;
+		}
+
+		reset();
 		return null;
+
 	}
 
 	/**
