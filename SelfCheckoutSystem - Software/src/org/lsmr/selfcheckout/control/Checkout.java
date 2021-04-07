@@ -76,7 +76,7 @@ public class Checkout {
 	private CheckoutState state = CheckoutState.Scanning;
 	private double weightOnBaggingArea = 0;
 	private double weightOnScanScale = 0;
-	private static BigDecimal pricePerPlasticBag;
+	private static BigDecimal pricePerPlasticBag = new BigDecimal("0.05");
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
@@ -84,6 +84,7 @@ public class Checkout {
 		}
 		weightOnBaggingArea = 0;
 		currentBalance = new BigDecimal(0);
+		plasticBags = new BarcodedProduct(null, "Plastic Bag", pricePerPlasticBag);
 		this.checkoutStation = checkoutStation;
 
 		BarcodeScannerUpdateListener scannerListener = new BarcodeScannerUpdateListener(this);
@@ -146,7 +147,7 @@ public class Checkout {
 		productsAdded.add(new ReceiptItem(p, p.getPrice(), Double.NaN, null));
 	}
 
-	private static BarcodedProduct plasticBags = new BarcodedProduct(null, "Plastic Bag", pricePerPlasticBag);
+	private static BarcodedProduct plasticBags;
 
 	protected void addBagsToList(BigDecimal totalPrice, int number) {
 		productsAdded.add(new ReceiptItem(plasticBags, totalPrice, number, pricePerPlasticBag));
@@ -790,6 +791,22 @@ public class Checkout {
 		} else if (isPaused()) {
 			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
 		}
+	}
+
+	/**
+	 * @return the pricePerPlasticBag
+	 */
+	public static BigDecimal getPricePerPlasticBag() {
+		return pricePerPlasticBag;
+	}
+
+	/**
+	 * @param pricePerPlasticBag
+	 *            the pricePerPlasticBag to set
+	 */
+	public static void setPricePerPlasticBag(BigDecimal pricePerPlasticBag) {
+		Checkout.pricePerPlasticBag = pricePerPlasticBag;
+		plasticBags = new BarcodedProduct(null, "Plastic Bag", pricePerPlasticBag);
 	}
 
 	/**
