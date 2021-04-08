@@ -20,9 +20,12 @@ import org.lsmr.selfcheckout.Item;
 import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.CardPayment.CardError;
 import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
+import org.lsmr.selfcheckout.devices.BanknoteDispenser;
+import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
+import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.external.CardIssuer;
@@ -64,6 +67,7 @@ public class Checkout {
 	private final CardPayment cardPayment;
 	private final SelfCheckoutStation checkoutStation;
 	private final GiveChange giveChange;
+
 	private final double WEIGHT_TOLERANCE = 10;
 	private static BigDecimal pricePerPlasticBag = new BigDecimal("0.05");
 	private static BarcodedProduct plasticBags;
@@ -72,6 +76,8 @@ public class Checkout {
 	private boolean customerBag;
 	private boolean paidCash;
 	private double expectedWeightOnBaggingArea;
+	private int inkTotal;
+	private int paperTotal;
 	private ArrayList<ReceiptItem> productsAdded; //Wanna keep track of what was scanned
 	private ArrayList<Item> itemsAdded = new ArrayList<Item>(); //keep track of items added so they can be removed
 	private String loggedInMemberName;
@@ -122,11 +128,15 @@ public class Checkout {
 		state = CheckoutState.Scanning;
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
+		inkTotal = 0;
+		paperTotal = 0;
 
 	}
 
 	/**
-	 * Resets the checkout to the initial state. Intended to be used only for testing. Simulates a person unloading everything, then loading anything needed.
+	 * Resets the checkout to the initial state. Intended to be used only for
+	 * testing. Simulates a person unloading everything, then loading anything
+	 * needed.
 	 */
 	public void reset() {
 		removePurchasedItemFromBaggingArea();
@@ -136,7 +146,7 @@ public class Checkout {
 		checkoutStation.coinTray.collectCoins();
 		checkoutStation.coinStorage.unload();
 		Currency cad = checkoutStation.coinValidator.currency;
-		
+
 		for (Integer value : checkoutStation.banknoteDispensers.keySet()) {
 			Banknote[] banknotes = new Banknote[10];
 			for (int i = 0; i < 10; i++) {
@@ -177,6 +187,8 @@ public class Checkout {
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
 		bankNoteOutputListener.reset();
+		inkTotal = 0;
+		paperTotal = 0;
 
 	}
 
@@ -809,12 +821,35 @@ public class Checkout {
 				}
 				String itemOnReceipt = productsAdded.get(i).toString();
 				for (char c : itemOnReceipt.toCharArray()) {
-					checkoutStation.printer.print(c);
+					printReceiptChar(c);
 				}
 			}
 			checkoutStation.printer.cutPaper();
 		} else {
 			throw new CheckoutException("Not in print receipt state");
+		}
+
+	}
+
+	/**
+	 * Prints a character on the receipt, and also updates the amount of paper and
+	 * ink remaining
+	 * 
+	 * @param c
+	 */
+	private void printReceiptChar(char c) {
+
+		try {
+			if (c == '\n') {
+				--paperTotal;
+			}
+			checkoutStation.printer.print(c);
+			if (!Character.isWhitespace(c)) {
+				inkTotal--;
+			}
+
+		} catch (SimulationException e) {
+
 		}
 
 	}
@@ -882,7 +917,6 @@ public class Checkout {
 			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
 		}
 	}
-
 
 	/**
 	 * @return the pricePerPlasticBag
@@ -1038,6 +1072,112 @@ public class Checkout {
 
 	public boolean usingCustomerBag() {
 		return customerBag;
+	}
+
+	/**
+	 * Attendant empties the coin storage unit
+	 */
+	public void emptyCoinStorage() {
+		checkoutStation.coinStorage.unload();
+	}
+
+	/**
+	 * Attendant empties the banknote storage unit
+	 */
+	public void emptyBanknoteStorage() {
+		checkoutStation.banknoteStorage.unload();
+	}
+
+	/**
+	 * Attendant refills the coin dispenser
+	 * 
+	 * @param coins
+	 *            The coins to be added. Any unloaded coins will be returned.
+	 * @throws CheckoutException
+	 *             Coin inserted was not real, dispenser was overloaded or if the
+	 *             dispenser was disabled
+	 */
+	public List<Coin> refillCoinDispenser(List<Coin> coins) throws CheckoutException {
+		List<Coin> unloaded = new ArrayList<Coin>();
+
+		for (Coin c : coins) {
+			CoinDispenser dispenser = checkoutStation.coinDispensers.get(c.getValue());
+			if (dispenser != null) {
+				try {
+					dispenser.load(c);
+				} catch (SimulationException | OverloadException e) {
+					unloaded.add(c);
+				}
+			} else {
+				unloaded.add(c);
+			}
+		}
+		return unloaded;
+	}
+
+	/**
+	 * Attendant refills the banknote dispenser
+	 * 
+	 * @throws CheckoutException
+	 *             Banknote inserted was not real or the dispenser was overloaded
+	 */
+	public List<Banknote> refillBanknoteDispenser(List<Banknote> notes) throws CheckoutException {
+		List<Banknote> unloaded = new ArrayList<Banknote>();
+
+		for (Banknote c : notes) {
+			BanknoteDispenser dispenser = checkoutStation.banknoteDispensers.get(c.getValue());
+			if (dispenser != null) {
+				try {
+					dispenser.load(c);
+				} catch (SimulationException | OverloadException e) {
+					unloaded.add(c);
+				}
+			} else {
+				unloaded.add(c);
+			}
+		}
+		return unloaded;
+	}
+
+	/**
+	 * Attendant adds paper to receipt printer
+	 * 
+	 * @param quantity
+	 *            The amount of paper being added
+	 */
+	public void paperAddition(int quantity) {
+		checkoutStation.printer.addPaper(quantity);
+		paperTotal += quantity;
+	}
+
+	/**
+	 * Attendant adds ink to receipt printer
+	 * 
+	 * @param quantity
+	 *            The amount of ink being added
+	 */
+	public void inkAddition(int quantity) {
+		checkoutStation.printer.addInk(quantity);
+		inkTotal += quantity;
+	}
+
+	/**
+	 * Detects if the ink in the receipt printer is low
+	 * 
+	 * @return true, if the ink is low, false otherwise
+	 */
+	public boolean isInkLow() {
+
+		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
+	}
+
+	/**
+	 * Detects if the ink in the receipt printer is low
+	 * 
+	 * @return true, if the paper is low, false otherwise
+	 */
+	public boolean isPaperLow() {
+		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
 	}
 
 }
