@@ -472,6 +472,22 @@ public class Checkout {
 		return new ArrayList<ReceiptItem>(productsAdded);
 	}
 
+	/**
+	 * Removes an item from the list of products added. Updates the balance
+	 * accordingly
+	 * 
+	 * @param i
+	 * @return true if the item was removed, false otherwise
+	 */
+	public boolean deleteProductAdded(ReceiptItem i) {
+
+		if (productsAdded.remove(i)) {
+			currentBalance = currentBalance.subtract(i.totalPrice);
+			return true;
+		}
+		return false;
+	}
+
 	public List<Banknote> getChangeFromBanknoteSlots() {
 		List<Banknote> banknotes = new ArrayList<Banknote>();
 		Banknote banknote;
