@@ -841,10 +841,35 @@ public class Checkout {
 				}
 			}
 			checkoutStation.printer.cutPaper();
+			state = CheckoutState.Done;
+			currentBalance = new BigDecimal(0);
+			customerBag = false;
+			paidCash = false;
+			expectedWeightOnBaggingArea = 0;
+			productsAdded.clear();
+			itemsAdded.clear();
+			loggedInMemberName = null;
+			loggedInMemberNumber = null;
+
 		} else {
 			throw new CheckoutException("Not in print receipt state");
 		}
 
+	}
+
+	/**
+	 * The user chooses to not print a receipt.
+	 */
+	public void doNotPrintReceipt() {
+		state = CheckoutState.Done;
+		currentBalance = new BigDecimal(0);
+		customerBag = false;
+		paidCash = false;
+		expectedWeightOnBaggingArea = 0;
+		productsAdded.clear();
+		itemsAdded.clear();
+		loggedInMemberName = null;
+		loggedInMemberNumber = null;
 	}
 
 	/**
