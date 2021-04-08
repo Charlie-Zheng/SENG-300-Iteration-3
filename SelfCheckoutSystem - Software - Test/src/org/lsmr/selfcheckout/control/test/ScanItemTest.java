@@ -29,15 +29,15 @@ public class ScanItemTest extends BaseTest {
 	@Test
 	public void testScanBarcodedItem() throws CheckoutException, OverloadException {
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-			c.scanItemUntilSuccessful(item);
+			c.scanItem(item);
 
 		}
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-			c.scanItemUntilSuccessful(item);
+			c.scanItem(item);
 
 		}
 
@@ -51,9 +51,9 @@ public class ScanItemTest extends BaseTest {
 	public void testBarcodedItemNotInDatabaseGetBalance() {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("00000"), 123);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				BigDecimal expected = new BigDecimal(0);
 				multiTestAssertEquals(expected, c.getBalance());
@@ -73,9 +73,9 @@ public class ScanItemTest extends BaseTest {
 	@Test
 	public void testScanBarcodedItemNotInDatabase() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 			BarcodedItem item = new BarcodedItem(new Barcode("00000"), 156);
-			c.scanItemUntilSuccessful(item);
+			c.scanItem(item);
 		}
 
 	}
@@ -89,10 +89,10 @@ public class ScanItemTest extends BaseTest {
 	@Test
 	public void testScanNotBarcodedItem() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 			Item item = new Item(156) {
 			};
-			c.scanItemUntilSuccessful(item);
+			c.scanItem(item);
 		}
 
 	}

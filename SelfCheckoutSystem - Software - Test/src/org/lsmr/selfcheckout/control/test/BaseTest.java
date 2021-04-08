@@ -34,7 +34,8 @@ public abstract class BaseTest {
 
 	protected int totalTests;
 	protected int successfulTests;
-	protected final int REPEAT = 5;
+	protected final int REPEAT = 100;
+	protected Checkout c;
 
 	/**
 	 * Setup method that is invoked before each test method, initializing product
@@ -44,6 +45,7 @@ public abstract class BaseTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		c = makeNewDefaultCheckout();
 		initProductDatabase();
 		initMembershipCardDatabase();
 		totalTests = 0;
@@ -94,30 +96,6 @@ public abstract class BaseTest {
 				new BigDecimal("1.00"), new BigDecimal("2.00") };
 		SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations, 100000, 1);
 		Checkout c = new Checkout(station);
-		for (Integer value : station.banknoteDispensers.keySet()) {
-			Banknote[] banknotes = new Banknote[10];
-			for (int i = 0; i < 10; i++) {
-				banknotes[i] = new Banknote(value, cad);
-			}
-			try {
-				station.banknoteDispensers.get(value).load(banknotes);
-			} catch (SimulationException | OverloadException e) {
-				//should not happen
-				e.printStackTrace();
-			}
-		}
-		for (BigDecimal value : station.coinDispensers.keySet()) {
-			Coin[] coins = new Coin[10];
-			for (int i = 0; i < 10; i++) {
-				coins[i] = new Coin(value, cad);
-			}
-			try {
-				station.coinDispensers.get(value).load(coins);
-			} catch (SimulationException | OverloadException e) {
-				//should not happen
-				e.printStackTrace();
-			}
-		}
 		return c;
 	}
 

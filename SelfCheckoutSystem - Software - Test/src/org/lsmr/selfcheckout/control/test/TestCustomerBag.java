@@ -23,9 +23,9 @@ public class TestCustomerBag extends BaseTest {
 	 */
 	@Test
 	public void testAddCustomerBagOnce() throws CheckoutException, OverloadException {
-		Checkout checkout = makeNewDefaultCheckout();
-		checkout.addCustomerBag(150);
-		assertTrue(checkout.usingCustomerBag());
+		c.reset();
+		c.addCustomerBag(150);
+		assertTrue(c.usingCustomerBag());
 	}
 
 	/**
@@ -35,9 +35,9 @@ public class TestCustomerBag extends BaseTest {
 	 */
 	@Test(expected = CheckoutException.class)
 	public void testAddCustomerBagTwice() throws CheckoutException, OverloadException {
-		Checkout checkout = makeNewDefaultCheckout();
-		checkout.addCustomerBag(150);
-		checkout.addCustomerBag(150);
+		c.reset();
+		c.addCustomerBag(150);
+		c.addCustomerBag(150);
 	}
 
 	/**
@@ -48,10 +48,10 @@ public class TestCustomerBag extends BaseTest {
 	@Test
 	public void testAddCustomerBagWeight() throws CheckoutException, OverloadException {
 		double weightb = 150;
-		Checkout checkout = makeNewDefaultCheckout();
-		checkout.addCustomerBag(weightb);
-		assertTrue(checkout.usingCustomerBag());
-		double weight = checkout.getWeightOnBaggingArea();
+		c.reset();
+		c.addCustomerBag(weightb);
+		assertTrue(c.usingCustomerBag());
+		double weight = c.getWeightOnBaggingArea();
 		assertTrue(weight == weightb);
 	}
 
@@ -67,18 +67,18 @@ public class TestCustomerBag extends BaseTest {
 			try {
 				double weightb = 150;
 
-				Checkout checkout = makeNewDefaultCheckout();
+				c.reset();
 
 				BarcodedItem i1 = new BarcodedItem(new Barcode("12345"), 123);
 				BarcodedItem i2 = new BarcodedItem(new Barcode("30040321"), 397);
 
-				checkout.scanItemUntilSuccessful(i1);
-				checkout.addItemToBaggingArea(i1);
-				checkout.scanItemUntilSuccessful(i2);
-				checkout.addItemToBaggingArea(i2);
-				checkout.addCustomerBag(weightb);
-				multiTestAssertEquals(true, checkout.usingCustomerBag());
-				double weight = checkout.getWeightOnBaggingArea();
+				c.scanItem(i1);
+				c.addItemToBaggingArea(i1);
+				c.scanItem(i2);
+				c.addItemToBaggingArea(i2);
+				c.addCustomerBag(weightb);
+				multiTestAssertEquals(true, c.usingCustomerBag());
+				double weight = c.getWeightOnBaggingArea();
 				multiTestAssertEquals((weightb + 123 + 397), weight, 0.001);
 			} catch (OverloadException | CheckoutException e) {
 				fail();

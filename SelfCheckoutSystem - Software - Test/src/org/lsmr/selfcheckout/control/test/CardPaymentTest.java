@@ -44,17 +44,16 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
 
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
@@ -73,19 +72,19 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 
 
 
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -103,19 +102,19 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 
 
 
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
@@ -152,15 +151,15 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
-			c.scanItemUntilSuccessful(item);
+			c.reset();
+			
+			c.scanItem(item);
 
 			//Has to add item to bagging area first
 			try {
@@ -180,15 +179,15 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
-			c.scanItemUntilSuccessful(item);
+			c.reset();
+			
+			c.scanItem(item);
 
 			//Has to add item to bagging area first
 			try {
@@ -208,15 +207,15 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
-			c.scanItemUntilSuccessful(item);
+			c.reset();
+			
+			c.scanItem(item);
 
 			//Has to add item to bagging area first
 			try {
@@ -248,17 +247,17 @@ public class CardPaymentTest extends BaseTest {
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -278,17 +277,17 @@ public class CardPaymentTest extends BaseTest {
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -308,16 +307,16 @@ public class CardPaymentTest extends BaseTest {
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -348,16 +347,16 @@ public class CardPaymentTest extends BaseTest {
 			CardIssuer issuer = new CardIssuer("abcdefg");
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Credit);
@@ -377,16 +376,16 @@ public class CardPaymentTest extends BaseTest {
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -406,16 +405,16 @@ public class CardPaymentTest extends BaseTest {
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -451,10 +450,10 @@ public class CardPaymentTest extends BaseTest {
 
 			// Initialize state before payment
 			// tap
-			Checkout c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Credit);
@@ -488,10 +487,10 @@ public class CardPaymentTest extends BaseTest {
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Initialize state before payment
-			Checkout c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.payByInsertingCard(card, "0909");
@@ -524,10 +523,10 @@ public class CardPaymentTest extends BaseTest {
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Initialize state before payment
-			Checkout c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.payByInsertingCard(card, "9999");
@@ -560,16 +559,16 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Credit);
@@ -589,16 +588,16 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -618,16 +617,16 @@ public class CardPaymentTest extends BaseTest {
 			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(issuer);
 			
-			Checkout c;
+			
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 
 			// Try out all three payment types
 
 			// tap
-			c = makeNewDefaultCheckout();
-			c.setCardIssuer(issuer);
+			c.reset();
+			
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
@@ -674,11 +673,11 @@ public class CardPaymentTest extends BaseTest {
 				CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
 				
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				Checkout c = makeNewDefaultCheckout();
-				c.scanItemUntilSuccessful(item);
+				c.reset();
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 
-				c.setCardIssuer(issuer);
+				
 				c.startPayment(PayingState.Credit);
 				try {
 					c.payByTappingCard(noTap);
@@ -688,11 +687,11 @@ public class CardPaymentTest extends BaseTest {
 				}
 
 				// insert the card (no chip)
-				c = makeNewDefaultCheckout();
-				c.scanItemUntilSuccessful(item);
+				c.reset();
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 
-				c.setCardIssuer(issuer);
+				
 				c.startPayment(PayingState.Debit);
 				try {
 					c.payByInsertingCard(noChip, "1111");

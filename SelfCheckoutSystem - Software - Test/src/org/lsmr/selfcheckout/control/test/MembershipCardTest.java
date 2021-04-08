@@ -10,7 +10,7 @@ public class MembershipCardTest extends BaseTest {
 	@Test
 	public void testTapping() {
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 
 			Card testCard = new Card("Membership", "123456789", "R.Walker", null, null, true, false);
 			try {
@@ -21,7 +21,7 @@ public class MembershipCardTest extends BaseTest {
 			}
 		}
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 
 			Card testCard = new Card("credit", "123456789", "R.Walker", null, null, false, false);
 			try {
@@ -35,7 +35,7 @@ public class MembershipCardTest extends BaseTest {
 	@Test
 	public void testSwiping() {
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 
 			Card testCard = new Card("Membership", "123456789", "R.Walker", null, null, true, false);
 			try {
@@ -46,7 +46,7 @@ public class MembershipCardTest extends BaseTest {
 			}
 		}
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 
 			Card testCard = new Card("credit", "123456789", "R.Walker", null, null, false, false);
 			try {
@@ -61,7 +61,7 @@ public class MembershipCardTest extends BaseTest {
 	@Test
 	public void testTapNotMembership() {
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 
 			Card testCard = new Card("credit", "123456789", "R.Walker", null, null, true, false);
 			try {
@@ -73,7 +73,7 @@ public class MembershipCardTest extends BaseTest {
 			}
 		}
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 
 			Card testCard = new Card("debit", "6541236", "M. Joe", "231", "1234", true, true);
 			try {
@@ -89,7 +89,7 @@ public class MembershipCardTest extends BaseTest {
 	@Test
 	public void testSwipeNotMembership() {
 		for (int i = 0; i < REPEAT; i++) {
-			Checkout c = makeNewDefaultCheckout();
+			c.reset();
 
 			Card testCard8 = new Card("Credit", "123456789", "R.Walker", null, null, true, false);
 			try {
@@ -106,7 +106,7 @@ public class MembershipCardTest extends BaseTest {
 	public void testSwipeMembership() {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				Card testCard8 = new Card("Membership", "123456789", "R.Walker", null, null, true, false);
 				c.swipeCard(testCard8);
 				multiTestAssertEquals(true, c.getLoggedInMemberName().equals("R.Walker"));
@@ -120,7 +120,7 @@ public class MembershipCardTest extends BaseTest {
 	public void testTapMembership() {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				Card testCard8 = new Card("Membership", "123456789", "R.Walker", null, null, true, false);
 				c.tapCard(testCard8);
 				multiTestAssertEquals(true, c.getLoggedInMemberName().equals("R.Walker"));
@@ -134,7 +134,7 @@ public class MembershipCardTest extends BaseTest {
 	public void testSwipeMembershipNotInDB() {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				Card testCard8 = new Card("Membership", "00000", "R.Walker", null, null, true, false);
 				c.swipeCard(testCard8);
 				multiTestAssertEquals(true, c.getLoggedInMemberName()==null);
@@ -148,7 +148,7 @@ public class MembershipCardTest extends BaseTest {
 	public void testTapMembershipNotInDB() {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				Card testCard8 = new Card("Membership", "0001200", "R.Walker", null, null, true, false);
 
 				
@@ -164,7 +164,7 @@ public class MembershipCardTest extends BaseTest {
 	public void testSwipeMemberAlreadyLoggedIn() {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				Card testCard0 = new Card("Membership", "123456789", "R.Walker", null, null, true, false);
 				Card testCard1 = new Card("Membership", "11111111", "C.Nolan", null, null, true, false);
 				c.swipeCard(testCard0);
@@ -181,7 +181,7 @@ public class MembershipCardTest extends BaseTest {
 	public void testTapMemberAlreadyLoggedIn() {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				Card testCard0 = new Card("Membership", "123456789", "R.Walker", null, null, true, false);
 				Card testCard1 = new Card("Membership", "11111111", "C.Nolan", null, null, true, false);
 				c.swipeCard(testCard0);

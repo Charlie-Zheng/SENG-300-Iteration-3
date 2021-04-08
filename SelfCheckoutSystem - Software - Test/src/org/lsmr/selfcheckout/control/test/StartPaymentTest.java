@@ -60,12 +60,12 @@ public class StartPaymentTest extends BaseTest {
 				// scan some items then check if payment process can be successfully started
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				BarcodedItem item2 = new BarcodedItem(new Barcode("987654321"), 98);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 
-				c.scanItemUntilSuccessful(item2);
+				c.scanItem(item2);
 				c.addItemToBaggingArea(item2);
 
 				c.startPayment(Checkout.PayingState.Cash);
@@ -85,12 +85,12 @@ public class StartPaymentTest extends BaseTest {
 				// scan some items then check if payment process can be successfully started
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				BarcodedItem item2 = new BarcodedItem(new Barcode("987654321"), 98);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 
-				c.scanItemUntilSuccessful(item2);
+				c.scanItem(item2);
 				c.addItemToBaggingArea(item2);
 
 				c.startPayment(Checkout.PayingState.Debit);
@@ -110,12 +110,12 @@ public class StartPaymentTest extends BaseTest {
 				// scan some items then check if payment process can be successfully started
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				BarcodedItem item2 = new BarcodedItem(new Barcode("987654321"), 98);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area first
 				c.addItemToBaggingArea(item);
 
-				c.scanItemUntilSuccessful(item2);
+				c.scanItem(item2);
 				c.addItemToBaggingArea(item2);
 
 				c.startPayment(Checkout.PayingState.Credit);
@@ -150,7 +150,7 @@ public class StartPaymentTest extends BaseTest {
 
 				// scan some items then check if payment process can be successfully started
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area
 				try {
@@ -199,7 +199,7 @@ public class StartPaymentTest extends BaseTest {
 
 				// scan some items then check if payment process can be successfully started
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -242,7 +242,7 @@ public class StartPaymentTest extends BaseTest {
 			try {
 				Checkout c = makeNewDefaultCheckout();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				c.addItemToBaggingArea(item);
 
@@ -250,7 +250,7 @@ public class StartPaymentTest extends BaseTest {
 
 				BigDecimal expected = new BigDecimal(12345).divide(new BigDecimal(100));
 				multiTestAssertEquals(expected, c.getBalance());
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//balance shouldn't change
 				multiTestAssertEquals(expected, c.getBalance());
@@ -275,7 +275,7 @@ public class StartPaymentTest extends BaseTest {
 			Checkout c = makeNewDefaultCheckout();
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 			} catch (CheckoutException e1) {
 				fail();
 				continue;
@@ -296,7 +296,7 @@ public class StartPaymentTest extends BaseTest {
 			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 323);
 
 			try {
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 			} catch (CheckoutException e1) {
 				fail();
 				continue;
@@ -336,10 +336,10 @@ public class StartPaymentTest extends BaseTest {
 				Checkout c = makeNewDefaultCheckout();
 				//forget to add one of the items
 					BarcodedItem item = new BarcodedItem(new Barcode("987654321"), 98);
-					c.scanItemUntilSuccessful(item);
+					c.scanItem(item);
 					c.addItemToBaggingArea(item);
 					item = new BarcodedItem(new Barcode("12345"), 123);
-					c.scanItemUntilSuccessful(item);
+					c.scanItem(item);
 				try {
 					c.startPayment(PayingState.Debit);
 				} catch (CheckoutException e) {
@@ -365,7 +365,7 @@ public class StartPaymentTest extends BaseTest {
 				Checkout c = makeNewDefaultCheckout();
 				//forget to add one of the items
 				BarcodedItem item = new BarcodedItem(new Barcode("987654321"), 105);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Debit);
 				multiTestAssertEquals(true, c.isPaying());

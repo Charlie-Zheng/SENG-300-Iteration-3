@@ -38,12 +38,15 @@ public class CheckoutTest extends BaseTest {
 	 */
 	@Test
 	public void testCheckoutDefault() {
-		for (int i = 0; i < REPEAT; i++) {
-			// test the default checkout being used for other tests
-			makeNewDefaultCheckout();
-		}
+		makeNewDefaultCheckout();
 	}
-
+	/**
+	 * Creates default checkout, and expects it to be created successfully.
+	 */
+	@Test
+	public void testCheckoutReset() {
+		c.reset();
+	}
 	/**
 	 * Tests passing a null self checkout station in and should throw
 	 * SimulationException.
@@ -60,8 +63,5 @@ public class CheckoutTest extends BaseTest {
 		}
 
 	}
-
-
-	
 
 }

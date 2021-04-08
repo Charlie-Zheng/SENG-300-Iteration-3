@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public class Checkout {
 	private boolean paidCash;
 	private double expectedWeightOnBaggingArea;
 	private ArrayList<ReceiptItem> productsAdded; //Wanna keep track of what was scanned
-	private ArrayList<Item> itemsAdded; //keep track of items added so they can be removed
+	private ArrayList<Item> itemsAdded = new ArrayList<Item>(); //keep track of items added so they can be removed
 	private String loggedInMemberName;
 	private String loggedInMemberNumber;
 	private CheckoutState state;
@@ -83,7 +84,7 @@ public class Checkout {
 		if (checkoutStation == null) {
 			throw new SimulationException(new NullPointerException("Argument may not be null."));
 		}
-		plasticBags = new BarcodedProduct(null, "Plastic Bag", pricePerPlasticBag);
+		plasticBags = new BarcodedProduct(new Barcode("123"), "Plastic Bag", pricePerPlasticBag);
 		this.checkoutStation = checkoutStation;
 
 		BarcodeScannerUpdateListener scannerListener = new BarcodeScannerUpdateListener(this);
@@ -110,14 +111,60 @@ public class Checkout {
 		MembershipCardListener membershipListener = new MembershipCardListener(this);
 		checkoutStation.cardReader.register(membershipListener);
 
-		reset();
+		currentBalance = new BigDecimal(0);
+		customerBag = false;
+		paidCash = false;
+		expectedWeightOnBaggingArea = 0;
+		productsAdded = new ArrayList<ReceiptItem>(); //Wanna keep track of what was scanned
+		itemsAdded = new ArrayList<Item>(); //keep track of items added so they can be removed
+		loggedInMemberName = null;
+		loggedInMemberNumber = null;
+		state = CheckoutState.Scanning;
+		weightOnBaggingArea = 0;
+		weightOnScanScale = 0;
 
 	}
 
 	/**
-	 * Resets the checkout to the initial state.
+	 * Resets the checkout to the initial state. Intended to be used only for testing. Simulates a person unloading everything, then loading anything needed.
 	 */
 	public void reset() {
+		removePurchasedItemFromBaggingArea();
+		checkoutStation.banknoteInput.removeDanglingBanknote();
+		checkoutStation.banknoteStorage.unload();
+		checkoutStation.cardReader.remove();
+		checkoutStation.coinTray.collectCoins();
+		checkoutStation.coinStorage.unload();
+		Currency cad = checkoutStation.coinValidator.currency;
+		
+		for (Integer value : checkoutStation.banknoteDispensers.keySet()) {
+			Banknote[] banknotes = new Banknote[10];
+			for (int i = 0; i < 10; i++) {
+
+				banknotes[i] = new Banknote(value, cad);
+			}
+			try {
+				checkoutStation.banknoteDispensers.get(value).unload();
+				checkoutStation.banknoteDispensers.get(value).load(banknotes);
+			} catch (SimulationException | OverloadException e) {
+				//should not happen
+				e.printStackTrace();
+			}
+		}
+		for (BigDecimal value : checkoutStation.coinDispensers.keySet()) {
+			Coin[] coins = new Coin[10];
+			for (int i = 0; i < 10; i++) {
+				coins[i] = new Coin(value, cad);
+			}
+			try {
+				checkoutStation.coinDispensers.get(value).unload();
+				checkoutStation.coinDispensers.get(value).load(coins);
+			} catch (SimulationException | OverloadException e) {
+				//should not happen
+				e.printStackTrace();
+			}
+		}
+
 		currentBalance = new BigDecimal(0);
 		customerBag = false;
 		paidCash = false;
@@ -130,6 +177,7 @@ public class Checkout {
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
 		bankNoteOutputListener.reset();
+
 	}
 
 	/**
@@ -222,7 +270,8 @@ public class Checkout {
 				state = CheckoutState.Scanning;
 			} else {
 				throw new CheckoutException("Weight on bagging area is incorrect (greater than " + WEIGHT_TOLERANCE
-						+ " deviation from expected weight)");
+						+ " deviation from expected weight).\n\tExpected: " + expectedWeightOnBaggingArea + "\tActual: "
+						+ getWeightOnBaggingArea());
 			}
 		}
 	}
@@ -573,7 +622,6 @@ public class Checkout {
 			throw new CheckoutException("Card machine not ready. Is it initialized?");
 
 		CardError e = cardPayment.insert(card, pin);
-
 		// true if there are errors
 		if (e != null) {
 			switch (e) {
@@ -595,6 +643,14 @@ public class Checkout {
 			currentBalance = new BigDecimal("0.00");
 			state = CheckoutState.PrintingReceipt;
 		}
+
+	}
+
+	/**
+	 * Removes the previously inserted card
+	 */
+	public void removeCard() {
+		checkoutStation.cardReader.remove();
 	}
 
 	/**
@@ -827,32 +883,6 @@ public class Checkout {
 		}
 	}
 
-	/**
-	 * Scan an item. If in the scanning state and not paused, the unit price of the
-	 * product is added to the balance. If paused, throws a CheckoutException,
-	 * otherwise nothing happens
-	 * 
-	 * @param item
-	 *            The item to scan
-	 * @throws CheckoutException
-	 *             if previously scanned items have not been added to the bagging
-	 *             area
-	 */
-	public void scanItemUntilSuccessful(Item item) throws CheckoutException {
-		if (isScanning()) {
-			int initialSize = productsAdded.size();
-			while (productsAdded.size() == initialSize) {
-				checkoutStation.mainScanner.scan(item);
-			}
-			if (Math.abs(getWeightOnBaggingArea() - expectedWeightOnBaggingArea) <= WEIGHT_TOLERANCE) {
-				state = CheckoutState.Scanning;
-			} else {
-				state = CheckoutState.Paused;
-			}
-		} else if (isPaused()) {
-			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
-		}
-	}
 
 	/**
 	 * @return the pricePerPlasticBag
