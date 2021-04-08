@@ -402,6 +402,15 @@ public class Checkout {
 		return currentBalance;
 	}
 
+	/**
+	 * Returns a list of items added, as they are stored on the receipt.
+	 * 
+	 * @return
+	 */
+	public ArrayList<ReceiptItem> getProductsAdded() {
+		return new ArrayList<ReceiptItem>(productsAdded);
+	}
+
 	public List<Banknote> getChangeFromBanknoteSlots() {
 		List<Banknote> banknotes = new ArrayList<Banknote>();
 		Banknote banknote;
@@ -859,15 +868,6 @@ public class Checkout {
 	public static void setPricePerPlasticBag(BigDecimal pricePerPlasticBag) {
 		Checkout.pricePerPlasticBag = pricePerPlasticBag;
 		plasticBags = new BarcodedProduct(null, "Plastic Bag", pricePerPlasticBag);
-	}
-
-	/**
-	 * Sets the card issuer
-	 * 
-	 * @param issuer
-	 */
-	public void setCardIssuer(CardIssuer issuer) {
-		cardIssuer = issuer;
 	}
 
 	/**

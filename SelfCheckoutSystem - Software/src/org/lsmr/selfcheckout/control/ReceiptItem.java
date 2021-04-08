@@ -14,23 +14,44 @@ import org.lsmr.selfcheckout.products.Product;
  * @date Apr. 6; 2021
  */
 public class ReceiptItem {
+	/**
+	 * The product this receipt item represents
+	 */
 	public final Product product;
+
+	/**
+	 * The total price of the product
+	 */
 	public final BigDecimal totalPrice;
+	/**
+	 * If the product is sold by weight, the weight in grams, if the product is sold
+	 * by unit, the number of units
+	 */
 	public final double weightInGrams;
+	/**
+	 * If the product is sold by weight, the price per kilogram, if the product is
+	 * sold by unit, the price per unit
+	 */
 	public final BigDecimal pricePerKilogram;
 
 	/**
 	 * @param product
+	 *            The product this receipt item represents
 	 * @param totalPrice
-	 * @param weightInGrams
-	 * @param pricePerKilogram
+	 *            The total price of the product
+	 * @param number
+	 *            If the product is sold by weight, the weight in grams, if the
+	 *            product is sold by unit, the number of units
+	 * @param pricePerUnit
+	 *            If the product is sold by weight, the price per kilogram, if the
+	 *            product is sold by unit, the price per unit
 	 */
-	public ReceiptItem(Product product, BigDecimal totalPrice, double weightInGrams, BigDecimal pricePerKilogram) {
+	public ReceiptItem(Product product, BigDecimal totalPrice, double number, BigDecimal pricePerUnit) {
 		super();
 		this.product = product;
 		this.totalPrice = totalPrice;
-		this.weightInGrams = weightInGrams;
-		this.pricePerKilogram = pricePerKilogram;
+		this.weightInGrams = number;
+		this.pricePerKilogram = pricePerUnit;
 	}
 
 	@Override
