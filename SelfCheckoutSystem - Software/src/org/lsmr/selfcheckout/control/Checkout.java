@@ -59,31 +59,30 @@ public class Checkout {
 		Cash, Credit, Debit, Gift
 	};
 
-	private BanknoteDispenserSlotListener bankNoteOutputListener;
-	private CardIssuer cardIssuer;
-	private CardPayment cardPayment;
-	private SelfCheckoutStation checkoutStation;
-	private BigDecimal currentBalance;
+	private final BanknoteDispenserSlotListener bankNoteOutputListener;
+	private final CardPayment cardPayment;
+	private final SelfCheckoutStation checkoutStation;
+	private final GiveChange giveChange;
 	private final double WEIGHT_TOLERANCE = 10;
-	private boolean customerBag = false;
-	private boolean paidCash = false;
-	private double expectedWeightOnBaggingArea = 0;
-	private GiveChange giveChange;
-	private ArrayList<ReceiptItem> productsAdded = new ArrayList<ReceiptItem>(); //Wanna keep track of what was scanned
-	private ArrayList<Item> itemsAdded = new ArrayList<Item>(); //keep track of items added so they can be removed
-	private String loggedInMemberName = null;
-	private String loggedInMemberNumber = null;
-	private CheckoutState state = CheckoutState.Scanning;
-	private double weightOnBaggingArea = 0;
-	private double weightOnScanScale = 0;
 	private static BigDecimal pricePerPlasticBag = new BigDecimal("0.05");
+	private static BarcodedProduct plasticBags;
+
+	private BigDecimal currentBalance;
+	private boolean customerBag;
+	private boolean paidCash;
+	private double expectedWeightOnBaggingArea;
+	private ArrayList<ReceiptItem> productsAdded; //Wanna keep track of what was scanned
+	private ArrayList<Item> itemsAdded; //keep track of items added so they can be removed
+	private String loggedInMemberName;
+	private String loggedInMemberNumber;
+	private CheckoutState state;
+	private double weightOnBaggingArea;
+	private double weightOnScanScale;
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
 			throw new SimulationException(new NullPointerException("Argument may not be null."));
 		}
-		weightOnBaggingArea = 0;
-		currentBalance = new BigDecimal(0);
 		plasticBags = new BarcodedProduct(null, "Plastic Bag", pricePerPlasticBag);
 		this.checkoutStation = checkoutStation;
 
@@ -111,6 +110,26 @@ public class Checkout {
 		MembershipCardListener membershipListener = new MembershipCardListener(this);
 		checkoutStation.cardReader.register(membershipListener);
 
+		reset();
+
+	}
+
+	/**
+	 * Resets the checkout to the initial state.
+	 */
+	public void reset() {
+		currentBalance = new BigDecimal(0);
+		customerBag = false;
+		paidCash = false;
+		expectedWeightOnBaggingArea = 0;
+		productsAdded = new ArrayList<ReceiptItem>(); //Wanna keep track of what was scanned
+		itemsAdded = new ArrayList<Item>(); //keep track of items added so they can be removed
+		loggedInMemberName = null;
+		loggedInMemberNumber = null;
+		state = CheckoutState.Scanning;
+		weightOnBaggingArea = 0;
+		weightOnScanScale = 0;
+		bankNoteOutputListener.reset();
 	}
 
 	/**
@@ -146,8 +165,6 @@ public class Checkout {
 	protected void addBarcodedProductToList(BarcodedProduct p) {
 		productsAdded.add(new ReceiptItem(p, p.getPrice(), Double.NaN, null));
 	}
-
-	private static BarcodedProduct plasticBags;
 
 	protected void addBagsToList(BigDecimal totalPrice, int number) {
 		productsAdded.add(new ReceiptItem(plasticBags, totalPrice, number, pricePerPlasticBag));
@@ -711,6 +728,41 @@ public class Checkout {
 		} else {
 			throw new CheckoutException("Cannot pay with coin because the user has finished paying");
 		}
+	}
+
+	/**
+	 * Prints receipt and gets it ready for removal. Call removeReceipt to get the
+	 * actual receipt.
+	 * 
+	 * @throws CheckoutException
+	 */
+	public void printReceipt() throws CheckoutException {
+		if (state != CheckoutState.PrintingReceipt) {
+			for (int i = 0; i < productsAdded.size(); i++) {
+				if (i != 0) {
+					checkoutStation.printer.print('\n');
+				}
+				String itemOnReceipt = productsAdded.get(i).toString();
+				for (char c : itemOnReceipt.toCharArray()) {
+					checkoutStation.printer.print(c);
+				}
+			}
+			checkoutStation.printer.cutPaper();
+		} else {
+			throw new CheckoutException("Not in print receipt state");
+		}
+
+	}
+
+	/**
+	 * Returns a string representation of the receipt, if possible. If the receipt
+	 * cannot be removed, returns null. If other customers forgot to remove their
+	 * receipt, this receipt could include that receipt too.
+	 * 
+	 * @return The receipt if it has been cut; otherwise, null
+	 */
+	public String removeReceipt() {
+		return checkoutStation.printer.removeReceipt();
 	}
 
 	/**
