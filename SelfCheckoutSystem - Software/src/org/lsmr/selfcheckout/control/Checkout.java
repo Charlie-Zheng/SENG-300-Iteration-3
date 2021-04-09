@@ -495,7 +495,7 @@ public class Checkout {
 			expectedWeightOnBaggingArea -= i.weightInGrams;
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -1145,11 +1145,8 @@ public class Checkout {
 	 * 
 	 * @param coins
 	 *            The coins to be added. Any unloaded coins will be returned.
-	 * @throws CheckoutException
-	 *             Coin inserted was not real, dispenser was overloaded or if the
-	 *             dispenser was disabled
 	 */
-	public List<Coin> refillCoinDispenser(List<Coin> coins) throws CheckoutException {
+	public List<Coin> refillCoinDispenser(List<Coin> coins) {
 		List<Coin> unloaded = new ArrayList<Coin>();
 
 		for (Coin c : coins) {
@@ -1168,12 +1165,12 @@ public class Checkout {
 	}
 
 	/**
-	 * Attendant refills the banknote dispenser
+	 * Attendant refills the banknote dispenser with a list of banknotes. * @param
+	 * notes The notes to be added. Any unloaded notes will be returned.
 	 * 
-	 * @throws CheckoutException
-	 *             Banknote inserted was not real or the dispenser was overloaded
+	 * @return any unloaded notes
 	 */
-	public List<Banknote> refillBanknoteDispenser(List<Banknote> notes) throws CheckoutException {
+	public List<Banknote> refillBanknoteDispenser(List<Banknote> notes) {
 		List<Banknote> unloaded = new ArrayList<Banknote>();
 
 		for (Banknote c : notes) {
