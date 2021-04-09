@@ -33,6 +33,9 @@ public class GUI implements ActionListener{
 	
 	private JFrame frame;
 	private ProductTableModel tableModel;
+	private JButton checkoutButton;
+	private JButton key;
+	private JButton look;
 	//private JPanel keyPadPanel;
 		
 	public GUI() {
@@ -84,7 +87,7 @@ public class GUI implements ActionListener{
 		
 		// Checkout button
 		final Dimension buttonSize = new Dimension(150, 40); // for custom checkout button size
-		JButton checkoutButton = new JButton("Finish & Pay");
+		checkoutButton = new JButton("Finish & Pay");
 		checkoutButton.setSize(buttonSize);
 		checkoutButton.setPreferredSize(buttonSize);
 		checkoutButton.setMinimumSize(buttonSize);
@@ -92,15 +95,15 @@ public class GUI implements ActionListener{
 		checkoutButton.addActionListener(this); 
 		
 		// jpanel with gridlayout row: 1, col: 2, then add jpanel to buttonLayout
-		JButton key = new JButton("Key In Code");
-		//key.addActionListener(this);
+		key = new JButton("Key In Code");
+		key.addActionListener(this);
 		buttonLayout.add(key);
 		key.setBackground(Color.GREEN);
 		buttonLayout.add(Box.createHorizontalStrut(10)); //makes a space between the panes
 		buttonLayout.add(newSpacing(1, 20));
-		JButton look = new JButton("Look Up Item");
+		look = new JButton("Look Up Item");
 		buttonLayout.add(look);
-		//look.addActionListener(this);
+		look.addActionListener(this);
 		buttonLayout.add(newSpacing(1, 20));
 		JLabel balancePrintOut = new JLabel();
 		balancePrintOut.setText("Total: $0.00");
@@ -214,6 +217,7 @@ public class GUI implements ActionListener{
 		
 		//tableModel.setProductScannedList(scannedProducts);
 	// ***************************** Key In Code **********************************//	
+		if(arg0.getSource() == key) {
 		JFrame keyFrame = new JFrame();
 		
 		JPanel keyPadPanel = new JPanel();
@@ -245,10 +249,11 @@ public class GUI implements ActionListener{
 		//int width = screenSize.width;
 		//frame.setSize(width, height);
 		keyFrame.pack();
-	//	frame.setVisible(fale);
-		keyFrame.setVisible(false);
+	//	frame.setVisible(false);
+		keyFrame.setVisible(true);
+		}
 // ***************************** Look Up Item ********************************//		
-		
+		else if(arg0.getSource() == look) {
 		JFrame lookUpFrame = new JFrame();
 		
 		JTextArea codeInput = new JTextArea();
@@ -318,15 +323,15 @@ public class GUI implements ActionListener{
 		//frame.setSize(width, height);
 		lookUpFrame.pack();
 	//	frame.setVisible(false);
-		lookUpFrame.setVisible(false);
-		
+		lookUpFrame.setVisible(true);
+		}
 // ******************************* Finish & Pay ********************************//
-		
+		else if(arg0.getSource() == checkoutButton) {
 		JFrame payFrame = new JFrame();
 		
 		JPanel payPanel = new JPanel();
 		payPanel.setBorder(BorderFactory.createEmptyBorder(100, 100, 100, 100));
-		lookUpPanel.setLayout(new GridLayout(0, 3, 50, 50));
+		payPanel.setLayout(new GridLayout(0, 3, 50, 50));
 		
 		final Dimension buttonSize1 = new Dimension(150, 150); // for custom checkout button size
 
@@ -354,7 +359,7 @@ public class GUI implements ActionListener{
 	//	frame.setVisible(false);
 		payFrame.setVisible(true);
 		
-		
+		}
 	}
 
 }
