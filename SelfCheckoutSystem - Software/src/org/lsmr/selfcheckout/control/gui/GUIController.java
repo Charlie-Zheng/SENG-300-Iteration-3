@@ -7,13 +7,13 @@ import org.lsmr.selfcheckout.control.gui.states.BuyingState;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
 import org.lsmr.selfcheckout.control.gui.states.ReducedState;
 
-public class MainController extends StateHandler<GUIState> {
+public class GUIController extends StateHandler<GUIState> {
 	
 	private JFrame frame;
 	private GUIState activeState;
 	
 	
-	public MainController(JFrame frame) {
+	public GUIController(JFrame frame) {
 		this.frame = frame;
 		setState(new BuyingState());
 	}

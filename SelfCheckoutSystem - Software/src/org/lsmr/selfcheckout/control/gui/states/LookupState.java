@@ -76,11 +76,11 @@ public class LookupState implements GUIState {
 		lookUpPanel.add(new JButton("N"));
 		lookUpPanel.add(new JButton("M"));
 		lookUpPanel.add(new JButton("Back"));
-		lookUpPanel.setLayout(new GridLayout(0, 3, 50, 50));
 		
 		
 		
 		inputPanel.add(codeInput);
+		inputPanel.add(lookUpPanel);
 		codeInput.setBackground(Color.WHITE);
 		codeInput.setForeground(Color.WHITE);
 		inputPanel.setBackground(Color.BLUE);

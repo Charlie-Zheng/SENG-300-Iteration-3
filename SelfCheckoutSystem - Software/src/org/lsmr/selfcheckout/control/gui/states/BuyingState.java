@@ -26,6 +26,9 @@ import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StringStateData;
 
+/**
+ * The state that displays the checkout screen
+ */
 public class BuyingState implements GUIState, ActionListener{
 	
 	private StateHandler<GUIState> stateController;
@@ -205,9 +208,4 @@ public class BuyingState implements GUIState, ActionListener{
 			stateController.setState(new LookupState());
 		}
 	}
-
-	public void updateScannedList(ArrayList<ReceiptItem> list) {
-		tableModel.setProductScannedList(list);
-	}
-
 }

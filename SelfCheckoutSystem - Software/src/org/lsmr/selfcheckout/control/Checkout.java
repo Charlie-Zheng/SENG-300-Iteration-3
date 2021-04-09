@@ -20,7 +20,7 @@ import org.lsmr.selfcheckout.Item;
 import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.CardPayment.CardError;
 import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
-import org.lsmr.selfcheckout.control.gui.MainController;
+import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
@@ -88,7 +88,7 @@ public class Checkout {
 	private CheckoutState state;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
-	private MainController guiController;
+	private GUIController guiController;
 	
 	private StateUpdateListener guiUpdateListener = new StateUpdateListener() {
 
@@ -132,7 +132,7 @@ public class Checkout {
 		
 		
 		
-		guiController = new MainController(checkoutStation.screen.getFrame());		
+		guiController = new GUIController(checkoutStation.screen.getFrame());		
 		guiController.addStateUpdateListener(guiUpdateListener); // so the checkout station can know of any GUI updates
 		
 		
