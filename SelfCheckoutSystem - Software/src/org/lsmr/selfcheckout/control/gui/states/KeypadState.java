@@ -147,12 +147,12 @@ public class KeypadState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		JButton button = (JButton) e.getSource();
 		// The go back button takes user back to buying screen
-		if(e.getSource() == goBack) {
+		if(button == goBack) {
 			stateController.setState(new BuyingState());
 			
 		} else {
-			JButton button = (JButton) e.getSource();
 			String buttonText = button.getText();
 		
 			// Takes the text of the buttons to make a decision of what action to perform
