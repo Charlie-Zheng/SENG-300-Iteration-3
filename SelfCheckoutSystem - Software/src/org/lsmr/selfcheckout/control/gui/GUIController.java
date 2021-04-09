@@ -15,7 +15,6 @@ public class GUIController extends StateHandler<GUIState> {
 	
 	public GUIController(JFrame frame) {
 		this.frame = frame;
-		setState(new BuyingState());
 	}
 
 	@Override

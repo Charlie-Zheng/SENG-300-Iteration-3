@@ -48,6 +48,12 @@ public class BuyingState implements GUIState, ActionListener{
 			String barcode = (String) reducedState.getData();
 			stateController.notifyListeners(new StringStateData(barcode));
 		}
+		
+		
+		
+		if (reducedState instanceof BaseReducedState) {
+			System.out.println("Counter received is: " + reducedState.getData());
+		}
 	}
 
 	@Override
@@ -204,6 +210,7 @@ public class BuyingState implements GUIState, ActionListener{
 		JComponent view = (JComponent) event.getSource();
 		if (view == key) {
 			stateController.setState(new KeypadState());
+			stateController.setState(new RedState());
 		} else if (view == look) {
 			stateController.setState(new LookupState());
 		}

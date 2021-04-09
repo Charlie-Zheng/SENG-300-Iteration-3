@@ -24,6 +24,7 @@ import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
+import org.lsmr.selfcheckout.control.gui.states.BuyingState;
 import org.lsmr.selfcheckout.devices.BanknoteDispenser;
 import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.DisabledException;
@@ -134,7 +135,7 @@ public class Checkout {
 		
 		guiController = new GUIController(checkoutStation.screen.getFrame());		
 		guiController.addStateUpdateListener(guiUpdateListener); // so the checkout station can know of any GUI updates
-		
+		guiController.setState(new BuyingState());
 		
 
 		currentBalance = new BigDecimal(0);
