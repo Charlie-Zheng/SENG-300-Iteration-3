@@ -37,6 +37,7 @@ public class BuyingState implements GUIState, ActionListener{
 	
 	private JButton key;
 	private JButton look;
+	private JButton checkoutButton;
 	
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
@@ -90,7 +91,7 @@ public class BuyingState implements GUIState, ActionListener{
 		
 		// Checkout button
 		final Dimension buttonSize = new Dimension(150, 40); // for custom checkout button size
-		JButton checkoutButton = new JButton("Finish & Pay");
+		checkoutButton = new JButton("Finish & Pay");
 		checkoutButton.setSize(buttonSize);
 		checkoutButton.setPreferredSize(buttonSize);
 		checkoutButton.setMinimumSize(buttonSize);
@@ -206,6 +207,8 @@ public class BuyingState implements GUIState, ActionListener{
 			stateController.setState(new KeypadState());
 		} else if (view == look) {
 			stateController.setState(new LookupState());
+		} else if(view == checkoutButton) {
+			stateController.setState(new PurchasingState());
 		}
 	}
 }
