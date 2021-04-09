@@ -1,0 +1,75 @@
+Diagram Meeting 03 (4 PM)
+<April 9, 2021>
+
+Attendence:
+	John
+	Mushfiq
+
+Discussed:
+	
+	Just assigned the other use case partitions to other members of the team
+	and made sure they were informed of our plans to finish this project
+	
+Use case partitioning:
+
+	//Payment Group
+	Customer pays with a credit card
+	Customer pays with a debit card
+	Customer pays with a coin
+	Customer pays with a banknote
+	Customer pays with gift card
+	Customer receives change
+	
+	//Item placement group
+	Customer places item in bagging area
+	Customer fails to place item in bagging area
+	Customer finishes adding items
+	Customer returns to adding items
+	Customer removes purchased items from bagging area
+	
+	//Item bagging
+	Customer adds their own bag to the bagging area
+	Customer does not want to bag a scanned item
+	Customer enters number of plastic bags used
+	
+	//Item scanning
+	Customer scans an item
+	Customer looks up a product
+	Customer enters PLU code for a product
+	
+	//Membership card usage
+	Customer enteres their membership card information
+	Customer scans their membership card
+	
+	//Station
+	Station detects that the weight in the bagging area does not conform to expectations
+	Station detects that the paper in a receipt printer is low
+	Station detects that the ink in a receipt printer is low
+	
+	//Attendent helps
+	Attendant approves a weight discrepancy
+	Attendant removes product from purchases
+	Attendant looks up a product
+	
+	//Attendant maintenance
+	Attendant adds paper to receipt printer
+	Attendant adds ink to receipt printer
+	Attendant blocks a station
+	Attendant empties the coin storage unit
+	Attendant empties the banknote storage unit
+	Attendant refills the coin dispenser
+	Attendant refills the banknote dispenser
+	Attendant logs in to their control console
+	Attendant logs out from their control console
+	Attendant starts up a station
+	Attendant shuts down a station
+
+Assignments:
+
+	Xingrui		- Payment group and Attendant Helps customer
+	John		- Item Placement and Attendent Maintenance
+	Mushfiq		- Scans membership card and item (Nothing changed, just added more use cases)
+	Abeuferris	- Customer adds their own bag and Station
+	
+	Lets get this done by the 12th, so we can record our videos on the 13th and submit the 
+	final video to the group by the same day.
