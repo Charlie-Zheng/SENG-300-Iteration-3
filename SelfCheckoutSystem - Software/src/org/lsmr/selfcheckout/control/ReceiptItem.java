@@ -24,8 +24,7 @@ public class ReceiptItem {
 	 */
 	public final BigDecimal totalPrice;
 	/**
-	 * If the product is sold by weight, the weight in grams, if the product is sold
-	 * by unit, the number of units
+	 * The weight in grams
 	 */
 	public final double weightInGrams;
 	/**
@@ -39,17 +38,17 @@ public class ReceiptItem {
 	 *            The product this receipt item represents
 	 * @param totalPrice
 	 *            The total price of the product
-	 * @param number
-	 *            If the weight in grams
+	 * @param weightInGrams
+	 *            the weight in grams
 	 * @param pricePerUnit
 	 *            If the product is sold by weight, the price per kilogram, if the
 	 *            product is sold by unit, the price per unit
 	 */
-	public ReceiptItem(Product product, BigDecimal totalPrice, double number, BigDecimal pricePerUnit) {
+	public ReceiptItem(Product product, BigDecimal totalPrice, double weightInGrams, BigDecimal pricePerUnit) {
 		super();
 		this.product = product;
 		this.totalPrice = totalPrice;
-		this.weightInGrams = number;
+		this.weightInGrams = weightInGrams;
 		this.pricePerKilogram = pricePerUnit;
 	}
 
