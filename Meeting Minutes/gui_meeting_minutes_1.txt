@@ -1,0 +1,31 @@
+GUI Meeting 01
+<April 5, 2021>
+
+Discussed:
+
+	- How to implement the GUI
+	- Laid out the GUI
+	- How to go about adding the GUI
+	- How to populate the table data
+	- Modelled the architecture of the GUI
+
+Iteration 1 & 2 Use Cases:
+	
+	- Customer scans an item
+	- Customer places item in bagging area
+	- Customer pays with a coin
+	- Customer pays with a banknote
+	- Customer fails to place item in bagging area
+	- Customer scans their membership card
+	- Customer adds their own bag to the bagging area
+	- Customer pays with a credit card
+	- Customer pays with a debit card
+	- Customer receives change
+	- Customer finishes adding items
+
+Assignments:
+
+	- Vianney did all of the set-up
+	- Marilyn to implement more things
+
+Meet April 8, 2021 with group, discuss via messages in the mean time
