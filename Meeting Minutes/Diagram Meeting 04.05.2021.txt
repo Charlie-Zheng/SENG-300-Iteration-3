@@ -1,0 +1,44 @@
+Diagram Meeting 01
+<April 5, 2021>
+
+Discussed:
+	When we get to iteration 3, we'll combine similar use cases together to
+	reduce the number of diagrams that need to be made.
+	
+	Diagrams are based on the Iteration 2 files that Charlie sent. We'll then
+	be dividing the use cases amongst our 4 members, and finishing it by 
+	April 8 (We'll then meet up at that date and compile our diagrams before
+	starting work on Iteration 3 diagram)
+	
+Iteration 1/2 Use cases:
+	
+	//Individuals//
+	Customer scans an item
+	
+	Customer scans their membership card
+	
+	Customer adds their own bag to the bagging area
+	
+	Customer receives change.
+	
+	//Payment group//
+	Customer pays with a credit card
+	Customer pays with a debit card
+	Customer pays with a coin
+	Customer pays with a banknote
+	
+	//Item placement group//
+	Customer places item in bagging area
+	Customer fails to place item in bagging area
+	Customer finishes adding items
+	
+Assignments:
+	Xingrui		-	Payment Group
+	John		-	Item Placement Group
+	Mushfiq		-	(Can pick 2 of the individuals)
+	Abeuferris	-	(Can pick 2 of the individuals)
+	
+	As often as possible, we will be meeting throughout the week to discuss
+	progress and offer aid to other group members. By April 8 we will need to
+	have finished all our diagrams and be ready to make diagrams for the final
+	iteration.
