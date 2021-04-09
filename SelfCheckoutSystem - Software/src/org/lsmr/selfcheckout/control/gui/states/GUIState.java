@@ -13,7 +13,22 @@ public interface GUIState {
 	 * @param reducedState
 	 */
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState);
+	
+	/**
+	 * Called when the Checkout class wants to send data to the state
+	 * @param data
+	 */
 	public void onDataUpdate(StateData<?> data);
+	
+	/**
+	 * Returns the view to put on the JFrame
+	 * @return
+	 */
 	public JPanel getPanel();
+	
+	/**
+	 * Reduces the state to it's bare minimum to give to the next state
+	 * @return the reduced state
+	 */
 	public ReducedState reduce();
 }
