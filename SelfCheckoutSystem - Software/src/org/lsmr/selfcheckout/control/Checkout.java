@@ -222,12 +222,15 @@ public class Checkout {
 		currentBalance = currentBalance.add(pricePerUnit);
 	}
 
-	protected void addBarcodedProductToList(BarcodedProduct p) {
-		productsAdded.add(new ReceiptItem(p, p.getPrice(), Double.NaN, null));
+	protected void addBarcodedProductToList(BarcodedProduct p, double weight) {
+		productsAdded.add(new ReceiptItem(p, p.getPrice(), weight, p.getPrice()));
 	}
 
-	protected void addBagsToList(BigDecimal totalPrice, int number) {
-		productsAdded.add(new ReceiptItem(plasticBags, totalPrice, number, pricePerPlasticBag));
+	protected void addBagsToList(int number) {
+		for (int i = 0; i < number; i++) {
+			productsAdded.add(new ReceiptItem(plasticBags, pricePerPlasticBag, 0, pricePerPlasticBag));
+		}
+
 	}
 
 	protected void addPLUProductToList(PLUCodedProduct p, BigDecimal totalPrice, double weightInGrams,
@@ -483,6 +486,10 @@ public class Checkout {
 
 		if (productsAdded.remove(i)) {
 			currentBalance = currentBalance.subtract(i.totalPrice);
+			if (i.product instanceof BarcodedProduct) {
+				expectedWeightOnBaggingArea -= i.weightInGrams;
+
+			}
 			return true;
 		}
 		return false;
@@ -972,7 +979,7 @@ public class Checkout {
 	 */
 	public static void setPricePerPlasticBag(BigDecimal pricePerPlasticBag) {
 		Checkout.pricePerPlasticBag = pricePerPlasticBag;
-		plasticBags = new BarcodedProduct(null, "Plastic Bag", pricePerPlasticBag);
+		plasticBags = new BarcodedProduct(new Barcode("123"), "Plastic Bag", pricePerPlasticBag);
 	}
 
 	/**

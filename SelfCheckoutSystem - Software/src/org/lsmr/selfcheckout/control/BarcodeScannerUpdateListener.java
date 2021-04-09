@@ -38,12 +38,12 @@ public class BarcodeScannerUpdateListener implements BarcodeScannerListener {
 
 	@Override
 	public void barcodeScanned(BarcodeScanner barcodeScanner, Barcode barcode) {
-		if(ProductDatabases.BARCODED_PRODUCT_DATABASE.containsKey(barcode)) {
+		if (ProductDatabases.BARCODED_PRODUCT_DATABASE.containsKey(barcode)) {
 			BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(barcode);
 			//barcoded products are always per unit
 			checkout.addBalanceUnit(product.getPrice());
 			checkout.addExpectedWeightOnScale(ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(barcode));
-			checkout.addBarcodedProductToList(product);
+			checkout.addBarcodedProductToList(product, ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(barcode));
 		}
 	}
 

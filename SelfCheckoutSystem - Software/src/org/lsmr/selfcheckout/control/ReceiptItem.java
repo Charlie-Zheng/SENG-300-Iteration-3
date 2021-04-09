@@ -40,8 +40,7 @@ public class ReceiptItem {
 	 * @param totalPrice
 	 *            The total price of the product
 	 * @param number
-	 *            If the product is sold by weight, the weight in grams, if the
-	 *            product is sold by unit, the number of units
+	 *            If the weight in grams
 	 * @param pricePerUnit
 	 *            If the product is sold by weight, the price per kilogram, if the
 	 *            product is sold by unit, the price per unit
@@ -79,33 +78,21 @@ public class ReceiptItem {
 		sb.append('.');
 		sb.append(priceInCents % 100);
 
-		if (!Double.isNaN(weightInGrams)) {
+		String weight;
+		if (!product.isPerUnit()) {
 			sb.append('\n');
 			sb.append("    ");
-
-			String weight;
-			if (!product.isPerUnit()) {
-				weight = String.valueOf(weightInGrams / 1000);
-				sb.append(weight);
-				sb.append('g');
-				for (int i = 0; i < space - 5 - weight.length() - 5; i++) {
-					sb.append(' ');
-				}
-				sb.append('$');
-				sb.append(pricePerKilogram);
-				sb.append("/kg");
-			} else {
-				weight = String.valueOf((int) weightInGrams);
-				sb.append(weight);
-				for (int i = 0; i < space - 4 - weight.length() - 15; i++) {
-					sb.append(' ');
-				}
-				sb.append('$');
-				sb.append(pricePerKilogram);
-				sb.append("/unit");
+			weight = String.valueOf(weightInGrams / 1000);
+			sb.append(weight);
+			sb.append('g');
+			for (int i = 0; i < space - 5 - weight.length() - 5; i++) {
+				sb.append(' ');
 			}
-
+			sb.append('$');
+			sb.append(pricePerKilogram);
+			sb.append("/kg");
 		}
+
 		return sb.toString();
 	}
 }
