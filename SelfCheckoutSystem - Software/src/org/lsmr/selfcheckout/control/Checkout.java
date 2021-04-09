@@ -300,14 +300,19 @@ public class Checkout {
 	 */
 	public List<Item> removePurchasedItemFromBaggingArea() {
 		//		checkoutStation.baggingArea
-
+		ArrayList<Item> itemsRemoved = new ArrayList<Item>();
 		for (Item item : itemsAdded) {
-			checkoutStation.baggingArea.remove(item);
+			try {
+				checkoutStation.baggingArea.remove(item);
+				itemsRemoved.add(item);
+			} catch (SimulationException e) {
+
+			}
 		}
 		if (state == CheckoutState.Done) {
 			state = CheckoutState.Scanning;
 		}
-		return new ArrayList<Item>(itemsAdded);
+		return itemsRemoved;
 	}
 
 	/**
@@ -486,12 +491,11 @@ public class Checkout {
 
 		if (productsAdded.remove(i)) {
 			currentBalance = currentBalance.subtract(i.totalPrice);
-			if (i.product instanceof BarcodedProduct) {
-				expectedWeightOnBaggingArea -= i.weightInGrams;
 
-			}
+			expectedWeightOnBaggingArea -= i.weightInGrams;
 			return true;
 		}
+		
 		return false;
 	}
 

@@ -45,7 +45,6 @@ public class ReceiptItem {
 	 *            product is sold by unit, the price per unit
 	 */
 	public ReceiptItem(Product product, BigDecimal totalPrice, double weightInGrams, BigDecimal pricePerUnit) {
-		super();
 		this.product = product;
 		this.totalPrice = totalPrice;
 		this.weightInGrams = weightInGrams;
