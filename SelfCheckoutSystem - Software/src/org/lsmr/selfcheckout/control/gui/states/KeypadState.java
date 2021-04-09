@@ -1,5 +1,6 @@
 package org.lsmr.selfcheckout.control.gui.states;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,48 +14,63 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class KeypadState implements GUIState, ActionListener {
 	
-	StateHandler<GUIState> stateController;
-	JTextField input;
-	String text = "";
+	private StateHandler<GUIState> stateController;
+	private JTextField input;
+	private String text = "";
+	private JButton goBack;
 
+	/*
+	 * 
+	 */
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
 	}
 
+	/*
+	 * 
+	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 *  This sets up all of the widgets to be used on the keypad state screen
+	 */
 	@Override
 	public JPanel getPanel() {
 		final int keypadWidth = 500;
 		Dimension size = new Dimension(keypadWidth, keypadWidth);
 		
+		// main panel components to be added to
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(100, 16, 50, 16));
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		
+		// the text field that will display user input
 		input = new JTextField();
 		input.setMaximumSize(new Dimension(keypadWidth, 50));
 		input.setEditable(false);
 		input.setFont(new Font("Arial", Font.PLAIN, 30));
 		input.setBackground(Color.WHITE);
-		//JPanel inputPanel = new JPanel();
-		//inputPanel.add(input);
-		//inputPanel.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 10));
 		
+		// the keypad that user will enter codes with
 		JPanel keyPadPanel = new JPanel();
 		keyPadPanel.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100)); // for margins
+		
+		// set size of key pad
 		keyPadPanel.setMaximumSize(size);
 		keyPadPanel.setPreferredSize(size);
 		keyPadPanel.setSize(size);
@@ -81,62 +97,89 @@ public class KeypadState implements GUIState, ActionListener {
 			}
 		}
 		
-		//https://www.pikpng.com/downpngs/oxJooi_simpleicons-interface-undo-black-arrow-pointing-to-tanda/
+		// image of black arrow downloaded from below website
+		// https://www.pikpng.com/downpngs/oxJooi_simpleicons-interface-undo-black-arrow-pointing-to-tanda/
 		JPanel goBackPanel = new JPanel();
-		ImageIcon arrow = new ImageIcon("src/org.lsmr.selfcheckout.gui.icons/black arrow.png");
+		ImageIcon arrow = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/black arrow.png");
 		Image img = arrow.getImage() ;  
-		Image newimg = img.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH ) ;  
-		ImageIcon arrowResized = new ImageIcon( newimg );
+		Image newimg = img.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
+		ImageIcon arrowResized = new ImageIcon(newimg);
 
-		JButton goBack = new JButton("Go Back",arrowResized);
-		//goBack.setVerticalTextPosition(SwingConstants.TOP);
+		goBack = new JButton();
+		goBack.setLayout(new BorderLayout()); //so we can add an icon
+		JLabel iconLabel = new JLabel(arrowResized);
+		JLabel back = new JLabel("Go Back", SwingConstants.CENTER);
+		
+		back.setFont(new Font("Arial", Font.BOLD, 30));
+		goBack.add(back, BorderLayout.CENTER);
+		goBack.add(iconLabel, BorderLayout.WEST);
 		goBack.addActionListener(this);
+		
+		// set size of go back button
 		Dimension backSize = new Dimension(300, 75);
 		goBack.setSize(backSize);
 		goBack.setPreferredSize(backSize);
 		goBack.setMinimumSize(backSize);
 		goBack.setMaximumSize(backSize);
-		goBack.setFont(new Font("Arial", Font.PLAIN, 30));
-		goBack.setHorizontalTextPosition(JButton.CENTER);
-		goBack.setVerticalTextPosition(JButton.CENTER);
+		
 		goBackPanel.add(goBack);
 		goBackPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100)); // for margins
 		
 		mainPanel.add(input);
 		mainPanel.add(keyPadPanel);
 		mainPanel.add(goBackPanel);
+		
 		return mainPanel;
 	}
 
+	/**
+	 * This returns only the necessary data needed to be known about the state
+	 */
 	@Override
 	public ReducedState reduce() {
 		return new KeypadReducedState(text);
 	}
 
+
+	/**
+	 * This reacts to button presses
+	 * @param e This is the button that is being pushed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JButton button = (JButton) e.getSource();
-		String buttonText = button.getText();
-		
-		if (Character.isDigit(buttonText.charAt(0))) {
-			text += buttonText;
-			
-		} else if (buttonText.equals("Delete")) {
-			if (text.length() > 0) {
-				text = text.substring(0, text.length()-1);
-			}
-			
-		} else if (buttonText.equals("OK")) {
+		// The go back button takes user back to buying screen
+		if(e.getSource() == goBack) {
 			stateController.setState(new BuyingState());
+			
+		} else {
+			JButton button = (JButton) e.getSource();
+			String buttonText = button.getText();
 		
-		} else if(buttonText.equals("Go Back")) {
-			stateController.setState(new BuyingState());
-		}
+			// Takes the text of the buttons to make a decision of what action to perform
+			if (Character.isDigit(buttonText.charAt(0))) {
+				text += buttonText;
+			
+			} else if (buttonText.equals("Delete")) {
+				if (text.length() > 0) {
+					text = text.substring(0, text.length()-1);
+				}
+				
+			} else if (buttonText.equals("OK")) {
+				// Add an error for if not a valid barcode .. where are we listening to the scale?
+				stateController.setState(new BuyingState());
+		
+			} 
+		} 
 		
 		input.setText(text);
 	}
 }
 
+/**
+ * 
+ * This allows to reduce the state of the key pad state to only the input text
+ *
+ */
 class KeypadReducedState extends ReducedState {
 	
 	private String data;
