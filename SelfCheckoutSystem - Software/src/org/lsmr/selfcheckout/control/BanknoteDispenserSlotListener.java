@@ -21,9 +21,9 @@ import org.lsmr.selfcheckout.devices.listeners.BanknoteSlotListener;
  */
 public class BanknoteDispenserSlotListener implements BanknoteSlotListener {
 
-	private Stack<Integer> numToEmit = new Stack<Integer>();
-	private Checkout checkout;
-	private Map<Integer, BanknoteDispenser> noteDispensers;
+	private final Stack<Integer> numToEmit = new Stack<Integer>();
+	private final Checkout checkout;
+	private final Map<Integer, BanknoteDispenser> noteDispensers;
 	public BanknoteDispenserSlotListener(Checkout c, Map<Integer, BanknoteDispenser> noteDispensers) {
 		checkout = c;
 		this.noteDispensers = noteDispensers;
@@ -39,7 +39,9 @@ public class BanknoteDispenserSlotListener implements BanknoteSlotListener {
 		}
 	
 	}
-
+	protected void reset() {
+		numToEmit.clear();
+	}
 	@Override
 	public void enabled(AbstractDevice<? extends AbstractDeviceListener> device) {
 

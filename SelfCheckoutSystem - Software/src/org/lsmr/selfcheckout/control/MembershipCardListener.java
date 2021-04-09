@@ -11,56 +11,56 @@ import org.lsmr.selfcheckout.devices.listeners.CardReaderListener;
  */
 public class MembershipCardListener implements CardReaderListener {
 
-private Checkout checkout;
+	private Checkout checkout;
+
 	public MembershipCardListener(Checkout checkout) {
 		this.checkout = checkout;
 	}
+
 	@Override
 	public void enabled(AbstractDevice<? extends AbstractDeviceListener> device) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void disabled(AbstractDevice<? extends AbstractDeviceListener> device) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void cardTapped(CardReader reader) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void cardSwiped(CardReader reader) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void cardDataRead(CardReader reader, CardData data) {
 		try {
-			if(data.getType().equals("Membership")) {
-				if(MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.contains(data.getNumber())) {
-					checkout.memberLogIn(data.getCardholder(), data.getNumber());
-				}
+			if (data.getType().equals("Membership")) {
+				checkout.memberLogIn(data.getCardholder(), data.getNumber());
 			}
-		}catch (CheckoutException e) {
-			
+		} catch (CheckoutException e) {
+
 		}
 	}
 
 	@Override
 	public void cardInserted(CardReader reader) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void cardRemoved(CardReader reader) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

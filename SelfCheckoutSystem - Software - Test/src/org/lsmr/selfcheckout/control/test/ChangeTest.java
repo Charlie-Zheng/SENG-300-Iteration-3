@@ -140,10 +140,10 @@ public class ChangeTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				// balance is 3.97
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 				c.startPayment(Checkout.PayingState.Cash);
 
@@ -163,10 +163,10 @@ public class ChangeTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				// balance is 123.45
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 				c.startPayment(Checkout.PayingState.Cash);
 
@@ -195,10 +195,10 @@ public class ChangeTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				// balance is 3.97
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 				c.startPayment(Checkout.PayingState.Cash);
 
@@ -230,10 +230,10 @@ public class ChangeTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				// balance is 3.97
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 				c.startPayment(Checkout.PayingState.Cash);
 
@@ -276,7 +276,7 @@ public class ChangeTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				// balance is 3.97
 
@@ -293,10 +293,10 @@ public class ChangeTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				// balance is 3.97
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 
 				c.emitChange();
@@ -321,10 +321,10 @@ public class ChangeTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				// balance is 3.97
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				c.addItemToBaggingArea(item);
 				
 				c.startPayment(PayingState.Cash);

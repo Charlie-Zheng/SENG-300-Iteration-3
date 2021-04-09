@@ -34,10 +34,10 @@ public class CashPaymentTest extends BaseTest {
 	public void testValidCoin() throws Exception {
 		for (int i = 0; i < REPEAT; i++)
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				//balance is 123.45
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area first
 				try {
@@ -78,7 +78,7 @@ public class CashPaymentTest extends BaseTest {
 	 */
 	@Test(expected = CheckoutException.class)
 	public void testValidCoinButBeforePayment() throws CheckoutException {
-		Checkout c = makeNewDefaultCheckout();
+		c.reset();
 		Currency cad = Currency.getInstance("CAD");
 		Coin coin = new Coin(new BigDecimal(1.0), cad);
 		c.payWithCoin(coin);
@@ -98,10 +98,10 @@ public class CashPaymentTest extends BaseTest {
 	public void testValidCoinButAfterPayment() throws Exception {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				//balance is 3.97
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area first
 				try {
@@ -146,18 +146,18 @@ public class CashPaymentTest extends BaseTest {
 	 */
 	@Test
 	public void testValidCoinButDisabledCoinSlot() throws Exception {
+		Currency cad = Currency.getInstance("CAD");
+		int[] banknoteDenominations = { 5, 10, 20, 50, 100 };
+		BigDecimal[] coinDenominations = { new BigDecimal(0.05), new BigDecimal(0.1), new BigDecimal(0.25),
+				new BigDecimal(1.0), new BigDecimal(2.0) };
+		SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations, 1000, 1);
+		Checkout c = new Checkout(station);
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Currency cad = Currency.getInstance("CAD");
-				int[] banknoteDenominations = { 5, 10, 20, 50, 100 };
-				BigDecimal[] coinDenominations = { new BigDecimal(0.05), new BigDecimal(0.1), new BigDecimal(0.25),
-						new BigDecimal(1.0), new BigDecimal(2.0) };
-				SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations,
-						1000, 1);
-				Checkout c = new Checkout(station);
 
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -202,12 +202,12 @@ public class CashPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				Coin coin = new Coin(new BigDecimal(3), cad);
 
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				// balance is 123.45
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -249,10 +249,10 @@ public class CashPaymentTest extends BaseTest {
 			try {
 				Currency usd = Currency.getInstance("USD");
 
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				// balance is 123.45
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area first
 				try {
@@ -289,10 +289,10 @@ public class CashPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				// balance is 123.45
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -322,7 +322,6 @@ public class CashPaymentTest extends BaseTest {
 				fail();
 			}
 		}
-
 	}
 
 	/**
@@ -338,7 +337,7 @@ public class CashPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				Banknote note = new Banknote(5, cad);
 				c.payWithBanknote(note);
 				fail();
@@ -364,10 +363,10 @@ public class CashPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
 				// balance is 3.97
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				//Has to add item to bagging area first
 				try {
@@ -411,18 +410,18 @@ public class CashPaymentTest extends BaseTest {
 	 */
 	@Test
 	public void testValidBanknoteButDisabledBanknoteInput() throws Exception {
+		Currency cad = Currency.getInstance("CAD");
+		int[] banknoteDenominations = { 5, 10, 20, 50, 100 };
+		BigDecimal[] coinDenominations = { new BigDecimal(0.05), new BigDecimal(0.1), new BigDecimal(0.25),
+				new BigDecimal(1.0), new BigDecimal(2.0) };
+		SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations, 1000, 1);
+
+		Checkout c = new Checkout(station);
 		for (int i = 0; i < REPEAT; i++) {
 			try {
-				Currency cad = Currency.getInstance("CAD");
-				int[] banknoteDenominations = { 5, 10, 20, 50, 100 };
-				BigDecimal[] coinDenominations = { new BigDecimal(0.05), new BigDecimal(0.1), new BigDecimal(0.25),
-						new BigDecimal(1.0), new BigDecimal(2.0) };
-				SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations,
-						1000, 1);
-
-				Checkout c = new Checkout(station);
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -465,9 +464,9 @@ public class CashPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -504,9 +503,9 @@ public class CashPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency usd = Currency.getInstance("USD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 
 				try {
 					c.addItemToBaggingArea(item);
@@ -544,9 +543,9 @@ public class CashPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			try {
 				Currency cad = Currency.getInstance("CAD");
-				Checkout c = makeNewDefaultCheckout();
+				c.reset();
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-				c.scanItemUntilSuccessful(item);
+				c.scanItem(item);
 				try {
 					c.addItemToBaggingArea(item);
 				} catch (OverloadException e) {
