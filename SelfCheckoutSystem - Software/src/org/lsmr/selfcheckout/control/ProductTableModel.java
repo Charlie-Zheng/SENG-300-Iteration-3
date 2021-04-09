@@ -8,19 +8,12 @@ import org.lsmr.selfcheckout.products.BarcodedProduct;
 
 public class ProductTableModel extends AbstractTableModel {
 	
-	private ArrayList<BarcodedProduct> productsAddedList;
-	
-	// TODO: Remove
-	final Object[][] fakeData = new Object[][] {
-		{"Col 1asdfasdf", "Col 2"},
-		{"Col 2-1", "Col 2-2"}
-	};
+	private final ArrayList<ReceiptItem> productsAddedList = new ArrayList<ReceiptItem>();
 	
 
 	@Override
 	public int getRowCount() {
-		return 2;
-		//return productsAddedList.size();
+		return productsAddedList.size();
 	}
 
 	@Override
@@ -30,15 +23,20 @@ public class ProductTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return fakeData[rowIndex][columnIndex];
 		
+		ReceiptItem item = productsAddedList.get(rowIndex);
 		
-//		if (columnIndex == 0) { // return scanned item name
-//			productsAddedList.get(rowIndex).getDescription();
-//		
-//		} else if (columnIndex == 1) { // return cost of scanned item
-//			return productsAddedList.get(rowIndex).getPrice().toString();
-//		}
+		if (columnIndex == 0) { // return scanned item name
+			// error prone here, since ReceiptItem has a Product type instead of BarcodedProduct. we assume the Checkout code
+			// will stay the same (even though realistically it may not).
+			return ((BarcodedProduct) item.product).getDescription();
+		
+		} else if (columnIndex == 1) { // return cost of scanned item
+			return item.totalPrice;
+			
+		} else {
+			throw new RuntimeException("Column index [" + columnIndex + "] not defined! Is the GUI set up properly?");
+		}
 		
 	}
 	
@@ -69,8 +67,9 @@ public class ProductTableModel extends AbstractTableModel {
 	 * 
 	 * @param scannedProducts the new scanned products list
 	 */
-	public void setProductScannedList(ArrayList<BarcodedProduct> scannedProducts) {
-		productsAddedList = scannedProducts;
+	public void setProductScannedList(ArrayList<ReceiptItem> scannedProducts) {
+		productsAddedList.clear();
+		productsAddedList.addAll(scannedProducts);
 		fireTableDataChanged();
 	}
 

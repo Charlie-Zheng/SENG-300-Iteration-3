@@ -20,6 +20,10 @@ import org.lsmr.selfcheckout.Item;
 import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.CardPayment.CardError;
 import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
+import org.lsmr.selfcheckout.control.gui.MainController;
+import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
+import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.devices.BanknoteDispenser;
 import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.DisabledException;
@@ -28,7 +32,6 @@ import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SimulationException;
-import org.lsmr.selfcheckout.external.CardIssuer;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
@@ -85,6 +88,16 @@ public class Checkout {
 	private CheckoutState state;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
+	private MainController guiController;
+	
+	private StateUpdateListener guiUpdateListener = new StateUpdateListener() {
+
+		@Override
+		public void onStateUpdate(StateData<?> data) {
+			System.out.println("Received in checkout: " + data.obtain());
+		}
+		
+	};
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
@@ -116,6 +129,13 @@ public class Checkout {
 		giveChange = new GiveChange(checkoutStation);
 		MembershipCardListener membershipListener = new MembershipCardListener(this);
 		checkoutStation.cardReader.register(membershipListener);
+		
+		
+		
+		guiController = new MainController(checkoutStation.screen.getFrame());		
+		guiController.addStateUpdateListener(guiUpdateListener); // so the checkout station can know of any GUI updates
+		
+		
 
 		currentBalance = new BigDecimal(0);
 		customerBag = false;
@@ -131,6 +151,10 @@ public class Checkout {
 		inkTotal = 0;
 		paperTotal = 0;
 
+	}
+	
+	public void run() {
+		checkoutStation.screen.setVisible(true);
 	}
 
 	/**
@@ -224,6 +248,9 @@ public class Checkout {
 
 	protected void addBarcodedProductToList(BarcodedProduct p, double weight) {
 		productsAdded.add(new ReceiptItem(p, p.getPrice(), weight, p.getPrice()));
+		
+		// imagine if java can be programmed functionally
+		guiController.notifyDataUpdate(new ProductStateData(productsAdded));
 	}
 
 	protected void addBagsToList(int number) {
@@ -1231,5 +1258,4 @@ public class Checkout {
 	public boolean isPaperLow() {
 		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
 	}
-
 }
