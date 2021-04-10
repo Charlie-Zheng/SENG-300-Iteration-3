@@ -21,11 +21,11 @@ import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 public class PurchasingState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
-	JButton goBack;
-	JButton cash;
-	JButton debit;
-	JButton credit;
-	JButton gift;
+	private JButton goBack;
+	private JButton cash;
+	private JButton debit;
+	private JButton credit;
+	private JButton gift;
 	
 
 	public PurchasingState() {
@@ -184,7 +184,7 @@ public class PurchasingState implements GUIState, ActionListener {
 		JLabel iconLabel = new JLabel(arrowResized);
 		JLabel back = new JLabel("Go Back", SwingConstants.CENTER);
 
-		back.setFont(new Font("Arial", Font.BOLD, 30));
+		back.setFont(new Font("Arial", Font.BOLD, 40));
 		goBack.add(back, BorderLayout.CENTER);
 		goBack.add(iconLabel, BorderLayout.WEST);
 		goBack.addActionListener(this);

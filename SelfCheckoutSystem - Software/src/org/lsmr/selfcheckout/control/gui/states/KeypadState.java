@@ -125,7 +125,7 @@ public class KeypadState implements GUIState, ActionListener {
 		JLabel iconLabel = new JLabel(arrowResized);
 		JLabel back = new JLabel("Go Back", SwingConstants.CENTER);
 		
-		back.setFont(new Font("Arial", Font.BOLD, 30));
+		back.setFont(new Font("Arial", Font.BOLD, 36));
 		goBack.add(back, BorderLayout.CENTER);
 		goBack.add(iconLabel, BorderLayout.WEST);
 		goBack.addActionListener(this);
