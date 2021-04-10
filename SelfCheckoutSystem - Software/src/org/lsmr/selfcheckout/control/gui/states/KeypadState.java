@@ -56,8 +56,21 @@ public class KeypadState implements GUIState, ActionListener {
 		
 		// main panel components to be added to
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(100, 16, 50, 16));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 50, 50));
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BorderLayout(200, 0));
+		topPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 10, 50));
+		JLabel topStatement = new JLabel("Key In Item's Code");
+		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
+		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
+		Image coOpImg = coopImg.getImage() ;  
+		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
+		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
+		JLabel coOpLogo = new JLabel(coOpImgResized);
+		topPanel.add(topStatement, BorderLayout.CENTER);
+		topPanel.add(coOpLogo, BorderLayout.EAST);
 		
 		// the text field that will display user input
 		input = new JTextField();
@@ -65,6 +78,8 @@ public class KeypadState implements GUIState, ActionListener {
 		input.setEditable(false);
 		input.setFont(new Font("Arial", Font.PLAIN, 30));
 		input.setBackground(Color.WHITE);
+		//topPanel.add(input, BorderLayout.CENTER);
+		
 		
 		// the keypad that user will enter codes with
 		JPanel keyPadPanel = new JPanel();
@@ -125,6 +140,7 @@ public class KeypadState implements GUIState, ActionListener {
 		goBackPanel.add(goBack);
 		goBackPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100)); // for margins
 		
+		mainPanel.add(topPanel);
 		mainPanel.add(input);
 		mainPanel.add(keyPadPanel);
 		mainPanel.add(goBackPanel);

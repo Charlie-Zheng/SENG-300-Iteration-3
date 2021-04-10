@@ -1,7 +1,6 @@
 package org.lsmr.selfcheckout.control.gui.states;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -33,17 +32,26 @@ public class PurchasingState implements GUIState, ActionListener {
 
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
 
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
 		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public JPanel getPanel() {
 		
@@ -61,10 +69,10 @@ public class PurchasingState implements GUIState, ActionListener {
 		payPanel.setLayout(new GridLayout(0, 4, 20, 20));
 
 
+		// for custom button size
+		final Dimension buttonSize1 = new Dimension(200, 200); 
 
-		final Dimension buttonSize1 = new Dimension(200, 200); // for custom checkout button size
-
-		// image for cash from below website
+		// image for cash downloaded from below website
 		// https://en.wikipedia.org/wiki/Canadian_dollar#/media/File:Canadian_Frontier_Banknotes_faces.png
 		cash = new JButton();
 		ImageIcon cashImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/Canadian_Frontier_Banknotes_faces.png");
@@ -81,9 +89,10 @@ public class PurchasingState implements GUIState, ActionListener {
 		csh.setFont(new Font("Arial", Font.BOLD, 30));
 		cash.add(csh, BorderLayout.SOUTH);
 		cash.add(cashImgLabel, BorderLayout.NORTH);
+		cash.addActionListener(this);
 		payPanel.add(cash);
 
-		// image for debit from website below
+		// image for debit downloaded from website below
 		// https://toppng.com/download-file/6436
 		debit = new JButton();
 		ImageIcon debitImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/interac-yellow-vector-logo.png");
@@ -100,9 +109,10 @@ public class PurchasingState implements GUIState, ActionListener {
 		deb.setFont(new Font("Arial", Font.BOLD, 30));
 		debit.add(deb, BorderLayout.SOUTH);
 		debit.add(debImgLabel, BorderLayout.NORTH);
+		debit.addActionListener(this);
 		payPanel.add(debit);
 
-		// image for credit card below
+		// image for credit card downloaded from website below
 		// https://www.seekpng.com/idown/u2q8t4r5o0r5r5q8_mastercard-clipart-credit-card-visa-and-master-card/
 		credit = new JButton();
 		ImageIcon creditImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/credit-card-logo.png");
@@ -119,9 +129,10 @@ public class PurchasingState implements GUIState, ActionListener {
 		cred.setFont(new Font("Arial", Font.BOLD, 30));
 		credit.add(cred, BorderLayout.SOUTH);
 		credit.add(credImgLabel, BorderLayout.NORTH);
+		credit.addActionListener(this);
 		payPanel.add(credit);
 
-		//gift card
+		// image for gift card downloaded from website below
 		// https://www.google.com/search?q=coop+giftcard+png&tbm=isch&ved=2ahUKEwiNnMz4-PHvAhXAFjQIHdo-AikQ2-cCegQIABAA&oq=coop+giftcard+png&gs_lcp=CgNpbWcQA1DqogtY9LALYKuzC2gAcAB4AIABdogB5QSSAQM4LjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=abFwYM3DCsCt0PEP2v2IyAI&bih=619&biw=1280#imgrc=lQRbSOTnh-SsTM
 		gift = new JButton();
 		ImageIcon giftImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/coop giftcard.png");
@@ -138,14 +149,24 @@ public class PurchasingState implements GUIState, ActionListener {
 		gft.setFont(new Font("Arial", Font.BOLD, 30));
 		gift.add(gft, BorderLayout.SOUTH);
 		gift.add(giftImgLabel, BorderLayout.NORTH);
+		gift.addActionListener(this);
 		payPanel.add(gift);
 
 		// set up statement at top of screen
+		// image for coop logo downloaded from website below
+		// https://www.google.com/search?q=coop+png&tbm=isch&ved=2ahUKEwjC9bTd-PHvAhU8AzQIHSiLAkkQ2-cCegQIABAA&oq=coop+png&gs_lcp=CgNpbWcQAzIECAAQQzICCAAyBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeUM-sA1jPrANg67IDaABwAHgAgAFDiAFDkgEBMZgBAKABAaoBC2d3cy13aXotaW1nwAEB&sclient=img&ei=MLFwYMKdCryG0PEPqJaKyAQ&bih=619&biw=1280#imgrc=EmUG01nblMHYrM
 		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BorderLayout(275, 0));
 		JLabel topStatement = new JLabel("Select Payment Method");
+		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
+		Image coOpImg = coopImg.getImage() ;  
+		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
+		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
+		JLabel coOpLogo = new JLabel(coOpImgResized);
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
 		topPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));
-		topPanel.add(topStatement);
+		topPanel.add(topStatement, BorderLayout.CENTER);
+		topPanel.add(coOpLogo, BorderLayout.EAST);
 
 
 		// set up bottom panel with payment and back button
@@ -192,12 +213,19 @@ public class PurchasingState implements GUIState, ActionListener {
 		return mainPayPanel;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public ReducedState reduce() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * This reacts to button presses
+	 * @param arg0  This is the button that is being pressed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		JButton button = (JButton) arg0.getSource();
