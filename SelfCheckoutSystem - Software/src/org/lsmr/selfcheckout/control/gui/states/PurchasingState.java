@@ -1,6 +1,7 @@
 package org.lsmr.selfcheckout.control.gui.states;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -57,7 +59,8 @@ public class PurchasingState implements GUIState, ActionListener {
 		
 		// set up main panel
 		JPanel mainPayPanel = new JPanel();
-		mainPayPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+		mainPayPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 70, 30));
+		mainPayPanel.setLayout(new BoxLayout(mainPayPanel, BoxLayout.Y_AXIS));
 		
 		// set up payment methods panel
 		JPanel payPanel = new JPanel();
@@ -201,14 +204,22 @@ public class PurchasingState implements GUIState, ActionListener {
 
 		
 		JLabel total = new JLabel();
-		total.setText("Total: $0.00");
+		total.setText("Amount Due: $0.00");
 		total.setFont(new Font("Arial", Font.BOLD, 40));
 		goBackPanel.add(total, BorderLayout.WEST);
 		
+		JLabel paid = new JLabel();
+		JPanel paidPanel = new JPanel();
+		paidPanel.setLayout(new BorderLayout());
+		paidPanel.setBorder(BorderFactory.createEmptyBorder(0, 135, 0, 100));
+		paid.setText("Amount Paid: $0.00");
+		paid.setFont(new Font("Arial", Font.BOLD, 30));
+		paidPanel.add(paid, BorderLayout.WEST);
 
 		mainPayPanel.add(topPanel);
 		mainPayPanel.add(payPanel);
 		mainPayPanel.add(goBackPanel);
+		mainPayPanel.add(paidPanel, BorderLayout.WEST);
 
 		return mainPayPanel;
 	}
@@ -234,15 +245,11 @@ public class PurchasingState implements GUIState, ActionListener {
 			stateController.setState(new BuyingState());
 			
 		} else if(button == cash) {
+			stateController.setState(new CashPaymentState());
 			
-		} else if(button == debit) { // i think we might be able to combine all the cards?
-			
-		} else if(button == credit) {
-			
-		} else if(button == gift) {
-			
-		}
-
+		} else if(button == debit || button == credit || button == gift) { // i think we might be able to combine all the cards?
+			stateController.setState(new CardPaymentState());
+		} 
 	}
 
 }
