@@ -28,7 +28,7 @@ public class PurchasingState implements GUIState, ActionListener {
 	private JButton debit;
 	private JButton credit;
 	private JButton gift;
-	
+
 
 	public PurchasingState() {
 
@@ -56,12 +56,12 @@ public class PurchasingState implements GUIState, ActionListener {
 	 */
 	@Override
 	public JPanel getPanel() {
-		
+
 		// set up main panel
 		JPanel mainPayPanel = new JPanel();
 		mainPayPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 70, 30));
 		mainPayPanel.setLayout(new BoxLayout(mainPayPanel, BoxLayout.Y_AXIS));
-		
+
 		// set up payment methods panel
 		JPanel payPanel = new JPanel();
 		Dimension size = new Dimension(1260, 400);
@@ -202,12 +202,13 @@ public class PurchasingState implements GUIState, ActionListener {
 		goBackPanel.add(goBack, BorderLayout.EAST);
 		goBackPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100)); // for margins
 
-		
+		// amount due panel
 		JLabel total = new JLabel();
 		total.setText("Amount Due: $0.00");
 		total.setFont(new Font("Arial", Font.BOLD, 40));
 		goBackPanel.add(total, BorderLayout.WEST);
-		
+
+		// amount paid panel
 		JLabel paid = new JLabel();
 		JPanel paidPanel = new JPanel();
 		paidPanel.setLayout(new BorderLayout());
@@ -240,14 +241,14 @@ public class PurchasingState implements GUIState, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		JButton button = (JButton) arg0.getSource();
-		
+
 		if(button == goBack) {
 			stateController.setState(new BuyingState());
-			
+
 		} else if(button == cash) {
 			stateController.setState(new CashPaymentState());
-			
-		} else if(button == debit || button == credit || button == gift) { // i think we might be able to combine all the cards?
+
+		} else if(button == debit || button == credit || button == gift) {
 			stateController.setState(new CardPaymentState());
 		} 
 	}

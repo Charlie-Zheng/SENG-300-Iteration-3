@@ -115,7 +115,7 @@ public class BuyingState implements GUIState, ActionListener{
 		Image checkImg = check.getImage() ;  
 		Image newCheckImg = checkImg.getScaledInstance( 75, 75,  java.awt.Image.SCALE_SMOOTH) ;  
 		ImageIcon checkImgResized = new ImageIcon(newCheckImg);
-		
+
 		checkoutButton = new JButton();
 		checkoutButton.setLayout(new BorderLayout());
 		JLabel checkIcon = new JLabel(checkImgResized);
@@ -129,7 +129,7 @@ public class BuyingState implements GUIState, ActionListener{
 		checkoutButton.setPreferredSize(buttonSize);
 		checkoutButton.setMinimumSize(buttonSize);
 		checkoutButton.setMaximumSize(buttonSize);
-		
+
 		checkoutPanel.add(checkoutButton);
 
 		// jpanel with gridlayout row: 1, col: 2, then add jpanel to buttonLayout
@@ -140,7 +140,7 @@ public class BuyingState implements GUIState, ActionListener{
 		Image keyImg = keyPad.getImage() ;  
 		Image newKeyImg = keyImg.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
 		ImageIcon keyImgResized = new ImageIcon(newKeyImg);
-		
+
 		key = new JButton();
 		key.setLayout(new BorderLayout());
 		JLabel keyIcon = new JLabel(keyImgResized);
@@ -157,7 +157,7 @@ public class BuyingState implements GUIState, ActionListener{
 		keyPanel.add(key);
 		buttonLayout.add(keyPanel);
 		buttonLayout.add(newSpacing(1, 20));
-		
+
 		// magnifying glass image downloaded from below website
 		// https://www.cleanpng.com/png-magnifying-glass-light-clip-art-loupe-650531/download-png.html		
 		JPanel lookPanel = new JPanel();
@@ -165,7 +165,7 @@ public class BuyingState implements GUIState, ActionListener{
 		Image lookImg = lookUp.getImage() ;  
 		Image newLookImg = lookImg.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
 		ImageIcon lookImgResized = new ImageIcon(newLookImg);
-		
+
 		look = new JButton();
 		look.setLayout(new BorderLayout());
 		JLabel lookIcon = new JLabel(lookImgResized);
@@ -174,21 +174,21 @@ public class BuyingState implements GUIState, ActionListener{
 		look.add(lookLabel, BorderLayout.CENTER);
 		look.add(lookIcon, BorderLayout.WEST);
 		look.addActionListener(this);
-		
+
 		look.setSize(buttonSize1);
 		look.setPreferredSize(buttonSize1);
 		look.setMinimumSize(buttonSize1);
 		look.setMaximumSize(buttonSize1);
 		lookPanel.add(look);
 		buttonLayout.add(lookPanel);
-		
+
 		buttonLayout.add(newSpacing(1, 70));
 		JLabel balancePrintOut = new JLabel();
 		balancePrintOut.setText("Total: $0.00");
 		balancePrintOut.setFont(new Font("Arial", Font.BOLD, 40));
 		JPanel labelPanel = new JPanel();
 		labelPanel.add(balancePrintOut);
-		
+
 		//balancePrintOut.setText("Total: $" + checkout.getBalance()); //causes error right now
 		buttonLayout.add(labelPanel);
 
@@ -281,6 +281,10 @@ public class BuyingState implements GUIState, ActionListener{
 		if (view == key) {
 			stateController.setState(new KeypadState());
 			//stateController.setState(new RedState());
+			//stateController.setState(new BagItemState());
+			//stateController.setState(new EndState());
+			//stateController.setState(new BlockState());
+			//stateController.setState(new WeightWrongState());
 		} else if (view == look) {
 			stateController.setState(new LookupState());
 		} else if(view == checkoutButton) {

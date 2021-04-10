@@ -1,19 +1,21 @@
 package org.lsmr.selfcheckout.control.gui.states;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
-public class CardPaymentState implements GUIState {
+public class EndState implements GUIState {
 
 	private StateHandler<GUIState> stateController;
 
@@ -36,50 +38,62 @@ public class CardPaymentState implements GUIState {
 	}
 
 	/**
-	 *  This sets up all of the widgets to be used on the keypad state screen
+	 * This sets up all of the widgets for the screen
 	 */
 	@Override
 	public JPanel getPanel() {
 
-		//****** do we want to add something that will pop up that says authorizing please wait?
-
+		// the main panel
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 100, 30));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 100, 50));
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
 		// set up statement at top of screen
 		// image for coop logo downloaded from website below
 		// https://www.google.com/search?q=coop+png&tbm=isch&ved=2ahUKEwjC9bTd-PHvAhU8AzQIHSiLAkkQ2-cCegQIABAA&oq=coop+png&gs_lcp=CgNpbWcQAzIECAAQQzICCAAyBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeUM-sA1jPrANg67IDaABwAHgAgAFDiAFDkgEBMZgBAKABAaoBC2d3cy13aXotaW1nwAEB&sclient=img&ei=MLFwYMKdCryG0PEPqJaKyAQ&bih=619&biw=1280#imgrc=EmUG01nblMHYrM
 		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BorderLayout(275, 0));
-		JLabel topStatement = new JLabel("PIN Pad Entry");
+		topPanel.setLayout(new BorderLayout(250, 0));
+		JLabel topStatement = new JLabel("Take Receipt");
 		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
 		Image coOpImg = coopImg.getImage() ;  
 		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
 		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
 		JLabel coOpLogo = new JLabel(coOpImgResized);
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
-		topPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 30));
+		topPanel.setBorder(BorderFactory.createEmptyBorder(50, 30, 10, 30));
 		topPanel.add(topStatement, BorderLayout.CENTER);
 		topPanel.add(coOpLogo, BorderLayout.EAST);
 
-		// panel with statement to input item's description
+		// panel with statement to place item in bagging area
+		// image of guy carrying groceries downloaded from website below
+		//https://www.clipartmax.com/middle/m2i8d3m2K9m2G6b1_vector-illustration-of-supermarket-grocery-store-shopper-carry-bags-clipart/		
 		JPanel wordPanel = new JPanel();
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 10, 50));
-		JLabel words = new JLabel("Use PIN Pad to complete transaction.");
+		JLabel words = new JLabel("Remove bags and take your receipt.");
 		words.setFont(new Font("Arial", Font.BOLD, 40));
 		wordPanel.add(words);// panel with statement to input item's description
 
-		// lets user know how to cancel payment
-		JPanel wordPanel2 = new JPanel();
-		wordPanel2.setBorder(BorderFactory.createEmptyBorder(0, 50, 200, 50));
-		JLabel words2 = new JLabel("Press \"Cancel\" on PIN Pad to cancel payment.");
-		words2.setFont(new Font("Arial", Font.BOLD, 40));
-		wordPanel2.add(words2);
+		// panel for take items image
+		JPanel removePanel = new JPanel();
+		ImageIcon remImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/guy carrying.png");
+		Image reMImg = remImg.getImage() ;  
+		Image newRemImg = reMImg.getScaledInstance( 350, 250,  java.awt.Image.SCALE_SMOOTH) ;  
+		ImageIcon remImgResized = new ImageIcon(newRemImg);
+		JLabel removeLogo = new JLabel(remImgResized);
+		removePanel.add(removeLogo);
 
-		// amount due panel
+
+		// thank you panel
+		JLabel thanks = new JLabel();
+		thanks.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+		thanks.setText("Thank You For Shopping At Co-op!");
+		thanks.setFont(new Font("Arial", Font.BOLD, 55));
+		JPanel thanksPanel = new JPanel();
+		thanksPanel.add(thanks);
+
+		// change due panel
 		JLabel duePrintOut = new JLabel();
-		duePrintOut.setText("Amount Due: $0.00");
+		duePrintOut.setText("Change Due: $0.00");
 		duePrintOut.setFont(new Font("Arial", Font.BOLD, 40));
 		JPanel duePanel = new JPanel();
 		duePanel.add(duePrintOut);
@@ -91,21 +105,20 @@ public class CardPaymentState implements GUIState {
 		JPanel paidPanel = new JPanel();
 		paidPanel.add(paidPrintOut);
 
+
 		mainPanel.add(topPanel);
 		mainPanel.add(wordPanel);
-		mainPanel.add(wordPanel2);
+		mainPanel.add(removePanel);
+		mainPanel.add(thanksPanel);
 		mainPanel.add(duePanel);
 		mainPanel.add(paidPanel);
 
 		return mainPanel;
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public ReducedState reduce() {
-		// return amount paid??
+		// TODO Auto-generated method stub
 		return null;
 	}
 

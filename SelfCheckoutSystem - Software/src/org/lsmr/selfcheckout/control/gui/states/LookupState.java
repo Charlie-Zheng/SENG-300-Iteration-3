@@ -53,7 +53,7 @@ public class LookupState implements GUIState, ActionListener {
 	 */
 	@Override
 	public JPanel getPanel() {
-		
+
 		final int keypadWidth = 975;
 
 		// main panel components to be added to
@@ -190,7 +190,7 @@ public class LookupState implements GUIState, ActionListener {
 		gridConstraints.gridx = 3;
 		gridConstraints.gridwidth = 4;
 		lookUpPanel.add(space, gridConstraints);
-		
+
 		for (Component button : lookUpPanel.getComponents()) {
 			((JButton) button).addActionListener(this);
 			if(button != delete && button != space) {
@@ -224,7 +224,7 @@ public class LookupState implements GUIState, ActionListener {
 
 
 		//numbers?
-		
+
 		// the panel for the go back button
 		// image of black arrow downloaded from below website
 		// https://www.pikpng.com/downpngs/oxJooi_simpleicons-interface-undo-black-arrow-pointing-to-tanda/
@@ -293,12 +293,12 @@ public class LookupState implements GUIState, ActionListener {
 			} else if(buttonText.equals("OK")) {
 				//add in conditions for if valid? if not add to go back
 				stateController.setState(new BuyingState());
-				
+
 			} else if(buttonText.equals("Delete")) {
 				if (text.length() > 0) {
 					text = text.substring(0, text.length()-1);
 				}
-				
+
 			} else if(buttonText.equals("Space")) {
 				text += " ";
 			}
