@@ -182,7 +182,8 @@ public class KeypadState implements GUIState, ActionListener {
 
 			} else if (buttonText.equals("OK")) {
 				// Add an error for if not a valid barcode .. where are we listening to the scale?
-				stateController.setState(new BuyingState());
+				//stateController.setState(new BuyingState());
+				stateController.setState(new ScaleState());
 
 			} 
 		} 

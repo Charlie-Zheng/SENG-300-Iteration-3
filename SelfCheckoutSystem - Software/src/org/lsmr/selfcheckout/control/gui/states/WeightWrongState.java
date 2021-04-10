@@ -68,9 +68,9 @@ public class WeightWrongState implements GUIState {
 		JPanel wordPanel = new JPanel();
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
 		//if because of too much weight
-		JLabel words = new JLabel("Unexpected item in bagging area.");
+		//JLabel words = new JLabel("Unexpected item in bagging area.");
 		//if because of removed item -- we could also branch to skip bagging?
-		//JLabel words = new JLabel("Please place item back in the bagging area.");
+		JLabel words = new JLabel("Please place item back in the bagging area.");
 		words.setFont(new Font("Arial", Font.BOLD, 40));
 		wordPanel.add(words);// panel with statement to input item's description
 

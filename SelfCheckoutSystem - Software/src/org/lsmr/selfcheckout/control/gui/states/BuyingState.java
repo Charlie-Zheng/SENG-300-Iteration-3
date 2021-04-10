@@ -285,10 +285,11 @@ public class BuyingState implements GUIState, ActionListener{
 			//stateController.setState(new EndState());
 			//stateController.setState(new BlockState());
 			//stateController.setState(new WeightWrongState());
+			//stateController.setState(new StartState());
 		} else if (view == look) {
 			stateController.setState(new LookupState());
 		} else if(view == checkoutButton) {
-			stateController.setState(new PurchasingState());
+			stateController.setState(new BuyBagsState());
 		}
 	}
 }
