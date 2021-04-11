@@ -179,6 +179,14 @@ public class AttendantSystem {
 			// Change state of checkout to OFF? Might need to add a new state for checkout to determine if it is on or not. 
 		}
 	}
+	
+	public void approveDoNotBagLastItem(int stationNum) throws CheckoutException {
+		if(this.state == ConsoleState.LoggedIn) {
+			Checkout station = this.stations.get(stationNum);
+			if(station != null) station.doNotBagLastItem();
+		}
+	}
+	
 }
 
 
