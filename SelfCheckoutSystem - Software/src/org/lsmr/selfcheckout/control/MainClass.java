@@ -32,6 +32,15 @@ public class MainClass {
 		}
 	}
 
+	/**
+	 * Converts a String array of data to a list of Key-Value mappings
+	 * 
+	 * For each data element, data[0] must be the code, data[1] must be the description, and data[2] must
+	 * be the price.
+	 * 
+	 * @param data
+	 * @return
+	 */
 	private static List <Pair<PriceLookupCode, PLUCodedProduct>> pluProductsOf(String[][] data) {
 		// why this works but initializing an array of generic types doesn't, I have no idea.
 		// the underlying implementation of an ArrayList should perform the same thing I did.
@@ -46,9 +55,16 @@ public class MainClass {
 		return products;
 	}
 
+	/**
+	 * Converts a String array of data to a list of Key-Value mappings
+	 * 
+	 * For each data element, data[0] must be the code, data[1] must be the description, and data[2] must
+	 * be the price.
+	 * 
+	 * @param data
+	 * @return
+	 */
 	private static List <Pair<Barcode, BarcodedProduct>> barcodedProductsOf(String[][] data) {
-		// why this works but initializing an array of generic types doesn't, I have no idea.
-		// the underlying implementation of an ArrayList should perform the same thing I did.
 		ArrayList<Pair<Barcode, BarcodedProduct>> products = new ArrayList<Pair<Barcode, BarcodedProduct>>();
 
 		for (String[] row : data) {

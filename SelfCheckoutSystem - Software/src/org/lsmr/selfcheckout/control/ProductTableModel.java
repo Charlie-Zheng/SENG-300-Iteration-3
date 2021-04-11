@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 import org.lsmr.selfcheckout.products.BarcodedProduct;
+import org.lsmr.selfcheckout.products.PLUCodedProduct;
 
 public class ProductTableModel extends AbstractTableModel {
 	
@@ -29,7 +30,13 @@ public class ProductTableModel extends AbstractTableModel {
 		if (columnIndex == 0) { // return scanned item name
 			// error prone here, since ReceiptItem has a Product type instead of BarcodedProduct. we assume the Checkout code
 			// will stay the same (even though realistically it may not).
-			return ((BarcodedProduct) item.product).getDescription();
+			if (item.product instanceof BarcodedProduct) {
+				return ((BarcodedProduct) item.product).getDescription();
+			} else if (item.product instanceof PLUCodedProduct) {
+				return ((PLUCodedProduct) item.product).getDescription();
+			} else {
+				return "No description";
+			}
 		
 		} else if (columnIndex == 1) { // return cost of scanned item
 			return item.totalPrice;

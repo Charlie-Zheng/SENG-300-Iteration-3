@@ -1,20 +1,18 @@
 package org.lsmr.selfcheckout.control.gui.statedata;
 
-import java.util.ArrayList;
+import org.lsmr.selfcheckout.products.Product;
 
-import org.lsmr.selfcheckout.control.ReceiptItem;
+public class ProductStateData implements StateData<Product> {
 
-public class ProductStateData implements StateData<ArrayList<ReceiptItem>> {
-	
-	private ArrayList<ReceiptItem> items;
-	
-	public ProductStateData(ArrayList<ReceiptItem> items) {
-		this.items = items;
+	private Product p;
+
+	public ProductStateData(Product p) {
+		this.p = p;
 	}
 
 	@Override
-	public ArrayList<ReceiptItem> obtain() {
-		return items;
+	public Product obtain() {
+		return p;
 	}
 
 }

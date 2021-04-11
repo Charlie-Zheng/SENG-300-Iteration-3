@@ -28,7 +28,8 @@ import javax.swing.SwingConstants;
 import org.lsmr.selfcheckout.control.ProductTableModel;
 import org.lsmr.selfcheckout.control.ReceiptItem;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
-import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StringStateData;
 
@@ -39,7 +40,7 @@ public class BuyingState implements GUIState, ActionListener{
 
 	private StateHandler<GUIState> stateController;
 
-	private ProductTableModel tableModel;
+	private ProductTableModel tableModel = new ProductTableModel();
 
 	private JButton key;
 	private JButton look;
@@ -51,9 +52,7 @@ public class BuyingState implements GUIState, ActionListener{
 
 		// previous state was keypad
 		if (reducedState instanceof KeypadReducedState) {
-			System.out.println("In");
-			String barcode = (String) reducedState.getData();
-			stateController.notifyListeners(new StringStateData(barcode));
+			stateController.notifyListeners(new ScannedItemsRequestData()); // request a copy of products
 		}
 
 
@@ -212,8 +211,8 @@ public class BuyingState implements GUIState, ActionListener{
 	@Override
 	public void onDataUpdate(StateData<?> data) {
 		// if only java can support functional programming and Maybe types. would be a one-line code
-		if (data instanceof ProductStateData) {
-			tableModel.setProductScannedList(((ProductStateData) data).obtain());
+		if (data instanceof ListProductStateData) {
+			tableModel.setProductScannedList(((ListProductStateData) data).obtain());
 		}
 	}
 
@@ -238,8 +237,6 @@ public class BuyingState implements GUIState, ActionListener{
 
 	private JComponent getProductPanel(Dimension tableSize, int rowHeight) {
 		final int scrollBarWidth = 10;
-
-		tableModel = new ProductTableModel();
 
 		// table
 		JTable scannedTable = new JTable(tableModel);

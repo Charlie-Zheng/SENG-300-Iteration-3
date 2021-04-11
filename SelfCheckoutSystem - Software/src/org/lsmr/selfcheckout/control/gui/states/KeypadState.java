@@ -20,6 +20,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class KeypadState implements GUIState, ActionListener {
@@ -42,8 +45,13 @@ public class KeypadState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
+		if (data == null) {
+			System.out.println("Invalid barcode");
+		} else if (data instanceof ProductStateData) {
+			//stateController.setState(new ScaleState());
 
+			stateController.setState(new BuyingState()); // TEMP: just to see populated data
+		}
 	}
 
 	/**
@@ -153,7 +161,7 @@ public class KeypadState implements GUIState, ActionListener {
 	 */
 	@Override
 	public ReducedState reduce() {
-		return new KeypadReducedState(text);
+		return new KeypadReducedState();
 	}
 
 
@@ -183,7 +191,9 @@ public class KeypadState implements GUIState, ActionListener {
 			} else if (buttonText.equals("OK")) {
 				// Add an error for if not a valid barcode .. where are we listening to the scale?
 				//stateController.setState(new BuyingState());
-				stateController.setState(new ScaleState());
+				//stateController.setState(new ScaleState());
+
+				stateController.notifyListeners(new KeypadStateData(Integer.valueOf(text)));
 
 			} 
 		} 
@@ -199,15 +209,10 @@ public class KeypadState implements GUIState, ActionListener {
  */
 class KeypadReducedState extends ReducedState {
 
-	private String data;
-
-	public KeypadReducedState(String barcode) {
-		this.data = barcode;
-	}
 
 	@Override
 	public Object getData() {
-		return data;
+		return null;
 	}
 
 }

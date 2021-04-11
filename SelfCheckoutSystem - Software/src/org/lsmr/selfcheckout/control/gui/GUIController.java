@@ -21,8 +21,10 @@ public class GUIController extends StateHandler<GUIState> {
 	public void setState(GUIState state) {
 		if (activeState != null) {
 			ReducedState reducedState = activeState.reduce();
+			activeState = state;
 			state.init(this, reducedState);
 		} else {
+			activeState = state;
 			state.init(this, null);
 		}
 		
@@ -31,7 +33,6 @@ public class GUIController extends StateHandler<GUIState> {
 		frame.getContentPane().revalidate();
 		frame.repaint();
 		
-		activeState = state;
 	}
 	
 	/**

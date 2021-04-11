@@ -22,7 +22,10 @@ import org.lsmr.selfcheckout.control.CardPayment.CardError;
 import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
 import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
+import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.states.BuyingState;
 import org.lsmr.selfcheckout.control.gui.states.StartState;
@@ -96,7 +99,19 @@ public class Checkout {
 
 		@Override
 		public void onStateUpdate(StateData<?> data) {
-			System.out.println("Received in checkout: " + data.obtain());
+			// Keypad inputted a number
+			if (data instanceof KeypadStateData) {
+				int pluCode = (int) data.obtain();
+				try {
+					PLUCodedProduct product = enterPLUCode(new PriceLookupCode(String.valueOf(pluCode)));
+					guiController.notifyDataUpdate(new ProductStateData(product));
+				} catch (CheckoutException e) {
+					// no item in database - notify null
+					guiController.notifyDataUpdate(null);
+				}
+			} else if (data instanceof ScannedItemsRequestData) {
+				guiController.notifyDataUpdate(new ListProductStateData(productsAdded));
+			}
 		}
 		
 	};
@@ -252,7 +267,7 @@ public class Checkout {
 		productsAdded.add(new ReceiptItem(p, p.getPrice(), weight, p.getPrice()));
 		
 		// imagine if java can be programmed functionally
-		guiController.notifyDataUpdate(new ProductStateData(productsAdded));
+		guiController.notifyDataUpdate(new ListProductStateData(productsAdded));
 	}
 
 	protected void addBagsToList(int number) {
@@ -411,7 +426,7 @@ public class Checkout {
 	 * @throws CheckoutException
 	 *             if the Checkout is currently paused
 	 */
-	public void enterPLUCode(PriceLookupCode code) throws CheckoutException {
+	public PLUCodedProduct enterPLUCode(PriceLookupCode code) throws CheckoutException {
 		if (isScanning()) {
 			PLUCodedProduct product = ProductDatabases.PLU_PRODUCT_DATABASE.get(code);
 			// need to convert price per kilo to price per gram, which is done by divide 1000. However, want to round to whole cents, so round after dividing by 10, then divide by 100.
@@ -421,9 +436,11 @@ public class Checkout {
 			addBalanceCurr(totalPrice);
 			addPLUProductToList(product, totalPrice, weightOnScanScale, totalPrice);
 			addExpectedWeightOnScale(weightOnScanScale);
+			return product;
 		} else if (isPaused()) {
 			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
 		}
+		return null;
 	}
 
 	/**
