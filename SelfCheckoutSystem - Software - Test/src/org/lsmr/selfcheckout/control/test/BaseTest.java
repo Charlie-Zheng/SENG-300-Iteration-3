@@ -168,7 +168,22 @@ public abstract class BaseTest {
 		}
 		totalTests++;
 	}
-
+	 /**
+	 * Check if the actual is equal to the excepted using the
+	 * String.compareTo() method. If it is equal, a successful test is
+	 * declared, otherwise a failed test is declared
+	 * 
+	 * @param expected
+	 *            The expected value
+	 * @param actual
+	 *            The actual value
+	 */
+	protected void multiTestAssertEquals(String expected, String actual) {
+		if(expected.compareTo(actual) == 0){
+			successfulTests++;
+		}
+		totalTests++;
+	}
 	/**
 	 * Declares a successful test
 	 */
