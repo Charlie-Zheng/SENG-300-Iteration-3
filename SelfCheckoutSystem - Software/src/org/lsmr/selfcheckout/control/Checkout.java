@@ -1256,4 +1256,8 @@ public class Checkout {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
 	public String getState() {return this.state.toString();}
+	public int getPaperTotal() {return this.paperTotal;}
+	public int getInkTotal() {return this.inkTotal;}
+	public int getCoinCount() {return checkoutStation.coinStorage.getCoinCount();}
+	public int getNoteCount() {return checkoutStation.banknoteStorage.getBanknoteCount();}
 }
