@@ -394,8 +394,7 @@ public class Checkout {
 	}
 
 	/**
-	 * Expects the item to already be added onto the scale using
-	 * addItemToScale()
+	 * Expects the item to already be added onto the scale using addItemToScale()
 	 * <p>
 	 * Adds the product specified by the PLUcode to the checkout. The balance is
 	 * incremented by the weight on the scale (in grams) multiplied by the price per
@@ -1193,9 +1192,10 @@ public class Checkout {
 	}
 
 	/**
-	 * Attendant refills the banknote dispenser with a list of banknotes. * @param
-	 * notes The notes to be added. Any unloaded notes will be returned.
+	 * Attendant refills the banknote dispenser with a list of banknotes.
 	 * 
+	 * @param notes
+	 *            The notes to be added. Any unloaded notes will be returned.
 	 * @return any unloaded notes
 	 */
 	public List<Banknote> refillBanknoteDispenser(List<Banknote> notes) {
@@ -1244,8 +1244,7 @@ public class Checkout {
 	 * @return true, if the ink is low, false otherwise
 	 */
 	public boolean isInkLow() {
-
-		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
+		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
 	}
 
 	/**
@@ -1254,7 +1253,7 @@ public class Checkout {
 	 * @return true, if the paper is low, false otherwise
 	 */
 	public boolean isPaperLow() {
-		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
+		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
 
 }
