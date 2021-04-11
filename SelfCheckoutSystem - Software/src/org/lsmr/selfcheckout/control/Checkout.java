@@ -22,8 +22,10 @@ import org.lsmr.selfcheckout.control.CardPayment.CardError;
 import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
 import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
+import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
@@ -99,18 +101,29 @@ public class Checkout {
 
 		@Override
 		public void onStateUpdate(StateData<?> data) {
-			// Keypad inputted a number
-			if (data instanceof KeypadStateData) {
+			if (data instanceof KeypadStateData) { // keypad state
 				int pluCode = (int) data.obtain();
 				try {
 					PLUCodedProduct product = enterPLUCode(new PriceLookupCode(String.valueOf(pluCode)));
 					guiController.notifyDataUpdate(new ProductStateData(product));
-				} catch (CheckoutException e) {
+				} catch (CheckoutException | SimulationException e) {
 					// no item in database - notify null
 					guiController.notifyDataUpdate(null);
 				}
-			} else if (data instanceof ScannedItemsRequestData) {
+				
+				
+			} else if (data instanceof ScannedItemsRequestData) { // buying state
 				guiController.notifyDataUpdate(new ListProductStateData(productsAdded));
+				
+				
+				
+			} else if (data instanceof MemberStateData) { // member card state
+				String memberNum = (String) data.obtain();
+				try {
+					guiController.notifyDataUpdate(new BooleanStateData(enterMembershipCardInfo(memberNum)));
+				} catch (CheckoutException e) {
+					System.err.println("Attempting to enter membership when already logged in. Check if the GUI is properly implemented.");
+				}
 			}
 		}
 		
@@ -449,20 +462,24 @@ public class Checkout {
 	 * membership number list, nothing happens.
 	 * 
 	 * @param number
+	 * @return true if the info associated with the membership card exists, false otherwise
 	 * @throws CheckoutException
 	 *             If a member is already logged in
 	 */
-	public void enterMembershipCardInfo(String number) throws CheckoutException {
+	public boolean enterMembershipCardInfo(String number) throws CheckoutException {
 
 		String check = MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE.get(number);
 		if (check != null) {
 			if (this.loggedInMemberName == null) {
 				this.loggedInMemberName = check;
 				this.loggedInMemberNumber = number;
+				return true;
 			} else {
 				throw new CheckoutException("Attempted to log in when a member was already logged in");
 			}
 		}
+		
+		return false;
 
 	}
 

@@ -21,13 +21,18 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.GUIUtils.Property;
+import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class MemberCardState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
 	private JTextField input;
+	private JLabel words;
 	private String text = "";
 	private JButton cancel;
 	private JButton nonMember;
@@ -47,8 +52,17 @@ public class MemberCardState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
+		if (data instanceof BooleanStateData) {
+			boolean result = (boolean) data.obtain();
+			
+			if (result) { // success on membership input
+				stateController.setState(new BuyingState());
 
+			} else { // unknown input
+				GUIUtils.flashError(input, 0.3f);
+				GUIUtils.flashText(words, 1.0f, "Invalid membership number!");
+			}
+		}
 	}
 
 	/**
@@ -82,7 +96,7 @@ public class MemberCardState implements GUIState, ActionListener {
 		// even if no bags used
 		JPanel wordPanel = new JPanel();
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
-		JLabel words = new JLabel("Please enter your membership number.");
+		words = new JLabel("Please enter your membership number.");
 		words.setFont(new Font("Arial", Font.BOLD, 40));
 		wordPanel.add(words);
 
@@ -206,6 +220,8 @@ public class MemberCardState implements GUIState, ActionListener {
 		// The go back button takes user back to buying screen
 		if(button == nonMember || button == scanCard) {
 			stateController.setState(new BuyingState());
+			
+		} else if (button == scanCard) {
 		
 		} else if(button == cancel) {
 			stateController.setState(new StartState());
@@ -223,9 +239,12 @@ public class MemberCardState implements GUIState, ActionListener {
 				}
 
 			} else if (buttonText.equals("OK")) {
+				stateController.notifyListeners(new MemberStateData(text));
+				/*
 				if(text.length() > 0) {
 					stateController.setState(new BuyingState());
 				}
+				*/
 			} 
 		} 
 
