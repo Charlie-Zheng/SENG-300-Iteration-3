@@ -334,7 +334,7 @@ public class Checkout {
 	 * @throws CheckoutException
 	 *             if the last added item was not a scanned item
 	 */
-	public void doNotBagLastItem() throws CheckoutException {
+	protected void doNotBagLastItem() throws CheckoutException {
 		Product lastAdded = productsAdded.get(productsAdded.size() - 1).product;
 		if (lastAdded instanceof BarcodedProduct) {
 			Barcode bar = ((BarcodedProduct) lastAdded).getBarcode();
