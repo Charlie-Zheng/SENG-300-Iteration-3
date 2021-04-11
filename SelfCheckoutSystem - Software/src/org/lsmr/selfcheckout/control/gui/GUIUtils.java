@@ -106,6 +106,7 @@ public class GUIUtils {
 	public void execute() {
 		GUIJob job = queue.peek();
 		if (job == null) return; // termination - end of jobs
+		job = queue.poll();
 
 		LinkedList<GUIJob> compiledJobs = new LinkedList<>();
 
@@ -204,6 +205,11 @@ public class GUIUtils {
 		public GUIJob(Property property, Object data) {
 			this.property = property;
 			this.data = data;
+		}
+
+		@Override
+		public String toString() {
+			return "Property: " + property + ", Data: " + data;
 		}
 
 	}
