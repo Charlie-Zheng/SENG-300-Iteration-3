@@ -287,7 +287,7 @@ public class LookupState implements GUIState, ActionListener {
 			String buttonText = button.getText();
 
 			// Takes the text of the buttons to make a decision of what action to perform
-			if (Character.isDigit(buttonText.charAt(0))) {
+			if (buttonText.length() == 1) {
 				text += buttonText;
 
 			} else if(buttonText.equals("OK")) {

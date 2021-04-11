@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class BagItemState implements GUIState, ActionListener {
@@ -36,8 +37,9 @@ public class BagItemState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
-
+		if (data instanceof ScaleStateData) {
+			stateController.setState(new BuyingState());
+		}
 	}
 
 	@Override
