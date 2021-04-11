@@ -308,7 +308,7 @@ public class BuyingState implements GUIState, ActionListener{
 		} else if(view == checkoutButton) {
 			stateController.setState(new BuyBagsState());
 		} else if(view == help) {
-			stateController.setState(new AttendantState());
+			stateController.setState(new AttendantLogInState());
 		}
 	}
 }

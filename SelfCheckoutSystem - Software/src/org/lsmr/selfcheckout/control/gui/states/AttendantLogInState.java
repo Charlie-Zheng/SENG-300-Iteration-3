@@ -76,7 +76,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 		JPanel middlePanel = new JPanel();
 		middlePanel.setLayout(new GridLayout(0, 2, 20, 0));
 		middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 20));
-		
+
 		JPanel inPanel = new JPanel();
 		inPanel.setLayout(new GridBagLayout());
 		Dimension inPanelSize = new Dimension(500, 250);
@@ -85,16 +85,16 @@ public class AttendantLogInState implements GUIState, ActionListener {
 		inputPanel.setMaximumSize(inPanelSize);
 		inputPanel.setPreferredSize(inPanelSize);
 		inputPanel.setSize(inPanelSize);
-		inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 90, 40, 0));
+		inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 97, 40, 0));
 		inputPanel.setBackground(Color.RED.darker());
 		inputPanel.setOpaque(true);
 
-		
+
 		JLabel employeeInputRequest = new JLabel("Employee Number");
 		employeeInputRequest.setFont(new Font("Arial", Font.PLAIN, 30));
-		
 
-		
+
+
 		// the text field that will display user input
 		employeeNumber = new JTextField();
 		employeeNumber.setMaximumSize(new Dimension(600, 50));
@@ -102,7 +102,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 		employeeNumber.setFont(new Font("Arial", Font.PLAIN, 30));
 		employeeNumber.setBackground(Color.WHITE);
 		employeeNumber.addActionListener(this);
-		
+
 
 
 		JLabel pinRequest = new JLabel("Password");
@@ -113,7 +113,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 		pin.setFont(new Font("Arial", Font.PLAIN, 30));
 		pin.setBackground(Color.WHITE);
 		pin.addActionListener(this);
-		
+
 		inputPanel.add(employeeInputRequest);
 		inputPanel.add(newSpacing(1, 10));
 		inputPanel.add(employeeNumber);
@@ -122,7 +122,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 		inputPanel.add(newSpacing(1, 10));
 		inputPanel.add(pin);
 		inPanel.add(inputPanel);
-		
+
 
 		// the keypad that user will enter codes with
 		JPanel keyPadPanel = new JPanel();
@@ -155,7 +155,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 			}
 		}
 
-		
+
 		middlePanel.add(inPanel);
 		middlePanel.add(keyPadPanel);
 
@@ -183,7 +183,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 
 		return spacing;
 	}
-	
+
 	/**
 	 * This returns only the necessary data needed to be known about the state
 	 */
@@ -199,7 +199,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		if(e.getSource() == employeeNumber) {
 			isEmployeeNumber = true;
 			isPin = false;
@@ -210,32 +210,32 @@ public class AttendantLogInState implements GUIState, ActionListener {
 			JButton button = (JButton) e.getSource();
 
 			String buttonText = button.getText();
-		
 
-		// Takes the text of the buttons to make a decision of what action to perform
-		if (Character.isDigit(buttonText.charAt(0))) {
-			if(isEmployeeNumber) {
-				employNumText += buttonText;
-			} else if(isPin) {
-				pinText += "*";
-			}
 
-		} else if (buttonText.equals("Delete")) {
-			if(isEmployeeNumber) {
-			if (employNumText.length() > 0) {
-				employNumText = employNumText.substring(0, employNumText.length()-1);
-			}
-			} else if(isPin) {
-				pinText = pinText.substring(0, pinText.length()-1);
-			}
+			// Takes the text of the buttons to make a decision of what action to perform
+			if (Character.isDigit(buttonText.charAt(0))) {
+				if(isEmployeeNumber) {
+					employNumText += buttonText;
+				} else if(isPin) {
+					pinText += "*";
+				}
 
-		} else if (buttonText.equals("OK") && pinText.length() == 4) {
-			//if(Attendent with employee name.validatePin(convert pin)) {
-			stateController.setState(new AttendantState());
-			
-			//else pop up screen with wrong pin message?
+			} else if (buttonText.equals("Delete")) {
+				if(isEmployeeNumber) {
+					if (employNumText.length() > 0) {
+						employNumText = employNumText.substring(0, employNumText.length()-1);
+					}
+				} else if(isPin) {
+					pinText = pinText.substring(0, pinText.length()-1);
+				}
 
-		} 
+			} else if (buttonText.equals("OK")) {
+				//if(Attendent with employee name.validatePin(convert pin)) {
+				stateController.setState(new AttendantState());
+
+				//else pop up screen with wrong pin message?
+
+			} 
 		}
 
 

@@ -1,15 +1,19 @@
 package org.lsmr.selfcheckout.control.gui.states;
 
+import java.awt.Color;
+
 import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class AttendantAccessState implements GUIState {
-
+	
+	private StateHandler<GUIState> stateController;
+	
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
-		// TODO Auto-generated method stub
+		this.stateController = stateController;
 
 	}
 
@@ -21,8 +25,10 @@ public class AttendantAccessState implements GUIState {
 
 	@Override
 	public JPanel getPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		JPanel mainPanel = new JPanel();
+		mainPanel.setBackground(Color.CYAN);
+		
+		return mainPanel;
 	}
 
 	@Override
