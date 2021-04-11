@@ -180,10 +180,19 @@ public class AttendantSystem {
 		}
 	}
 	
+	/**
+	 * Approves an item that the customer does not want to bag at a given station. 
+	 * 
+	 * @param stationNum
+	 *            the number associated to the station
+	 * @throws CheckoutException
+	 *             if the station is not valid
+	 */
 	public void approveDoNotBagLastItem(int stationNum) throws CheckoutException {
 		if(this.state == ConsoleState.LoggedIn) {
 			Checkout station = this.stations.get(stationNum);
 			if(station != null) station.doNotBagLastItem();
+			else throw new CheckoutException("This station does not exist!"); 
 		}
 	}
 	
