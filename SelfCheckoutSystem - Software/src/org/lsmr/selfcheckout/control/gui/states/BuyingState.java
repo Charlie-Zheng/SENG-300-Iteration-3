@@ -45,6 +45,7 @@ public class BuyingState implements GUIState, ActionListener{
 	private JButton key;
 	private JButton look;
 	private JButton checkoutButton;
+	private JButton help;
 
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
@@ -65,7 +66,7 @@ public class BuyingState implements GUIState, ActionListener{
 	@Override
 	public JPanel getPanel() {
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20)); // for margins
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20)); // for margins
 		mainPanel.setLayout(new BorderLayout());
 
 
@@ -103,7 +104,7 @@ public class BuyingState implements GUIState, ActionListener{
 		// https://www.cleanpng.com/png-dollar-sign-united-states-dollar-symbol-us-dollars-1327518/download-png.html		
 		JPanel checkoutButtonPanel = new JPanel();
 		checkoutButtonPanel.setLayout(new BorderLayout());
-		checkoutButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 35, 20));
+		checkoutButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 20));
 
 		JPanel buttonLayout = new JPanel();
 		buttonLayout.setLayout(new BoxLayout(buttonLayout, BoxLayout.Y_AXIS));
@@ -188,6 +189,22 @@ public class BuyingState implements GUIState, ActionListener{
 		JPanel labelPanel = new JPanel();
 		labelPanel.add(balancePrintOut);
 
+		JPanel helpPanel = new JPanel();
+		helpPanel.setLayout(new BorderLayout());
+		helpPanel.setBorder(BorderFactory.createEmptyBorder(0, 70, 20, 0));
+		help = new JButton("Help");
+		help.setFont(new Font("Arial", Font.BOLD, 20));
+		
+		Dimension helpSize = new Dimension(100, 30); // for custom checkout button size
+		help.setSize(helpSize);
+		help.setPreferredSize(helpSize);
+		help.setMinimumSize(helpSize);
+		help.setMaximumSize(helpSize);
+		
+		help.addActionListener(this);
+		helpPanel.add(help, BorderLayout.WEST);
+		
+		
 		//balancePrintOut.setText("Total: $" + checkout.getBalance()); //causes error right now
 		buttonLayout.add(labelPanel);
 
@@ -198,6 +215,7 @@ public class BuyingState implements GUIState, ActionListener{
 		mainPanel.add(topPanel, BorderLayout.PAGE_START);
 		mainPanel.add(centerPanel, BorderLayout.CENTER);
 		mainPanel.add(checkoutButtonPanel, BorderLayout.LINE_END);
+		mainPanel.add(helpPanel, BorderLayout.PAGE_END);
 
 		return mainPanel;
 	}
@@ -283,10 +301,14 @@ public class BuyingState implements GUIState, ActionListener{
 			//stateController.setState(new BlockState());
 			//stateController.setState(new WeightWrongState());
 			//stateController.setState(new StartState());
+			//stateController.setState(new AttendantState());
+			//stateController.setState(new AttendantLogInState());
 		} else if (view == look) {
 			stateController.setState(new LookupState());
 		} else if(view == checkoutButton) {
 			stateController.setState(new BuyBagsState());
+		} else if(view == help) {
+			stateController.setState(new AttendantState());
 		}
 	}
 }
