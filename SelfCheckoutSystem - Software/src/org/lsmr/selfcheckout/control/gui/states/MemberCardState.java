@@ -59,8 +59,20 @@ public class MemberCardState implements GUIState, ActionListener {
 				stateController.setState(new BuyingState());
 
 			} else { // unknown input
-				GUIUtils.flashError(input, 0.3f);
-				GUIUtils.flashText(words, 1.0f, "Invalid membership number!");
+				GUIUtils
+					.begin(words)
+					.setText("Invalid membership number!")
+					.waitFor(1.0f)
+					.restore()
+					.execute();
+
+				GUIUtils
+					.begin(input)
+					.setError()
+					.waitFor(1.0f)
+					.restore()
+					.execute();
+
 			}
 		}
 	}
@@ -97,6 +109,7 @@ public class MemberCardState implements GUIState, ActionListener {
 		JPanel wordPanel = new JPanel();
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
 		words = new JLabel("Please enter your membership number.");
+		words.setBackground(Color.RED);
 		words.setFont(new Font("Arial", Font.BOLD, 40));
 		wordPanel.add(words);
 

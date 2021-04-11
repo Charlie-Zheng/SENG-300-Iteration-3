@@ -76,6 +76,16 @@ public class MainClass {
 		return products;
 	}
 
+	private static List<Pair<String, String>> membershipsOf(String[][] data) {
+		ArrayList<Pair<String, String>> memberships = new ArrayList<Pair<String, String>>();
+		
+		for (String[] row : data) {
+			memberships.add(new Pair<>(row[0], row[1]));
+		}
+
+		return memberships;
+	}
+
 
 	public static void initializeDatabases() {
 		addAll(
@@ -89,6 +99,12 @@ public class MainClass {
 				ProductDatabases.BARCODED_PRODUCT_DATABASE,
 				barcodedProductsOf(new String[][] {
 					{"1124341", "Checkout Machine Toy", "20.99"}
+				}));
+
+		addAll(
+				MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE,
+				membershipsOf(new String[][] {
+					{"111122223333", "Robert James Walker"}
 				}));
 	}
 
