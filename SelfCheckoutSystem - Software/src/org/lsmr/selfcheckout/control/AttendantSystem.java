@@ -196,6 +196,8 @@ public class AttendantSystem {
 		}
 	}
 	
+	public String getState(){return this.state.toString();}
+
 }
 
 

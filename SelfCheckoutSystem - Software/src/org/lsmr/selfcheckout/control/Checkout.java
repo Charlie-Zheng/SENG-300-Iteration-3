@@ -1255,5 +1255,5 @@ public class Checkout {
 	public boolean isPaperLow() {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
-
+	public String getState() {return this.state.toString();}
 }
