@@ -868,7 +868,7 @@ public class Checkout {
 	 * @throws CheckoutException
 	 */
 	public void printReceipt() throws CheckoutException {
-		if (state != CheckoutState.PrintingReceipt) {
+		if (state == CheckoutState.PrintingReceipt) {
 			for (int i = 0; i < productsAdded.size(); i++) {
 				if (i != 0) {
 					checkoutStation.printer.print('\n');
