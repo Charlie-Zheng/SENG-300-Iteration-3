@@ -13,22 +13,30 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
+import org.lsmr.selfcheckout.products.PLUCodedProduct;
 
 public class ScaleState implements GUIState {
 
 	private StateHandler<GUIState> stateController;
+	private PLUCodedProduct product;
 
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
 
+		product = (PLUCodedProduct) reducedState.getData();
 	}
 
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
-
+		if (data instanceof ScaleStateData) {
+			// scan product then go back to buying
+			stateController.notifyListeners(new InsertPLUProductData(product));
+			stateController.setState(new BuyingState());
+		}
 	}
 
 	@Override

@@ -37,6 +37,7 @@ public class LookupState implements GUIState, ActionListener {
 	private String text = "";
 	private JButton goBack;
 	private JLabel words;
+	private Product inputProduct;
 
 	/**
 	 * This sets up all of the widgets to be used on the look up state screen
@@ -59,12 +60,14 @@ public class LookupState implements GUIState, ActionListener {
 				.setText("Type in the item's description")
 				.execute();
 		} else if (data instanceof ProductStateData) {
-			Product p = (Product) data.obtain();
+			inputProduct = (Product) data.obtain();
 			
-			if (p instanceof PLUCodedProduct) {
+			if (inputProduct instanceof PLUCodedProduct) {
+				// don't insert prpoduct - we pass it to the next state to get a weighing of it
+				stateController.setState(new ScaleState());
 				
-			} else if (p instanceof BarcodedProduct) {
-				stateController.notifyListeners(new InsertBarcodedProductData((BarcodedProduct) p)); // directly insert product into checkout
+			} else if (inputProduct instanceof BarcodedProduct) {
+				stateController.notifyListeners(new InsertBarcodedProductData((BarcodedProduct) inputProduct)); // directly insert product into checkout
 				stateController.setState(new BuyingState());
 			}
 		}
@@ -291,7 +294,7 @@ public class LookupState implements GUIState, ActionListener {
 	 */
 	@Override
 	public ReducedState reduce() {
-		return new LookupReducedState(text);
+		return new LookupReducedState(inputProduct);
 
 	}
 
@@ -348,10 +351,10 @@ public class LookupState implements GUIState, ActionListener {
  */
 class LookupReducedState extends ReducedState {
 
-	private String data;
+	private Product data;
 
-	public LookupReducedState(String barcode) {
-		this.data = barcode;
+	public LookupReducedState(Product p) {
+		this.data = p;
 	}
 
 	@Override

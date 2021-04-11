@@ -25,11 +25,13 @@ import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.InsertBarcodedProductData;
+import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.states.BuyingState;
@@ -107,9 +109,9 @@ public class Checkout {
 			if (data instanceof KeypadStateData) { // keypad state
 				int pluCode = (int) data.obtain();
 				try {
-					PLUCodedProduct product = enterPLUCode(new PriceLookupCode(String.valueOf(pluCode)));
-					guiController.notifyDataUpdate(new ProductStateData(product));
-				} catch (CheckoutException | SimulationException e) {
+					PriceLookupCode code = new PriceLookupCode(String.valueOf(pluCode));
+					guiController.notifyDataUpdate(new ProductStateData(ProductDatabases.PLU_PRODUCT_DATABASE.get(code)));
+				} catch (SimulationException e) {
 					// no item in database - notify null
 					guiController.notifyDataUpdate(null);
 				}
@@ -148,6 +150,14 @@ public class Checkout {
 				addBalanceUnit(p.getPrice());
 				addExpectedWeightOnScale(ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
 				addBarcodedProductToList(p, ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
+
+
+			} else if (data instanceof InsertPLUProductData) {
+				try {
+					enterPLUCode(((PLUCodedProduct) data.obtain()).getPLUCode());
+				} catch (CheckoutException e) {
+					System.err.println("Unknown PLU product");
+				}
 			}
 		}
 		
@@ -460,7 +470,7 @@ public class Checkout {
 	 * @throws CheckoutException
 	 *             if the Checkout is currently paused
 	 */
-	public PLUCodedProduct enterPLUCode(PriceLookupCode code) throws CheckoutException {
+	public void enterPLUCode(PriceLookupCode code) throws CheckoutException {
 		if (isScanning()) {
 			PLUCodedProduct product = ProductDatabases.PLU_PRODUCT_DATABASE.get(code);
 			// need to convert price per kilo to price per gram, which is done by divide 1000. However, want to round to whole cents, so round after dividing by 10, then divide by 100.
@@ -470,11 +480,9 @@ public class Checkout {
 			addBalanceCurr(totalPrice);
 			addPLUProductToList(product, totalPrice, weightOnScanScale, totalPrice);
 			addExpectedWeightOnScale(weightOnScanScale);
-			return product;
 		} else if (isPaused()) {
 			throw new CheckoutException("Previously scanned item has not been added to the bagging area");
 		}
-		return null;
 	}
 
 	/**
@@ -1088,6 +1096,7 @@ public class Checkout {
 	 */
 	protected void setWeightOnScanScale(double weight) {
 		weightOnScanScale = weight;
+		guiController.notifyDataUpdate(new ScaleStateData(weight));
 	}
 
 	/**

@@ -1,15 +1,15 @@
 package org.lsmr.selfcheckout.control.gui.statedata;
 
-public class ScaleStateData implements StateData<Float> {
+public class ScaleStateData implements StateData<Double> {
 	
-	private float weight;
+	private double weight;
 	
-	public ScaleStateData(float weight) {
+	public ScaleStateData(double weight) {
 		this.weight = weight;
 	}
 
 	@Override
-	public Float obtain() {
+	public Double obtain() {
 		return weight;
 	}
 

@@ -24,6 +24,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
+import org.lsmr.selfcheckout.products.PLUCodedProduct;
 
 public class KeypadState implements GUIState, ActionListener {
 
@@ -31,6 +32,7 @@ public class KeypadState implements GUIState, ActionListener {
 	private JTextField input;
 	private String text = "";
 	private JButton goBack;
+	private PLUCodedProduct inputProduct;
 
 	/*
 	 * 
@@ -48,9 +50,10 @@ public class KeypadState implements GUIState, ActionListener {
 		if (data == null) {
 			System.out.println("Invalid barcode");
 		} else if (data instanceof ProductStateData) {
-			//stateController.setState(new ScaleState());
+			inputProduct = (PLUCodedProduct) data.obtain();
+			stateController.setState(new ScaleState());
 
-			stateController.setState(new BuyingState()); // TEMP: just to see populated data
+			//stateController.setState(new BuyingState()); // TEMP: just to see populated data
 		}
 	}
 
@@ -161,7 +164,7 @@ public class KeypadState implements GUIState, ActionListener {
 	 */
 	@Override
 	public ReducedState reduce() {
-		return new KeypadReducedState();
+		return new KeypadReducedState(inputProduct);
 	}
 
 
@@ -209,10 +212,15 @@ public class KeypadState implements GUIState, ActionListener {
  */
 class KeypadReducedState extends ReducedState {
 
+	private PLUCodedProduct product;
+	
+	public KeypadReducedState(PLUCodedProduct p) {
+		product = p;
+	}
 
 	@Override
 	public Object getData() {
-		return null;
+		return product;
 	}
 
 }
