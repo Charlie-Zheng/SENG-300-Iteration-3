@@ -48,8 +48,12 @@ import org.lsmr.selfcheckout.products.Product;
  * <p>
  * 4. Choose to start paying
  * <p>
- * 5. Pay with the chosen paying method
+ * 5. Pay with the chosen paying method (user can also choose to cancel payment
+ * and go back to scanning)
  * <p>
+ * 6. Choose to print the receipt, or not to
+ * <p>
+ * 7. Remove the purchased items from the bagging area
  * 
  * @author Group U08-2
  * @date Mar 31, 2021
@@ -233,6 +237,14 @@ public class Checkout {
 
 	}
 
+	/**
+	 * Adds a PLU product to the receipt list
+	 * 
+	 * @param p
+	 * @param totalPrice
+	 * @param weightInGrams
+	 * @param pricePerKilo
+	 */
 	protected void addPLUProductToList(PLUCodedProduct p, BigDecimal totalPrice, double weightInGrams,
 			BigDecimal pricePerKilo) {
 		productsAdded.add(new ReceiptItem(p, totalPrice, weightInGrams, pricePerKilo));
@@ -371,9 +383,25 @@ public class Checkout {
 	}
 
 	/**
+	 * Removes the item from the scale
+	 * 
+	 * @param item
+	 * @throws SimulationException
+	 *             If the item is not on the scale
+	 */
+	public void removeItemFromScale(Item item) throws SimulationException {
+		checkoutStation.scale.remove(item);
+	}
+
+	/**
+	 * Expects the item to already be added onto the scale using
+	 * addItemToScale()
+	 * <p>
 	 * Adds the product specified by the PLUcode to the checkout. The balance is
 	 * incremented by the weight on the scale (in grams) multiplied by the price per
 	 * kilogram of the item, converted appropriately to units match.
+	 * <p>
+	 * Once done, remember to removeItemFromScale()
 	 * <p>
 	 * Throws a checkout exception if the Checkout is currently paused
 	 * 
@@ -1194,7 +1222,7 @@ public class Checkout {
 	 * @param quantity
 	 *            The amount of paper being added
 	 */
-	public void paperAddition(int quantity) {
+	public void addPaper(int quantity) {
 		checkoutStation.printer.addPaper(quantity);
 		paperTotal += quantity;
 	}
@@ -1205,7 +1233,7 @@ public class Checkout {
 	 * @param quantity
 	 *            The amount of ink being added
 	 */
-	public void inkAddition(int quantity) {
+	public void addInk(int quantity) {
 		checkoutStation.printer.addInk(quantity);
 		inkTotal += quantity;
 	}
