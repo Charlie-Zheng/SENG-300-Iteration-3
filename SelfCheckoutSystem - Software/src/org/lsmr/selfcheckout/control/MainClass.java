@@ -86,6 +86,16 @@ public class MainClass {
 		return memberships;
 	}
 
+	private static List<Pair<Barcode, Double>> productWeightsOf(String[][] data) {
+		ArrayList<Pair<Barcode, Double>> weights = new ArrayList<Pair<Barcode, Double>>();
+		
+		for (String[] row : data) {
+			weights.add(new Pair<>(new Barcode(row[0]), Double.valueOf(row[1])));
+		}
+
+		return weights;
+	}
+
 
 	public static void initializeDatabases() {
 		addAll(
@@ -95,11 +105,18 @@ public class MainClass {
 					{"4523", "Pear", "0.95"}
 				}));
 
+		
 		addAll(
 				ProductDatabases.BARCODED_PRODUCT_DATABASE,
 				barcodedProductsOf(new String[][] {
 					{"1124341", "Checkout Machine Toy", "20.99"}
 				}));
+		addAll(
+				ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE,
+				productWeightsOf(new String[][] {
+					{"1124341", "12.1"}
+				}));
+		
 
 		addAll(
 				MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE,

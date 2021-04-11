@@ -22,9 +22,12 @@ import org.lsmr.selfcheckout.control.CardPayment.CardError;
 import org.lsmr.selfcheckout.control.CardPayment.PaymentType;
 import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
+import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.InsertBarcodedProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
@@ -112,9 +115,12 @@ public class Checkout {
 				}
 				
 				
-			} else if (data instanceof ScannedItemsRequestData) { // buying state
+			} else if (data instanceof ScannedItemsRequestData) { // buying state is requesting for data
 				guiController.notifyDataUpdate(new ListProductStateData(productsAdded));
 				
+
+			} else if (data instanceof BalanceStateData) { // buying state is requesting for total balance
+				guiController.notifyDataUpdate(new BalanceStateData(getBalance().floatValue()));
 				
 				
 			} else if (data instanceof MemberStateData) { // member card state
@@ -124,6 +130,24 @@ public class Checkout {
 				} catch (CheckoutException e) {
 					System.err.println("Attempting to enter membership when already logged in. Check if the GUI is properly implemented.");
 				}
+
+
+			} else if (data instanceof LookupStateData) { // search has been made, so we return first search result
+				ArrayList<Product> products = searchProductDatabase((String) data.obtain());
+				if (products.isEmpty()) {
+					guiController.notifyDataUpdate(null);
+				} else {
+					guiController.notifyDataUpdate(new ProductStateData(products.get(0)));
+				}
+
+
+				
+			} else if (data instanceof InsertBarcodedProductData) { // inserts a barcoded product into the cart
+				BarcodedProduct p = (BarcodedProduct) data.obtain();
+
+				addBalanceUnit(p.getPrice());
+				addExpectedWeightOnScale(ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
+				addBarcodedProductToList(p, ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
 			}
 		}
 		
@@ -278,9 +302,6 @@ public class Checkout {
 
 	protected void addBarcodedProductToList(BarcodedProduct p, double weight) {
 		productsAdded.add(new ReceiptItem(p, p.getPrice(), weight, p.getPrice()));
-		
-		// imagine if java can be programmed functionally
-		guiController.notifyDataUpdate(new ListProductStateData(productsAdded));
 	}
 
 	protected void addBagsToList(int number) {

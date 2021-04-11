@@ -20,8 +20,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.InsertBarcodedProductData;
+import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
+import org.lsmr.selfcheckout.products.BarcodedProduct;
+import org.lsmr.selfcheckout.products.PLUCodedProduct;
+import org.lsmr.selfcheckout.products.Product;
 
 public class LookupState implements GUIState, ActionListener {
 
@@ -29,6 +36,7 @@ public class LookupState implements GUIState, ActionListener {
 	private JTextField input;
 	private String text = "";
 	private JButton goBack;
+	private JLabel words;
 
 	/**
 	 * This sets up all of the widgets to be used on the look up state screen
@@ -36,7 +44,6 @@ public class LookupState implements GUIState, ActionListener {
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
-
 	}
 
 	/**
@@ -44,8 +51,23 @@ public class LookupState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
-
+		if (data == null) {
+			GUIUtils
+				.begin(words)
+				.setText("Unknown item!")
+				.waitFor(1.0f)
+				.setText("Type in the item's description")
+				.execute();
+		} else if (data instanceof ProductStateData) {
+			Product p = (Product) data.obtain();
+			
+			if (p instanceof PLUCodedProduct) {
+				
+			} else if (p instanceof BarcodedProduct) {
+				stateController.notifyListeners(new InsertBarcodedProductData((BarcodedProduct) p)); // directly insert product into checkout
+				stateController.setState(new BuyingState());
+			}
+		}
 	}
 
 	/**
@@ -78,7 +100,7 @@ public class LookupState implements GUIState, ActionListener {
 		// panel with statement to input item's description
 		JPanel wordPanel = new JPanel();
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 50, 70));
-		JLabel words = new JLabel("Type in the item's description.");
+		words = new JLabel("Type in the item's description.");
 		words.setFont(new Font("Arial", Font.BOLD, 40));
 		wordPanel.add(words);
 
@@ -269,7 +291,7 @@ public class LookupState implements GUIState, ActionListener {
 	 */
 	@Override
 	public ReducedState reduce() {
-		return new LookUpReducedState(text);
+		return new LookupReducedState(text);
 
 	}
 
@@ -291,8 +313,18 @@ public class LookupState implements GUIState, ActionListener {
 				text += buttonText;
 
 			} else if(buttonText.equals("OK")) {
+				if (text.length() < 3) {
+					GUIUtils
+						.begin(words)
+						.setText("At least three characters must be in the search query")
+						.waitFor(1.0f)
+						.restore()
+						.execute();
+				} else {
+					stateController.notifyListeners(new LookupStateData(text));
+				}
 				//add in conditions for if valid? if not add to go back
-				stateController.setState(new BuyingState());
+				//stateController.setState(new BuyingState());
 
 			} else if(buttonText.equals("Delete")) {
 				if (text.length() > 0) {
@@ -314,11 +346,11 @@ public class LookupState implements GUIState, ActionListener {
  * This allows to reduce the state of the key pad state to only the input text
  *
  */
-class LookUpReducedState extends ReducedState {
+class LookupReducedState extends ReducedState {
 
 	private String data;
 
-	public LookUpReducedState(String barcode) {
+	public LookupReducedState(String barcode) {
 		this.data = barcode;
 	}
 

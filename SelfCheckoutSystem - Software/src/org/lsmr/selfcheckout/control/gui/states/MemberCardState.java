@@ -69,7 +69,7 @@ public class MemberCardState implements GUIState, ActionListener {
 				GUIUtils
 					.begin(input)
 					.setError()
-					.waitFor(1.0f)
+					.waitFor(0.3f)
 					.restore()
 					.execute();
 

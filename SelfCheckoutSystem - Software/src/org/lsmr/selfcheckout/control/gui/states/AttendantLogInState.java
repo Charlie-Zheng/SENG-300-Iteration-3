@@ -173,6 +173,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 	 */
 	private JComponent newSpacing(int width, int height) {
 		JPanel spacing = new JPanel();
+		spacing.setBackground(null);
 		Dimension size = new Dimension(width, height);
 
 		// setting all these makes it work
