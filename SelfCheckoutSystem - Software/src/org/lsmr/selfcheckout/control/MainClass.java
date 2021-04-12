@@ -109,12 +109,16 @@ public class MainClass {
 		addAll(
 				ProductDatabases.BARCODED_PRODUCT_DATABASE,
 				barcodedProductsOf(new String[][] {
-					{"1124341", "Checkout Machine Toy", "20.99"}
+					{"1124341", "Checkout Machine Toy", "20.99"},
+					{"0101010", "PlayStation 6 (PS6)", "699.99"},
+					{"12345", "Grand Piano", "109000.00"}
 				}));
 		addAll(
 				ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE,
 				productWeightsOf(new String[][] {
-					{"1124341", "12.1"}
+					{"1124341", "7.1"},
+					{"0101010", "15.9"},
+					{"12345", "321.0"},
 				}));
 		
 
@@ -123,6 +127,12 @@ public class MainClass {
 				membershipsOf(new String[][] {
 					{"111122223333", "Robert James Walker"}
 				}));
+
+
+		// assertions
+		if (ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.size() != ProductDatabases.BARCODED_PRODUCT_DATABASE.size()) {
+			throw new RuntimeException("Product weight database and barcoded database have different sizes");
+		}
 	}
 
 	public static void main(String[] args) {
