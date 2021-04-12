@@ -60,13 +60,13 @@ import org.lsmr.selfcheckout.products.Product;
  */
 public class Checkout {
 	private enum CheckoutState {
-		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done,On,Off
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done, On, Off
 	};
 
-	private enum PowerState{
-		On,Off
+	private enum PowerState {
+		On, Off
 	}
-	
+
 	public enum PayingState {
 		Cash, Credit, Debit, Gift
 	};
@@ -78,7 +78,6 @@ public class Checkout {
 
 	private final double WEIGHT_TOLERANCE = 10;
 	private static BigDecimal pricePerPlasticBag = new BigDecimal("0.05");
-
 
 	private BigDecimal currentBalance;
 	private boolean customerBag;
@@ -234,10 +233,9 @@ public class Checkout {
 	}
 
 	protected void addBagsToList(int number, BigDecimal totalPrice) {
-		BarcodedProduct plasticBags = new BarcodedProduct(new Barcode("000"+number), "Plastic Bag x"+number, totalPrice);
-		for (int i = 0; i < number; i++) {
-			productsAdded.add(new ReceiptItem(plasticBags, totalPrice, 0, totalPrice));
-		}
+		BarcodedProduct plasticBags = new BarcodedProduct(new Barcode("000" + number), "Plastic Bag x" + number,
+				totalPrice);
+		productsAdded.add(new ReceiptItem(plasticBags, totalPrice, 0, totalPrice));
 
 	}
 
@@ -359,6 +357,7 @@ public class Checkout {
 	 * string
 	 * <p>
 	 * Use case: customer looks up product
+	 * 
 	 * @param name
 	 * @return A list of products that match the search
 	 */
@@ -768,7 +767,7 @@ public class Checkout {
 	public void usePlasticBags(int n) {
 		BigDecimal totalPrice = pricePerPlasticBag.multiply(new BigDecimal(n));
 		addBalanceCurr(totalPrice);
-		addBagsToList(n,totalPrice);
+		addBagsToList(n, totalPrice);
 	}
 
 	/**
@@ -1262,23 +1261,37 @@ public class Checkout {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
 
-	public String getState() {return this.state.toString();}
-	public int getPaperTotal() {return this.paperTotal;}
-	public int getInkTotal() {return this.inkTotal;}
-	public int getCoinCount() {return checkoutStation.coinStorage.getCoinCount();}
-	public int getNoteCount() {return checkoutStation.banknoteStorage.getBanknoteCount();}
-	
-	protected void shutDown(){
+	public String getState() {
+		return this.state.toString();
+	}
+
+	public int getPaperTotal() {
+		return this.paperTotal;
+	}
+
+	public int getInkTotal() {
+		return this.inkTotal;
+	}
+
+	public int getCoinCount() {
+		return checkoutStation.coinStorage.getCoinCount();
+	}
+
+	public int getNoteCount() {
+		return checkoutStation.banknoteStorage.getBanknoteCount();
+	}
+
+	protected void shutDown() {
 		this.pState = PowerState.Off;
 	}
-	
-	protected void powerOn(){
+
+	protected void powerOn() {
 		this.pState = PowerState.On;
 	}
-	
+
 	protected void approveWeightDiscrepency() {
 		expectedWeightOnBaggingArea = weightOnBaggingArea;
-		this.state = CheckoutState.Scanning; 
+		this.state = CheckoutState.Scanning;
 	}
-	
+
 }
