@@ -60,9 +60,13 @@ import org.lsmr.selfcheckout.products.Product;
  */
 public class Checkout {
 	private enum CheckoutState {
-		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done,On,Off
 	};
 
+	private enum PowerState{
+		On,Off
+	}
+	
 	public enum PayingState {
 		Cash, Credit, Debit, Gift
 	};
@@ -87,6 +91,7 @@ public class Checkout {
 	private String loggedInMemberName;
 	private String loggedInMemberNumber;
 	private CheckoutState state;
+	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
 
@@ -1255,8 +1260,29 @@ public class Checkout {
 	public boolean isPaperLow() {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
+<<<<<<< HEAD
 
 	public String getState() {
 		return this.state.toString();
 	}
+=======
+	public String getState() {return this.state.toString();}
+	public int getPaperTotal() {return this.paperTotal;}
+	public int getInkTotal() {return this.inkTotal;}
+	public int getCoinCount() {return checkoutStation.coinStorage.getCoinCount();}
+	public int getNoteCount() {return checkoutStation.banknoteStorage.getBanknoteCount();}
+	
+	protected void shutDown(){
+		this.pState = PowerState.Off;
+	}
+	
+	protected void powerOn(){
+		this.pState = PowerState.On;
+	}
+	
+	protected void setStateScanning() {
+		this.state = CheckoutState.Scanning; 
+	}
+	
+>>>>>>> 420ca5467fe2c97f13e9d1eec21955cf58f057a5
 }
