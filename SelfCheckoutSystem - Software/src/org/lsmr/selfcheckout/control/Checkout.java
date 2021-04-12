@@ -110,69 +110,9 @@ public class Checkout {
 	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
-	private GUIController guiController;
+	protected GUIController guiController;
 
-	private StateUpdateListener guiUpdateListener = new StateUpdateListener() {
-
-		@Override
-		public void onStateUpdate(StateData<?> data) {
-			if (data instanceof KeypadStateData) { // keypad state
-				int pluCode = (int) data.obtain();
-				try {
-					PriceLookupCode code = new PriceLookupCode(String.valueOf(pluCode));
-					guiController
-							.notifyDataUpdate(new ProductStateData(ProductDatabases.PLU_PRODUCT_DATABASE.get(code)));
-				} catch (SimulationException e) {
-					// no item in database - notify null
-					guiController.notifyDataUpdate(null);
-				}
-
-			} else if (data instanceof ScannedItemsRequestData) { // buying state is requesting for data
-				guiController.notifyDataUpdate(new ListProductStateData(productsAdded));
-
-			} else if (data instanceof BalanceStateData) { // buying state is requesting for total balance
-				guiController.notifyDataUpdate(new BalanceStateData(getBalance().floatValue()));
-
-			} else if (data instanceof MemberStateData) { // member card state
-				String memberNum = (String) data.obtain();
-				try {
-					guiController.notifyDataUpdate(new BooleanStateData(enterMembershipCardInfo(memberNum)));
-				} catch (CheckoutException e) {
-					System.err.println(
-							"Attempting to enter membership when already logged in. Check if the GUI is properly implemented.");
-				}
-
-			} else if (data instanceof LookupStateData) { // search has been made, so we return first search result
-				ArrayList<Product> products = searchProductDatabase((String) data.obtain());
-				if (products.isEmpty()) {
-					guiController.notifyDataUpdate(null);
-				} else {
-					guiController.notifyDataUpdate(new ProductStateData(products.get(0)));
-				}
-
-			} else if (data instanceof InsertBarcodedProductData) { // inserts a barcoded product into the cart
-				BarcodedProduct p = (BarcodedProduct) data.obtain();
-
-				addBalanceUnit(p.getPrice());
-				addExpectedWeightOnScale(ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
-				addBarcodedProductToList(p, ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
-
-			} else if (data instanceof InsertPLUProductData) { // inserts PLU into the cart
-				try {
-					enterPLUCode(((PLUCodedProduct) data.obtain()).getPLUCode());
-				} catch (CheckoutException e) {
-					System.err.println("Unknown PLU product");
-				}
-
-			} else if (data instanceof RequestPricePerBagData) { // requesting price of bags
-				guiController.notifyDataUpdate(new RequestPricePerBagData(getPricePerPlasticBag().floatValue()));
-
-			} else if (data instanceof BuyBagStateData) { // set # of bags to purchase
-				usePlasticBags((int) data.obtain());
-			}
-		}
-
-	};
+	private StateUpdateListener guiUpdateListener = new GUIupdateListener(this);
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
@@ -220,8 +160,7 @@ public class Checkout {
 		state = CheckoutState.Scanning;
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
-		inkTotal = 0;
-		paperTotal = 0;
+
 
 	}
 
