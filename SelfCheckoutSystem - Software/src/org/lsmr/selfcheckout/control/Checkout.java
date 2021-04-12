@@ -1277,6 +1277,11 @@ public class Checkout {
 	public boolean isPaperLow() {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
+	
+	// Blocks the station from being scanned
+	protected void blockStation() {
+        this.state = CheckoutState.Paused;
+    }
 
 	public String getState() {
 		return this.state.toString();
