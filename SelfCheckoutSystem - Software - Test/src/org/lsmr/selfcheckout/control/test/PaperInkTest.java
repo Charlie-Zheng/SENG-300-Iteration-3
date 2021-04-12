@@ -30,7 +30,7 @@ public class PaperInkTest extends BaseTest {
 	public void InkLowTest() {
 		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
-			c.inkAddition(50);
+			c.addInk(50);
 			multiTestAssertEquals(true, c.isInkLow());
 		}
 	}
@@ -43,7 +43,7 @@ public class PaperInkTest extends BaseTest {
 	@Test
 	public void InkLowFailTest() throws CheckoutException, OverloadException {
 			c.reset();
-			c.inkAddition(110000);
+			c.addInk(110000);
 			multiTestAssertEquals(false, c.isInkLow());
 	}
 	/**
@@ -54,7 +54,7 @@ public class PaperInkTest extends BaseTest {
 	public void PaperLowTest() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
-			c.paperAddition(1);
+			c.addPaper(1);
 			multiTestAssertEquals(true, c.isPaperLow());
 		}
 	}
@@ -66,8 +66,8 @@ public class PaperInkTest extends BaseTest {
 	 */
 	@Test
 	public void PaperLowFailTest() throws OverloadException {
-		c.reset();
-			c.paperAddition(150);
+			c.reset();
+			c.addPaper(150);
 			multiTestAssertEquals(false, c.isPaperLow());
 		}
 }

@@ -12,14 +12,10 @@ import org.junit.runners.Suite.SuiteClasses;
  * @date Mar 31, 2021
  */
 @RunWith(Suite.class)
-@SuiteClasses({ BaggingAreaTest.class, CardPaymentTest.class, CashPaymentTest.class, ChangeTest.class,
-<<<<<<< HEAD
+@SuiteClasses({ AttendantTests.class, BaggingAreaTest.class, CardPaymentTest.class, CashPaymentTest.class, ChangeTest.class,
 		CheckoutTest.class, MembershipCardTest.class, PaperInkTest.class, PlasticBagTest.class, ScanItemTest.class, StartPaymentTest.class,
 		TestCustomerBag.class })
-=======
-		CheckoutTest.class, MembershipCardTest.class, ScanItemTest.class, StartPaymentTest.class,
-		TestCustomerBag.class, AttendantTests.class})
->>>>>>> bf655137a605a4e3fdbb659bdd71726d931997fd
+		
 public class AllTests {
 
 }

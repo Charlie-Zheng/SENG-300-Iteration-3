@@ -549,6 +549,14 @@ public class CardPaymentTest extends BaseTest {
 		}
 	}
 	
+	/**
+	 * @Description Verify that a random card not associated to any CardIssuer will
+	 *              be rejected.
+	 *              <p>
+	 * @Expected_Outcome The machine rejects the card and throws an error
+	 *                   <p>
+	 * @Purpose To prevent people from paying with fake cards
+	 */
 	@Test
 	public void testInvalidGiftCard() {
 

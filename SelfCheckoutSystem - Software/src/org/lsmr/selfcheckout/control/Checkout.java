@@ -1249,10 +1249,6 @@ public class Checkout {
 	 * @return true, if the ink is low, false otherwise
 	 */
 	public boolean isInkLow() {
-<<<<<<< HEAD
-
-=======
->>>>>>> bf655137a605a4e3fdbb659bdd71726d931997fd
 		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
 	}
 
@@ -1264,12 +1260,7 @@ public class Checkout {
 	public boolean isPaperLow() {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
-<<<<<<< HEAD
 
-	public String getState() {
-		return this.state.toString();
-	}
-=======
 	public String getState() {return this.state.toString();}
 	public int getPaperTotal() {return this.paperTotal;}
 	public int getInkTotal() {return this.inkTotal;}
@@ -1288,5 +1279,4 @@ public class Checkout {
 		this.state = CheckoutState.Scanning; 
 	}
 	
->>>>>>> 420ca5467fe2c97f13e9d1eec21955cf58f057a5
 }
