@@ -1,0 +1,15 @@
+GUI Meeting 02
+<April 11, 2021>
+
+Discussed:
+
+	- Caught each other up on what we did
+	- How to move forward
+	- Vianney helped Marilyn figure out how to do some stuff
+	- What we want to bring up at the group meeting tonight
+Assignments:
+
+	- Vianney keep working on implementation
+	- Marilyn keep working on design
+
+Meet April 11, 2021 with group, discuss when to meet via messages
