@@ -96,7 +96,6 @@ public class Checkout {
 	private final double WEIGHT_TOLERANCE = 10;
 	private static BigDecimal pricePerPlasticBag = new BigDecimal("0.05");
 
-
 	private BigDecimal currentBalance;
 	private boolean customerBag;
 	private boolean paidCash;
@@ -322,10 +321,9 @@ public class Checkout {
 	}
 
 	protected void addBagsToList(int number, BigDecimal totalPrice) {
-		BarcodedProduct plasticBags = new BarcodedProduct(new Barcode("000"+number), "Plastic Bag x"+number, totalPrice);
-		for (int i = 0; i < number; i++) {
-			productsAdded.add(new ReceiptItem(plasticBags, totalPrice, 0, totalPrice));
-		}
+		BarcodedProduct plasticBags = new BarcodedProduct(new Barcode("000" + number), "Plastic Bag x" + number,
+				totalPrice);
+		productsAdded.add(new ReceiptItem(plasticBags, totalPrice, 0, totalPrice));
 
 	}
 
@@ -862,7 +860,7 @@ public class Checkout {
 	public void usePlasticBags(int n) {
 		BigDecimal totalPrice = pricePerPlasticBag.multiply(new BigDecimal(n));
 		addBalanceCurr(totalPrice);
-		addBagsToList(n,totalPrice);
+		addBagsToList(n, totalPrice);
 	}
 
 	/**
@@ -1384,10 +1382,10 @@ public class Checkout {
 	protected void powerOn() {
 		this.pState = PowerState.On;
 	}
-	
+
 	protected void approveWeightDiscrepency() {
 		expectedWeightOnBaggingArea = weightOnBaggingArea;
-		this.state = CheckoutState.Scanning; 
+		this.state = CheckoutState.Scanning;
 	}
-	
+
 }
