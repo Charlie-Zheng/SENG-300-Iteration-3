@@ -1261,9 +1261,9 @@ public class Checkout {
 	public int getCoinCount() {return checkoutStation.coinStorage.getCoinCount();}
 	public int getNoteCount() {return checkoutStation.banknoteStorage.getBanknoteCount();}
 	protected void shutDown(){
-		this.state = CheckoutState.Off
+		this.state = CheckoutState.Off;
 	}
 	protected void powerOn(){
-		this.state = CheckoutState.On
+		this.state = CheckoutState.On;
 	}
 }
