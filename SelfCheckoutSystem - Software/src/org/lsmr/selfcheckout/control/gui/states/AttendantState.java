@@ -9,6 +9,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -29,7 +31,7 @@ public class AttendantState implements GUIState, ActionListener {
 	private StateHandler<GUIState> stateController;
 
 	private ProductTableModel tableModel;
-	JButton tableButton;
+//	JButton tableButton;
 	JButton logOut;
 	
 	
@@ -61,7 +63,7 @@ public class AttendantState implements GUIState, ActionListener {
 		int numOfStations = 6;
 		
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 85, 0, 85));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 150, 0, 150));
 		mainPanel.setLayout(new BorderLayout());
 
 		// informing the user there is a $0.10 charge per bag, must enter a digit
@@ -71,40 +73,25 @@ public class AttendantState implements GUIState, ActionListener {
 		wordPanel.setBorder(new LineBorder(Color.RED.darker()));
 		wordPanel.setBackground(Color.RED.darker());
 		JLabel words = new JLabel("Select a checkout");
-		words.setFont(new Font("Arial", Font.BOLD, 50));
+		words.setFont(new Font("Arial", Font.BOLD, 40));
 		words.setForeground(Color.WHITE);
 		words.setBackground(Color.RED.darker());
 		words.setBorder(new LineBorder(Color.RED.darker()));
 		wordPanel.add(words);
 		
-		Dimension tableSize = new Dimension(494, 150);
+		Dimension tableSize = new Dimension(394, 130);
 
 		JPanel stationsPanel = new JPanel();
-		stationsPanel.setLayout(new GridLayout(3, 2, 86, 30));
+		stationsPanel.setLayout(new GridLayout(3, 2, 150, 30));
+		stationsPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 0, 200));
 		stationsPanel.setBorder(new LineBorder(Color.RED.darker()));
 		stationsPanel.setBackground(Color.RED.darker());
 
 	
 		
 		for(int i = 0; i < numOfStations; i++) {
-			JPanel checkoutWithNumPanel = new JPanel();
-			checkoutWithNumPanel.setLayout(new BoxLayout(checkoutWithNumPanel, BoxLayout.Y_AXIS));
-			checkoutWithNumPanel.setBorder(new LineBorder(Color.RED.darker()));
-			checkoutWithNumPanel.setBackground(Color.RED.darker());
-			
-			JPanel stationNumPanel = new JPanel();
-			//stationNumPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
-			//stationNumPanel.setBorder(new LineBorder(Color.RED.darker()));
-			//stationNumPanel.setBackground(Color.RED.darker());
-			JLabel stationNum = new JLabel("Checkout #" + (i + 1));
-			stationNum.setFont(new Font("Arial", Font.BOLD, 20));
-			stationNum.setForeground(Color.WHITE);
-			stationNum.setBackground(Color.RED.darker());
-			stationNum.setBorder(new LineBorder(Color.RED.darker()));
-			stationNum.add(words);
-			//checkoutWithNumPanel.add(stationNum);
-			
-			tableButton = new JButton();
+
+			JButton tableButton = new JButton();
 			tableButton.setLayout(new BorderLayout());
 			JLabel buttonLabel = new JLabel();
 			buttonLabel.setText("Checkout #" + (i + 1));
@@ -112,12 +99,31 @@ public class AttendantState implements GUIState, ActionListener {
 			buttonLabel.setFont(new Font("Arial", Font.BOLD, 20));
 			
 			JComponent scannedTable = getProductPanel(tableSize, 50);
-			tableButton.add(new JScrollPane(scannedTable), BorderLayout.SOUTH);
+			/*scannedTable.addMouseListener(new MouseAdapter() {
+
+				
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					stateController.setState(new AttendantAccessState());
+				}
+					
+				});*/
 			tableButton.setBackground(Color.RED.darker());
 			tableButton.setBorder(new LineBorder(Color.RED.darker()));
+			
 			tableButton.add(buttonLabel, BorderLayout.NORTH);
-			tableButton.addActionListener(this);
-			//checkoutWithNumPanel.add(tableButton);
+			tableButton.add(new JScrollPane(scannedTable), BorderLayout.SOUTH);
+			//tableButton.addActionListener(this);
+			tableButton.addMouseListener(new MouseAdapter() {
+
+				
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					stateController.setState(new AttendantAccessState());
+					
+				}
+				
+			});
 			
 			stationsPanel.add(tableButton);
 		}
@@ -141,14 +147,11 @@ public class AttendantState implements GUIState, ActionListener {
 		logOutPanel.add(logOut, BorderLayout.EAST);
 		
 		
-		
-		wordPanel.setBackground(Color.BLUE);
-		
 		mainPanel.setBackground(Color.RED.darker());
-	//	mainPanel.add(wordPanel, BorderLayout.PAGE_START);
+		mainPanel.add(wordPanel, BorderLayout.PAGE_START);
 		mainPanel.add(stationsPanel, BorderLayout.CENTER);
 		mainPanel.add(logOutPanel, BorderLayout.PAGE_END);
-		// TODO Auto-generated method stub
+
 		return mainPanel;
 	}
 	
@@ -205,13 +208,13 @@ public class AttendantState implements GUIState, ActionListener {
 		JButton button = (JButton) arg0.getSource();
 		if(button == logOut) {
 			stateController.setState(new AttendantLogInState());
-		} else if(button == tableButton) {
+		} /*else if(button == tableButton) {
 			
 			String buttonText = button.getText();
 			
-			/*if(buttonText.equals("Checkout #1")) {
+			if(buttonText.equals("Checkout #1")) {
 				stateController.setState(new AttendantAccessState()); 
-			}*/
+			}
 			
 		
 			
@@ -221,7 +224,7 @@ public class AttendantState implements GUIState, ActionListener {
 
 				stateController.setState(new AttendantAccessState());
 			}*/
-		}
+		//}
 		
 	}
 

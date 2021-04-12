@@ -10,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
@@ -28,10 +31,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 	private StateHandler<GUIState> stateController;
 	private JTextField employeeNumber;
 	private JTextField pin;
-	private String employNumText = "";
-	private String pinText = "";
-	private boolean isEmployeeNumber;
-	private boolean isPin;
+	private JTextField activeTextField;
 
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
@@ -92,6 +92,7 @@ public class AttendantLogInState implements GUIState, ActionListener {
 
 		JLabel employeeInputRequest = new JLabel("Employee Number");
 		employeeInputRequest.setFont(new Font("Arial", Font.PLAIN, 30));
+		employeeInputRequest.setForeground(Color.WHITE);
 
 
 
@@ -101,19 +102,40 @@ public class AttendantLogInState implements GUIState, ActionListener {
 		employeeNumber.setEditable(false);
 		employeeNumber.setFont(new Font("Arial", Font.PLAIN, 30));
 		employeeNumber.setBackground(Color.WHITE);
-		employeeNumber.addActionListener(this);
+		employeeNumber.addMouseListener(new MouseAdapter() {
+
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				activeTextField = employeeNumber;
+				
+			}
+			
+		});
 
 
 
 		JLabel pinRequest = new JLabel("Password");
 		pinRequest.setFont(new Font("Arial", Font.PLAIN, 30));
-		pin = new JTextField();
+		pinRequest.setForeground(Color.WHITE);
+		pin = new JPasswordField();
 		pin.setMaximumSize(new Dimension(600, 50));
 		pin.setEditable(false);
 		pin.setFont(new Font("Arial", Font.PLAIN, 30));
 		pin.setBackground(Color.WHITE);
-		pin.addActionListener(this);
+		pin.addMouseListener(new MouseAdapter() {
 
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				activeTextField = pin;
+				
+			}
+			
+		});
+
+		activeTextField = employeeNumber;
+		
 		inputPanel.add(employeeInputRequest);
 		inputPanel.add(newSpacing(1, 10));
 		inputPanel.add(employeeNumber);
@@ -190,7 +212,8 @@ public class AttendantLogInState implements GUIState, ActionListener {
 	 */
 	@Override
 	public ReducedState reduce() {
-		return new LogInReducedState(employNumText, pinText);
+	//	return new LogInReducedState(employNumText, pinText);
+		return null;
 	}
 
 
@@ -201,48 +224,28 @@ public class AttendantLogInState implements GUIState, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if(e.getSource() == employeeNumber) {
-			isEmployeeNumber = true;
-			isPin = false;
-		} else if(e.getSource() == pin) {
-			isEmployeeNumber = false;
-			isPin = true;
-		} else {
+	
+		
 			JButton button = (JButton) e.getSource();
 
 			String buttonText = button.getText();
 
 
-			// Takes the text of the buttons to make a decision of what action to perform
+		// Takes the text of the buttons to make a decision of what action to perform
 			if (Character.isDigit(buttonText.charAt(0))) {
-				if(isEmployeeNumber) {
-					employNumText += buttonText;
-				} else if(isPin) {
-					pinText += "*";
-				}
-
-			} else if (buttonText.equals("Delete")) {
-				if(isEmployeeNumber) {
-					if (employNumText.length() > 0) {
-						employNumText = employNumText.substring(0, employNumText.length()-1);
-					}
-				} else if(isPin) {
-					pinText = pinText.substring(0, pinText.length()-1);
-				}
-
+				activeTextField.setText(activeTextField.getText() + buttonText);
+				
 			} else if (buttonText.equals("OK")) {
-				//if(Attendent with employee name.validatePin(convert pin)) {
 				stateController.setState(new AttendantState());
 
 				//else pop up screen with wrong pin message?
-
-			} 
+			
+		} else if (buttonText.equals("Delete")) {
+			activeTextField.setText(activeTextField.getText().substring(0, activeTextField.getText().length() - 1));
 		}
 
-
-		employeeNumber.setText(employNumText);
-		pin.setText(pinText);
 	}
+
 }
 
 /**
@@ -250,8 +253,8 @@ public class AttendantLogInState implements GUIState, ActionListener {
  * This allows to reduce the state of the key pad state to only the input text
  *
  */
-class LogInReducedState extends ReducedState {
-	// ** i need help with this **//
+/*class LogInReducedState extends ReducedState {
+	// ** i need help with this
 	private String employeeNumber;
 	private String pin;
 
@@ -264,5 +267,4 @@ class LogInReducedState extends ReducedState {
 	public Object getData() {
 		return employeeNumber;
 	}
-
-}
+}*/

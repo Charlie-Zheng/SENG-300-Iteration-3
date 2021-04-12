@@ -103,7 +103,7 @@ public class BagItemState implements GUIState, ActionListener {
 		mainPanel.add(topPanel);
 		mainPanel.add(wordPanel);
 		mainPanel.add(baggingPanel);
-		mainPanel.add(skipBagPanel, BorderLayout.EAST);
+	//	mainPanel.add(skipBagPanel, BorderLayout.EAST);
 
 		return mainPanel;
 	}

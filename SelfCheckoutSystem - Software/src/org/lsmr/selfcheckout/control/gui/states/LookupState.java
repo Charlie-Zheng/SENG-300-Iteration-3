@@ -38,6 +38,13 @@ public class LookupState implements GUIState, ActionListener {
 	private JButton goBack;
 	private JLabel words;
 	private Product inputProduct;
+	private JPanel mainPanel;
+	private JLabel topStatement;
+	private JPanel topPanel;
+	private JPanel wordPanel;
+	private int keypadWidth = 975;
+	private JPanel lookUpPanel;
+	private JPanel goBackPanel;
 
 	/**
 	 * This sets up all of the widgets to be used on the look up state screen
@@ -85,19 +92,12 @@ public class LookupState implements GUIState, ActionListener {
 	@Override
 	public JPanel getPanel() {
 
-		final int keypadWidth = 975;
-
-		// main panel components to be added to
-		JPanel mainPanel = new JPanel();
+		mainPanel = new JPanel();
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 50, 50));
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-
 		// top panel with title and logo
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BorderLayout(200, 0));
-		topPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 0, 50));
-		JLabel topStatement = new JLabel("Look Up Item");
-		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
+		setTopPanel();
+		setTopStatement();
 		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
 		Image coOpImg = coopImg.getImage() ;  
 		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
@@ -107,22 +107,108 @@ public class LookupState implements GUIState, ActionListener {
 		topPanel.add(coOpLogo, BorderLayout.EAST);
 
 		// panel with statement to input item's description
-		JPanel wordPanel = new JPanel();
-		wordPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 50, 70));
-		words = new JLabel("Type in the item's description.");
-		words.setFont(new Font("Arial", Font.BOLD, 40));
+		setWordPanel();
+		setWords();
 		wordPanel.add(words);
 
 
 		// the text field that will display user input
+		setInput();
+		// the panel with the keyboard for user input
+		setLookUpPanel(this);
+
+		//numbers?
+		
+		setGoBackPanel();
+		setGoBackButton();
+		goBack.addActionListener(this);
+		goBackPanel.add(goBack, BorderLayout.EAST);
+
+		mainPanel.add(topPanel);
+		mainPanel.add(wordPanel);
+		mainPanel.add(input);
+		mainPanel.add(lookUpPanel);
+		mainPanel.add(goBackPanel, BorderLayout.EAST);
+
+		return mainPanel;
+	}
+	
+	private void setMainPanel() {
+		mainPanel = new JPanel();
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 50, 50));
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+	}
+	
+	protected JPanel getMainPanel() {
+		setMainPanel();
+		return mainPanel;
+	}
+	
+	private void setTopStatement() {
+		topStatement = new JLabel("Look Up Item");
+		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
+	}
+	
+	protected JLabel getTopStatement() {
+		setTopStatement();
+		return topStatement;
+	}
+	
+	private void setTopPanel() {
+		topPanel = new JPanel();
+		topPanel.setLayout(new BorderLayout(200, 0));
+		topPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 0, 50));
+	}
+	
+	protected JPanel getTopPanel() {
+		setTopPanel();
+		return topPanel;
+	}
+	
+	
+	private void setWordPanel() {
+		wordPanel = new JPanel();
+		wordPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 50, 70));
+	}
+	
+	protected JPanel getwordPanel() {
+		setWordPanel();
+		return wordPanel;
+	}
+	
+	private void setWords() {
+		words = new JLabel("Type in the item's description.");
+		words.setFont(new Font("Arial", Font.BOLD, 40));
+	}
+	
+	protected JLabel getWords() {
+		setWords();
+		return words;
+	}
+	
+	private void setKeypadWidth(int keypadWidth) {
+		this.keypadWidth = keypadWidth;
+	}
+	
+	private int getKeypadWidth() {
+		return keypadWidth;
+	}
+	
+	private void setInput() {
 		input = new JTextField();
 		input.setMaximumSize(new Dimension(keypadWidth, 50));
 		input.setEditable(false);
 		input.setFont(new Font("Arial", Font.PLAIN, 30));
 		input.setBackground(Color.WHITE);
-
-		// the panel with the keyboard for user input
-		JPanel lookUpPanel = new JPanel();
+	}
+	
+	protected JTextField getInput() {
+		setInput();
+		return input;
+	}
+	
+	private void setLookUpPanel(ActionListener actionListener) {
+		lookUpPanel = new JPanel();
 		lookUpPanel.setBorder(BorderFactory.createEmptyBorder(30, 100, 0, 100));
 		lookUpPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gridConstraints = new GridBagConstraints();
@@ -223,7 +309,7 @@ public class LookupState implements GUIState, ActionListener {
 		lookUpPanel.add(space, gridConstraints);
 
 		for (Component button : lookUpPanel.getComponents()) {
-			((JButton) button).addActionListener(this);
+			((JButton) button).addActionListener(actionListener);
 			if(button != delete && button != space) {
 				Dimension keySize = new Dimension(80, 40);
 				button.setSize(keySize);
@@ -253,47 +339,55 @@ public class LookupState implements GUIState, ActionListener {
 			}
 		}
 
-
-		//numbers?
-
-		// the panel for the go back button
-		// image of black arrow downloaded from below website
-		// https://www.pikpng.com/downpngs/oxJooi_simpleicons-interface-undo-black-arrow-pointing-to-tanda/
-		JPanel goBackPanel = new JPanel();
-		goBackPanel.setLayout(new BorderLayout());
-		ImageIcon arrow = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/black arrow.png");
-		Image img = arrow.getImage() ;  
-		Image newimg = img.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
-		ImageIcon arrowResized = new ImageIcon(newimg);
-
-		goBack = new JButton();
-		goBack.setLayout(new BorderLayout()); //so we can add an icon
-		JLabel iconLabel = new JLabel(arrowResized);
-		JLabel back = new JLabel("Go Back", SwingConstants.CENTER);
-
-		back.setFont(new Font("Arial", Font.BOLD, 40));
-		goBack.add(back, BorderLayout.CENTER);
-		goBack.add(iconLabel, BorderLayout.WEST);
-		goBack.addActionListener(this);
-
-		// set size of go back button
-		Dimension backSize = new Dimension(300, 40);
-		goBack.setSize(backSize);
-		goBack.setPreferredSize(backSize);
-		goBack.setMinimumSize(backSize);
-		goBack.setMaximumSize(backSize);
-
-		goBackPanel.add(goBack, BorderLayout.EAST);
-
-		mainPanel.add(topPanel);
-		mainPanel.add(wordPanel);
-		mainPanel.add(input);
-		mainPanel.add(lookUpPanel);
-		mainPanel.add(goBackPanel, BorderLayout.EAST);
-
-		return mainPanel;
+	}
+	
+	protected JPanel getLookUpPanel(ActionListener actionListener) {
+		setLookUpPanel(actionListener);
+		return lookUpPanel;
 	}
 
+	private void setGoBackPanel() {
+		goBackPanel = new JPanel();
+		goBackPanel.setLayout(new BorderLayout());
+	}
+	
+	protected JPanel getGoBackPanel() {
+		setGoBackPanel();
+		return goBackPanel;
+	}
+	
+	private void setGoBackButton() {
+	
+				// image of black arrow downloaded from below website
+				// https://www.pikpng.com/downpngs/oxJooi_simpleicons-interface-undo-black-arrow-pointing-to-tanda/
+				
+				setGoBackPanel();
+				ImageIcon arrow = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/black arrow.png");
+				Image img = arrow.getImage() ;  
+				Image newimg = img.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
+				ImageIcon arrowResized = new ImageIcon(newimg);
+
+				goBack = new JButton();
+				goBack.setLayout(new BorderLayout()); //so we can add an icon
+				JLabel iconLabel = new JLabel(arrowResized);
+				JLabel back = new JLabel("Go Back", SwingConstants.CENTER);
+
+				back.setFont(new Font("Arial", Font.BOLD, 40));
+				goBack.add(back, BorderLayout.CENTER);
+				goBack.add(iconLabel, BorderLayout.WEST);
+
+				// set size of go back button
+				Dimension backSize = new Dimension(300, 40);
+				goBack.setSize(backSize);
+				goBack.setPreferredSize(backSize);
+				goBack.setMinimumSize(backSize);
+				goBack.setMaximumSize(backSize);
+	}
+	
+	protected JButton getGoBackButton() {
+			setGoBackButton();
+			return goBack;
+	}
 	/**
 	 * This reduces the screen to only its pertinent information which is just the text
 	 * @return the reduced state of the look up items screen
@@ -345,7 +439,6 @@ public class LookupState implements GUIState, ActionListener {
 			}
 		}
 		input.setText(text);
-		input.setForeground(Color.BLUE);
 	}
 
 }
