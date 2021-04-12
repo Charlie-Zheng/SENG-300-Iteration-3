@@ -65,6 +65,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -95,6 +96,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -126,6 +128,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -172,6 +175,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -200,6 +204,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -228,6 +233,114 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+	}
+	
+	/**
+	 * @throws Exception
+	 * @Description Assuming a card accepts all three methods of payment (swipe,
+	 *              insert, tap), we check that a gift card can do all of these
+	 *              transaction methods.
+	 *              <p>
+	 * @Expected_Outcome The checkout succeeds
+	 *                   <p>
+	 * @Purpose Verify that a normal gift payment works
+	 */
+	@Test
+	public void testNormalGiftCardPayment() {
+		
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			
+			
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Try out all three payment types
+			
+			// tap
+			c.reset();
+			
+			
+			try {
+				c.scanItem(item);
+				
+				//Has to add item to bagging area first
+				
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Gift);
+				c.payByTappingCard(card);
+				success();
+			} catch (CheckoutException | OverloadException e) {
+				fail();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			// don't add the card to the issuer
+
+			
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Try out all three payment types
+
+			// insert
+			c.reset();
+			
+			
+			try {
+				c.scanItem(item);
+				//Has to add item to bagging area first
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Gift);
+				c.payByInsertingCard(card, "0909");
+				fail();
+			} catch (CheckoutException e) {
+				success();
+			} catch (OverloadException e) {
+				fail();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			// don't add the card to the issuer
+
+			
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Try out all three payment types
+
+			// swipe
+			c.reset();
+			
+			try {
+				c.scanItem(item);
+				//Has to add item to bagging area first
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Gift);
+				c.payBySwipingCard(card, new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+				fail();
+			} catch (CheckoutException e) {
+				success();
+			} catch (OverloadException e) {
+				fail();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -270,6 +383,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -282,7 +396,7 @@ public class CardPaymentTest extends BaseTest {
 
 			// Try out all three payment types
 
-			// tap
+			// insert
 			c.reset();
 			
 			
@@ -300,6 +414,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -329,6 +444,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -369,6 +485,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -398,6 +515,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -427,6 +545,103 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+	}
+	
+	@Test
+	public void testInvalidGiftCard() {
+
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			
+			
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Try out all three payment types
+
+			// tap
+			c.reset();
+			
+
+			try {
+				c.scanItem(item);
+				//Has to add item to bagging area first
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Gift);
+				c.payByTappingCard(card);
+				fail();
+			} catch (CheckoutException e) {
+				success();
+			} catch (OverloadException e) {
+				fail();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			// don't add the card to the issuer
+
+			
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Try out all three payment types
+
+			// insert
+			c.reset();
+			
+			
+			try {
+				c.scanItem(item);
+				//Has to add item to bagging area first
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Gift);
+				c.payByInsertingCard(card, "0909");
+				fail();
+			} catch (CheckoutException e) {
+				success();
+			} catch (OverloadException e) {
+				fail();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			// don't add the card to the issuer
+
+			
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Try out all three payment types
+
+			// tap
+			c.reset();
+			
+			try {
+				c.scanItem(item);
+				//Has to add item to bagging area first
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Gift);
+				c.payBySwipingCard(card, new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+				fail();
+			} catch (CheckoutException e) {
+				success();
+			} catch (OverloadException e) {
+				fail();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -466,6 +681,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -502,9 +718,49 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
 
+	/**
+	 * @Description Verify that a gift card without enough funds will fail
+	 *              <p>
+	 * @Expected_Outcome An exception is thrown because of insufficient funds
+	 *                   <p>
+	 * @Purpose Ensure that users have enough money to pay for an item
+	 */
+	@Test
+	public void testInsufficientFundsOnGiftCard() {
+
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(9, 2023), "123", BigDecimal.ONE);
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Initialize state before payment
+			// tap
+			c.reset();
+			
+			try {
+				c.scanItem(item);
+				//Has to add item to bagging area first
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Gift);
+				c.payByTappingCard(card);
+				fail();
+			} catch (CheckoutException e) {
+				success();
+			} catch (OverloadException e) {
+				fail();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+	}
 	/**
 	 * @Description Test to see if the software rejects an incorrect entered pin
 	 *              <p>
@@ -538,12 +794,14 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
 
 	/**
 	 * @Description Test to see if the software detects the user paying debit after
 	 *              choosing credit, and paying with credit after choosing debit
+	 *              or paying with gift after selecting debit
 	 *              <p>
 	 * @Expected_Outcome An exception is thrown from the result of using an
 	 *                   incorrect card type
@@ -581,6 +839,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -610,6 +869,7 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("credit", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -639,6 +899,38 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+		
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			
+			
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Try out all three payment types
+
+			// tap
+			c.reset();
+			
+			try {
+				c.scanItem(item);
+				//Has to add item to bagging area first
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Debit);
+				c.payByTappingCard(card);
+				fail();
+			} catch (CheckoutException e) {
+				success();
+			} catch (OverloadException e) {
+				fail();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
 
@@ -706,6 +998,8 @@ public class CardPaymentTest extends BaseTest {
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
 		}
 	}
+	
 }

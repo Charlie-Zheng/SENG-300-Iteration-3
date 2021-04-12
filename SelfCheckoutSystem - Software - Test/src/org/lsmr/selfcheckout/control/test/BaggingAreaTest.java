@@ -9,10 +9,14 @@ import java.util.Currency;
 import org.junit.Test;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
+import org.lsmr.selfcheckout.Card;
+import org.lsmr.selfcheckout.control.CardIssuerDatabase;
 import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.CheckoutException;
+import org.lsmr.selfcheckout.control.Checkout.PayingState;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+import org.lsmr.selfcheckout.external.CardIssuer;
 
 /**
  * @author Group U08-2
@@ -79,7 +83,7 @@ public class BaggingAreaTest extends BaseTest {
 		}
 
 	}
-
+	
 	/**
 	 * Adds overweight item to bagging area.
 	 * 
@@ -273,4 +277,93 @@ public class BaggingAreaTest extends BaseTest {
 			multiTestAssertEquals(0, c.getWeightOnBaggingArea(), 0.0001);
 		}
 	}
+	
+	/**
+	 * Checks to see if removing purchased items from bagging area works
+	 * when the state is Done, correctly changing the state back to 
+	 * scanning. 
+	 * 
+	 * @throws OverloadException
+	 */
+	@Test
+	public void testRemovePurchasedItems() throws OverloadException, CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+
+			c.reset();
+			
+			c.doNotPrintReceipt();
+			c.removePurchasedItemFromBaggingArea();
+			multiTestAssertEquals(true, c.isScanning());
+			}		
+		}
+	
+	/**
+	 * Checks to see if removing purchased items from bagging area doesn't
+	 * work when the state is not Done, and does not change the state
+	 * back to scanning
+	 * 
+	 * @throws OverloadException
+	 */
+	@Test
+	public void testStateRemovePurchasedItems() throws OverloadException {
+		for (int i = 0; i < REPEAT; i++) {
+				Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
+				CardIssuer issuer = new CardIssuer("abcdefg");
+				issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
+				CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+				
+				
+				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+				// Try out all three payment types
+
+				// tap
+				c.reset();
+
+				try {
+					c.scanItem(item);
+
+					//Has to add item to bagging area first
+					c.addItemToBaggingArea(item);
+					c.startPayment(PayingState.Debit);
+					
+				c.removePurchasedItemFromBaggingArea();
+				multiTestAssertEquals(0, c.getWeightOnBaggingArea(), 0.0001);
+				multiTestAssertEquals(false, c.isScanning());
+				c.payByTappingCard(card);
+				success();
+				} catch (CheckoutException | OverloadException e) {
+				fail();
+				} 				
+				
+				CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+				CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+				CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+			
+				
+		}
+	}
+	/**
+	 * To see if the expectedweightinbaggingarea works as intended, 
+	 * that the state is changed from scanning to paused. 
+	 * @throws CheckoutException
+	 */
+	@Test 
+	public void weightInBaggingAreaNotConformtoExpectationTest() throws OverloadException, CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			try{
+			c.reset();
+
+			BarcodedItem item1 = new BarcodedItem(new Barcode("12345"), 123);
+			BarcodedItem item2 = new BarcodedItem(new Barcode("23456"), 10);
+			c.scanItem(item1);
+			c.addItemToBaggingArea(item2);
+			fail();
+			}catch (OverloadException | CheckoutException e) {
+			multiTestAssertEquals(true, c.isPaused());
+			success();
+			}
+		}
+	}
+	
 }

@@ -841,7 +841,7 @@ public class Checkout {
 	 * @throws CheckoutException
 	 */
 	public void printReceipt() throws CheckoutException {
-		if (state != CheckoutState.PrintingReceipt) {
+		if (state == CheckoutState.PrintingReceipt) {
 			for (int i = 0; i < productsAdded.size(); i++) {
 				if (i != 0) {
 					checkoutStation.printer.print('\n');
@@ -1217,7 +1217,7 @@ public class Checkout {
 	 */
 	public boolean isInkLow() {
 
-		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
+		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
 	}
 
 	/**
@@ -1226,7 +1226,7 @@ public class Checkout {
 	 * @return true, if the paper is low, false otherwise
 	 */
 	public boolean isPaperLow() {
-		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
+		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
 
 }

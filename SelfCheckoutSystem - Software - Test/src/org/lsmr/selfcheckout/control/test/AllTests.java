@@ -13,7 +13,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ BaggingAreaTest.class, CardPaymentTest.class, CashPaymentTest.class, ChangeTest.class,
-		CheckoutTest.class, MembershipCardTest.class, ScanItemTest.class, StartPaymentTest.class,
+		CheckoutTest.class, MembershipCardTest.class, PaperInkTest.class, PlasticBagTest.class, ScanItemTest.class, StartPaymentTest.class,
 		TestCustomerBag.class })
 public class AllTests {
 
