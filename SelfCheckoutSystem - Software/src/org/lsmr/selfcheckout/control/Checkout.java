@@ -63,6 +63,10 @@ public class Checkout {
 		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done,On,Off
 	};
 
+	private enum PowerState{
+		On,Off
+	}
+	
 	public enum PayingState {
 		Cash, Credit, Debit, Gift
 	};
@@ -87,6 +91,7 @@ public class Checkout {
 	private String loggedInMemberName;
 	private String loggedInMemberNumber;
 	private CheckoutState state;
+	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
 
@@ -1260,10 +1265,17 @@ public class Checkout {
 	public int getInkTotal() {return this.inkTotal;}
 	public int getCoinCount() {return checkoutStation.coinStorage.getCoinCount();}
 	public int getNoteCount() {return checkoutStation.banknoteStorage.getBanknoteCount();}
+	
 	protected void shutDown(){
-		this.state = CheckoutState.Off;
+		this.pState = PowerState.Off;
 	}
+	
 	protected void powerOn(){
-		this.state = CheckoutState.On;
+		this.pState = PowerState.On;
 	}
+	
+	protected void setStateScanning() {
+		this.state = CheckoutState.Scanning; 
+	}
+	
 }
