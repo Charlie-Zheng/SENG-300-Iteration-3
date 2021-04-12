@@ -766,7 +766,7 @@ public class Checkout {
 	 */
 	public void usePlasticBags(int n) {
 		addBalanceCurr(pricePerPlasticBag.multiply(new BigDecimal(n)));
-
+		addBagsToList(n);
 	}
 
 	/**
