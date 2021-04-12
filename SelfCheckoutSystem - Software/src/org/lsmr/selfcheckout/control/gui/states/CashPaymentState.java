@@ -16,12 +16,15 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class CashPaymentState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
 	private JButton goBack;
+	private JLabel duePrintOut;
+	private float cost;
 
 	/**
 	 * 
@@ -38,7 +41,10 @@ public class CashPaymentState implements GUIState, ActionListener {
 	@Override
 	public void onDataUpdate(StateData<?> data) {
 		// TODO Auto-generated method stub
-
+		if (data instanceof BalanceStateData) {
+			cost = (float) data.obtain();
+			duePrintOut.setText(String.format("Amount Due: $%.2f", cost));
+		}
 	}
 
 	/**
@@ -82,7 +88,7 @@ public class CashPaymentState implements GUIState, ActionListener {
 		wordPanel2.add(words2);
 
 		// amount due panel
-		JLabel duePrintOut = new JLabel();
+		duePrintOut = new JLabel();
 		duePrintOut.setText("Amount Due: $0.00");
 		duePrintOut.setFont(new Font("Arial", Font.BOLD, 40));
 		JPanel duePanel = new JPanel();
@@ -133,6 +139,8 @@ public class CashPaymentState implements GUIState, ActionListener {
 		mainPanel.add(duePanel);
 		mainPanel.add(paidPanel);
 		mainPanel.add(goBackPanel, BorderLayout.EAST);
+
+		stateController.notifyListeners(new BalanceStateData(0));
 
 		return mainPanel;
 	}

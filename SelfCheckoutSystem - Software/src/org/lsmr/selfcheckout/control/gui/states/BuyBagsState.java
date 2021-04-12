@@ -12,6 +12,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.print.attribute.standard.RequestingUserName;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -22,6 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BuyBagStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.RequestPricePerBagData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class BuyBagsState implements GUIState, ActionListener {
@@ -30,6 +33,9 @@ public class BuyBagsState implements GUIState, ActionListener {
 	private JTextField input;
 	private String text = "";
 	private JButton goBack;
+	private JLabel duePrintOut;
+	private float cost;
+	private float pricePerBag;
 	
 	/**
 	 * 
@@ -37,7 +43,9 @@ public class BuyBagsState implements GUIState, ActionListener {
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
-
+	
+		cost = (float) reducedState.getData();
+		stateController.notifyListeners(new RequestPricePerBagData(0));
 	}
 
 	/**
@@ -45,8 +53,9 @@ public class BuyBagsState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
-
+		if (data instanceof RequestPricePerBagData) {
+			pricePerBag = (float) data.obtain();
+		}
 	}
 
 	/**
@@ -80,7 +89,7 @@ public class BuyBagsState implements GUIState, ActionListener {
 		// even if no bags used
 		JPanel wordPanel = new JPanel();
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
-		JLabel words = new JLabel("Enter the number of bags you used for $0.10 each or 0 if no bags were used.");
+		JLabel words = new JLabel(String.format("Enter the number of bags you used for $%.2f each or 0 if no bags were used.", pricePerBag));
 		words.setFont(new Font("Arial", Font.BOLD, 30));
 		wordPanel.add(words);
 
@@ -129,8 +138,9 @@ public class BuyBagsState implements GUIState, ActionListener {
 		}
 
 		// amount due panel
-		JLabel duePrintOut = new JLabel();
-		duePrintOut.setText("Amount Due: $0.00");
+		duePrintOut = new JLabel();
+		duePrintOut.setText(String.format("Amount Due: $%.2f", cost));
+		//duePrintOut.setText("Amount Due: $0.00");
 		duePrintOut.setFont(new Font("Arial", Font.BOLD, 40));
 		JPanel duePanel = new JPanel();
 		duePanel.add(duePrintOut);
@@ -221,6 +231,7 @@ public class BuyBagsState implements GUIState, ActionListener {
 
 			} else if (buttonText.equals("OK")) {
 				if(text.length() > 0) {
+					stateController.notifyListeners(new BuyBagStateData(Integer.parseInt(text)));
 					stateController.setState(new PurchasingState());
 				}
 
@@ -228,6 +239,15 @@ public class BuyBagsState implements GUIState, ActionListener {
 		} 
 
 		input.setText(text);
+
+		// update cost
+		int bags;
+		try {
+			bags = Integer.valueOf(text);
+		} catch (NumberFormatException e) {
+			bags = 0;
+		}
+		duePrintOut.setText(String.format("Amount Due: $%.2f", cost + bags * pricePerBag));	
 	}
 
 }

@@ -48,6 +48,7 @@ public class BuyingState implements GUIState, ActionListener{
 	private JButton checkoutButton;
 	private JButton help;
 	private JLabel balancePrintOut;
+	private float cost;
 
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
@@ -227,8 +228,7 @@ public class BuyingState implements GUIState, ActionListener{
 
 	@Override
 	public ReducedState reduce() {
-		// TODO Auto-generated method stub
-		return null;
+		return new BuyingReducedState(cost);
 	}
 
 	@Override
@@ -239,7 +239,8 @@ public class BuyingState implements GUIState, ActionListener{
 
 			// balance
 		} else if (data instanceof BalanceStateData) {
-			balancePrintOut.setText(String.format("Total: $%.2f", (float) data.obtain()));
+			cost = (float) data.obtain();
+			balancePrintOut.setText(String.format("Total: $%.2f", cost));
 		}
 	}
 
@@ -320,4 +321,19 @@ public class BuyingState implements GUIState, ActionListener{
 			stateController.setState(new AttendantLogInState());
 		}
 	}
+}
+
+class BuyingReducedState extends ReducedState {
+
+	private float cost;
+	
+	public BuyingReducedState(float cost) {
+		this.cost = cost;
+	}
+
+	@Override
+	public Object getData() {
+		return cost;
+	}
+	
 }

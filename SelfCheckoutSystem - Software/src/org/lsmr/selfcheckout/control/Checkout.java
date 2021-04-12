@@ -24,6 +24,7 @@ import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.BuyBagStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.InsertBarcodedProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
@@ -31,6 +32,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.RequestPricePerBagData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
@@ -152,12 +154,20 @@ public class Checkout {
 				addBarcodedProductToList(p, ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
 
 
-			} else if (data instanceof InsertPLUProductData) {
+			} else if (data instanceof InsertPLUProductData) { // inserts PLU into the cart
 				try {
 					enterPLUCode(((PLUCodedProduct) data.obtain()).getPLUCode());
 				} catch (CheckoutException e) {
 					System.err.println("Unknown PLU product");
 				}
+
+
+			} else if (data instanceof RequestPricePerBagData) { // requesting price of bags
+				guiController.notifyDataUpdate(new RequestPricePerBagData(getPricePerPlasticBag().floatValue()));
+
+
+			} else if (data instanceof BuyBagStateData) { // set # of bags to purchase
+				usePlasticBags((int) data.obtain());
 			}
 		}
 		

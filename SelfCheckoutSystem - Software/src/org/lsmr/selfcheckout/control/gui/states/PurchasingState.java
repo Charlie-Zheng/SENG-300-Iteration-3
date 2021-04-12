@@ -17,7 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.PurchasingStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class PurchasingState implements GUIState, ActionListener {
@@ -28,6 +31,8 @@ public class PurchasingState implements GUIState, ActionListener {
 	private JButton debit;
 	private JButton credit;
 	private JButton gift;
+	private JLabel total;
+	private float cost;
 
 
 	public PurchasingState() {
@@ -40,7 +45,6 @@ public class PurchasingState implements GUIState, ActionListener {
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
-
 	}
 
 	/**
@@ -48,7 +52,10 @@ public class PurchasingState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
+		if (data instanceof BalanceStateData) {
+			cost = (float) data.obtain();
+			total.setText(String.format("Amount Due: $%.2f", cost));
+		}
 	}
 
 	/**
@@ -203,7 +210,7 @@ public class PurchasingState implements GUIState, ActionListener {
 		goBackPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100)); // for margins
 
 		// amount due panel
-		JLabel total = new JLabel();
+		total = new JLabel();
 		total.setText("Amount Due: $0.00");
 		total.setFont(new Font("Arial", Font.BOLD, 40));
 		goBackPanel.add(total, BorderLayout.WEST);
@@ -221,6 +228,8 @@ public class PurchasingState implements GUIState, ActionListener {
 		mainPayPanel.add(payPanel);
 		mainPayPanel.add(goBackPanel);
 		mainPayPanel.add(paidPanel, BorderLayout.WEST);
+
+		stateController.notifyListeners(new BalanceStateData(0)); // request balance
 
 		return mainPayPanel;
 	}
@@ -246,11 +255,22 @@ public class PurchasingState implements GUIState, ActionListener {
 			stateController.setState(new BuyingState());
 
 		} else if(button == cash) {
+			stateController.notifyListeners(new PurchasingStateData(Checkout.PayingState.Cash));
 			stateController.setState(new CashPaymentState());
 
-		} else if(button == debit || button == credit || button == gift) {
+		} else if(button == debit) {
+			stateController.notifyListeners(new PurchasingStateData(Checkout.PayingState.Debit));
 			stateController.setState(new CardPaymentState());
-		} 
+
+		} else if(button == credit) {
+			stateController.notifyListeners(new PurchasingStateData(Checkout.PayingState.Credit));
+			stateController.setState(new CardPaymentState());
+
+		}  else if(button == gift) {
+			stateController.notifyListeners(new PurchasingStateData(Checkout.PayingState.Gift));
+			stateController.setState(new CardPaymentState());
+
+		}  
 	}
 
 }
