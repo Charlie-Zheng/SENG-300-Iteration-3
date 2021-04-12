@@ -186,7 +186,6 @@ public class AttendantTests extends BaseTest {
 	
 	@Test
 	public void attendantAddPaper() throws CheckoutException {
-		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Integer num = new Integer(1019);
 			Attendant br = new Attendant(num, "Brian",2002);
@@ -196,12 +195,11 @@ public class AttendantTests extends BaseTest {
 			int stationNum = sys.register(c);
 			c.addPaper(5);
 			multiTestAssertEquals(5,c.getPaperTotal());
-		}
+		
 	}
 	
 	@Test(expected = SimulationException.class)
 	public void attendantAddPaperNegative() throws CheckoutException {
-		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Integer num = new Integer(1019);
 			Attendant br = new Attendant(num, "Brian",2002);
@@ -210,7 +208,7 @@ public class AttendantTests extends BaseTest {
 			boolean bool = sys.login(num,2002);
 			int stationNum = sys.register(c);
 			c.addPaper(-50);
-		}
+		
 	}	
 	
 	@Test(expected = SimulationException.class)
@@ -224,13 +222,13 @@ public class AttendantTests extends BaseTest {
 			boolean bool = sys.login(num,2002);
 			int stationNum = sys.register(c);
 			c.addPaper(50);
-		}
-	}	
+		
 	
+		}	
+	}
 
 	@Test
 	public void attendantAddInk() throws CheckoutException {
-		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Integer num = new Integer(1019);
 			Attendant br = new Attendant(num, "Brian",2002);
@@ -240,11 +238,10 @@ public class AttendantTests extends BaseTest {
 			int stationNum = sys.register(c);
 			c.addInk(50);
 			multiTestAssertEquals(50,c.getInkTotal());
-		}
+		
 	}
 	@Test(expected = SimulationException.class)
 	public void attendantAddInkNegative() throws CheckoutException {
-		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Integer num = new Integer(1019);
 			Attendant br = new Attendant(num, "Brian",2002);
@@ -253,7 +250,7 @@ public class AttendantTests extends BaseTest {
 			boolean bool = sys.login(num,2002);
 			int stationNum = sys.register(c);
 			c.addInk(-50);
-		}
+		
 	}	
 
 	@Test
@@ -273,6 +270,7 @@ public class AttendantTests extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			c.emptyBanknoteStorage();
+			
 			multiTestAssertEquals(0, c.getNoteCount());
 		}
 		
