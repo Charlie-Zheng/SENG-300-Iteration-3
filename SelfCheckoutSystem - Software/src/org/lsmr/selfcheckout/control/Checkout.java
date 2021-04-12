@@ -1275,7 +1275,8 @@ public class Checkout {
 		this.pState = PowerState.On;
 	}
 	
-	protected void setStateScanning() {
+	protected void approveWeightDiscrepency() {
+		expectedWeightOnBaggingArea = weightOnBaggingArea;
 		this.state = CheckoutState.Scanning; 
 	}
 	
