@@ -55,10 +55,10 @@ public class BuyingState implements GUIState, ActionListener{
 		this.stateController = stateController;
 
 		// previous state was keypad
-		if (reducedState instanceof KeypadReducedState || reducedState instanceof LookupReducedState) {
-			stateController.notifyListeners(new ScannedItemsRequestData()); // request a copy of products
+		//if (reducedState instanceof KeypadReducedState || reducedState instanceof LookupReducedState || reducedState instanceof PurchasingReducedState) {
+		stateController.notifyListeners(new ScannedItemsRequestData()); // request a copy of products
 
-		}
+		//}
 
 
 

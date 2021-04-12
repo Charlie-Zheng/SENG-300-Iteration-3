@@ -239,8 +239,7 @@ public class PurchasingState implements GUIState, ActionListener {
 	 */
 	@Override
 	public ReducedState reduce() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PurchasingReducedState();
 	}
 
 	/**
@@ -273,4 +272,13 @@ public class PurchasingState implements GUIState, ActionListener {
 		}  
 	}
 
+}
+
+class PurchasingReducedState extends ReducedState {
+
+	@Override
+	public Object getData() {
+		return null;
+	}
+	
 }
