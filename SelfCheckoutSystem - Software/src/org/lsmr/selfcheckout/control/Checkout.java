@@ -191,8 +191,6 @@ public class Checkout {
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
 		bankNoteOutputListener.reset();
-		inkTotal = 0;
-		paperTotal = 0;
 
 	}
 
@@ -353,7 +351,8 @@ public class Checkout {
 	/**
 	 * Returns an array list of products with descriptions that contain the search
 	 * string
-	 * 
+	 * <p>
+	 * Use case: customer looks up product
 	 * @param name
 	 * @return A list of products that match the search
 	 */
@@ -615,7 +614,8 @@ public class Checkout {
 	}
 
 	/**
-	 * Checks whether this checkout instance is in the paused state
+	 * Checks whether this checkout instance is in the paused state. Paused state is
+	 * the checkout station waiting for an item to be added to the bagging area
 	 * 
 	 * @return true if this checkout instance is in the paused state, false
 	 *         otherwise
@@ -1255,5 +1255,8 @@ public class Checkout {
 	public boolean isPaperLow() {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
-	public String getState() {return this.state.toString();}
+
+	public String getState() {
+		return this.state.toString();
+	}
 }

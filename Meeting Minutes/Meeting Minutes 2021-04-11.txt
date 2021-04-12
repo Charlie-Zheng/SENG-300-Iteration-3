@@ -1,0 +1,35 @@
+Meeting Minutes: Discord Meeting April 11, 2021
+
+Attendance:
+Abraham
+Alejandro
+Harprabh
+Jae
+John
+Marilyn
+Nick
+Vianney
+Xingrui
+Charlie
+
+Mahmoud has emergency stuff
+
+Goals this meeting: Progress report:
+Testing team:
+	Nick:		Not much
+	Jae:		Ink totals not reset anymore. Cannot reset the ink state
+	Mahmoud:	Not here
+	
+	Asks implementation to add which use case the method is to javadoc (Harpbrah)
+
+Diagrams:
+	Made deadline for tomorrow
+	is on track to finish tomorow
+
+GUI:
+	Demo'd scanning, searching for product, and entering PLU code
+	Want implementation to make going back from a paying state undos the bag cost (Charlie)
+	Wanted another memeber to help (Charlie, Alejandro)
+
+Next meeting:
+	General meeting:	April 13, 21:30 MST
