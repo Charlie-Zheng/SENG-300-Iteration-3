@@ -60,7 +60,7 @@ import org.lsmr.selfcheckout.products.Product;
  */
 public class Checkout {
 	private enum CheckoutState {
-		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done,On,Off
 	};
 
 	public enum PayingState {
