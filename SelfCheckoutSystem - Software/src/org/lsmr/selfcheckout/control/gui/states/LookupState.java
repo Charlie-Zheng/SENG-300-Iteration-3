@@ -59,6 +59,12 @@ public class LookupState implements GUIState, ActionListener {
 				.waitFor(1.0f)
 				.setText("Type in the item's description")
 				.execute();
+			GUIUtils
+				.begin(input)
+				.setError()
+				.waitFor(0.5f)
+				.restore()
+				.execute();
 		} else if (data instanceof ProductStateData) {
 			inputProduct = (Product) data.obtain();
 			

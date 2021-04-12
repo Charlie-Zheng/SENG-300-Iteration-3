@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
@@ -32,6 +33,7 @@ public class KeypadState implements GUIState, ActionListener {
 	private JTextField input;
 	private String text = "";
 	private JButton goBack;
+	private JLabel topStatement;
 	private PLUCodedProduct inputProduct;
 
 	/*
@@ -48,7 +50,14 @@ public class KeypadState implements GUIState, ActionListener {
 	@Override
 	public void onDataUpdate(StateData<?> data) {
 		if (data == null) {
-			System.out.println("Invalid barcode");
+			GUIUtils
+			.begin(input)
+			.setError()
+			.waitFor(0.5f)
+			.restore()
+			.execute();
+			
+			
 		} else if (data instanceof ProductStateData) {
 			inputProduct = (PLUCodedProduct) data.obtain();
 			stateController.setState(new ScaleState());
@@ -73,7 +82,7 @@ public class KeypadState implements GUIState, ActionListener {
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout(200, 0));
 		topPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 10, 50));
-		JLabel topStatement = new JLabel("Key In Item's Code");
+		topStatement = new JLabel("Key In Item's Code");
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
 		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
 		Image coOpImg = coopImg.getImage() ;  
