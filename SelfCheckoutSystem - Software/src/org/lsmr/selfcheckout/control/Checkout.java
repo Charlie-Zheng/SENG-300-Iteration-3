@@ -48,17 +48,25 @@ import org.lsmr.selfcheckout.products.Product;
  * <p>
  * 4. Choose to start paying
  * <p>
- * 5. Pay with the chosen paying method
+ * 5. Pay with the chosen paying method (user can also choose to cancel payment
+ * and go back to scanning)
  * <p>
+ * 6. Choose to print the receipt, or not to
+ * <p>
+ * 7. Remove the purchased items from the bagging area
  * 
  * @author Group U08-2
  * @date Mar 31, 2021
  */
 public class Checkout {
 	private enum CheckoutState {
-		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done,On,Off
 	};
 
+	private enum PowerState{
+		On,Off
+	}
+	
 	public enum PayingState {
 		Cash, Credit, Debit, Gift
 	};
@@ -83,6 +91,7 @@ public class Checkout {
 	private String loggedInMemberName;
 	private String loggedInMemberNumber;
 	private CheckoutState state;
+	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
 
@@ -187,8 +196,6 @@ public class Checkout {
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
 		bankNoteOutputListener.reset();
-		inkTotal = 0;
-		paperTotal = 0;
 
 	}
 
@@ -233,6 +240,14 @@ public class Checkout {
 
 	}
 
+	/**
+	 * Adds a PLU product to the receipt list
+	 * 
+	 * @param p
+	 * @param totalPrice
+	 * @param weightInGrams
+	 * @param pricePerKilo
+	 */
 	protected void addPLUProductToList(PLUCodedProduct p, BigDecimal totalPrice, double weightInGrams,
 			BigDecimal pricePerKilo) {
 		productsAdded.add(new ReceiptItem(p, totalPrice, weightInGrams, pricePerKilo));
@@ -322,7 +337,7 @@ public class Checkout {
 	 * @throws CheckoutException
 	 *             if the last added item was not a scanned item
 	 */
-	public void doNotBagLastItem() throws CheckoutException {
+	protected void doNotBagLastItem() throws CheckoutException {
 		Product lastAdded = productsAdded.get(productsAdded.size() - 1).product;
 		if (lastAdded instanceof BarcodedProduct) {
 			Barcode bar = ((BarcodedProduct) lastAdded).getBarcode();
@@ -341,7 +356,8 @@ public class Checkout {
 	/**
 	 * Returns an array list of products with descriptions that contain the search
 	 * string
-	 * 
+	 * <p>
+	 * Use case: customer looks up product
 	 * @param name
 	 * @return A list of products that match the search
 	 */
@@ -371,9 +387,24 @@ public class Checkout {
 	}
 
 	/**
+	 * Removes the item from the scale
+	 * 
+	 * @param item
+	 * @throws SimulationException
+	 *             If the item is not on the scale
+	 */
+	public void removeItemFromScale(Item item) throws SimulationException {
+		checkoutStation.scale.remove(item);
+	}
+
+	/**
+	 * Expects the item to already be added onto the scale using addItemToScale()
+	 * <p>
 	 * Adds the product specified by the PLUcode to the checkout. The balance is
 	 * incremented by the weight on the scale (in grams) multiplied by the price per
 	 * kilogram of the item, converted appropriately to units match.
+	 * <p>
+	 * Once done, remember to removeItemFromScale()
 	 * <p>
 	 * Throws a checkout exception if the Checkout is currently paused
 	 * 
@@ -588,7 +619,8 @@ public class Checkout {
 	}
 
 	/**
-	 * Checks whether this checkout instance is in the paused state
+	 * Checks whether this checkout instance is in the paused state. Paused state is
+	 * the checkout station waiting for an item to be added to the bagging area
 	 * 
 	 * @return true if this checkout instance is in the paused state, false
 	 *         otherwise
@@ -1165,9 +1197,10 @@ public class Checkout {
 	}
 
 	/**
-	 * Attendant refills the banknote dispenser with a list of banknotes. * @param
-	 * notes The notes to be added. Any unloaded notes will be returned.
+	 * Attendant refills the banknote dispenser with a list of banknotes.
 	 * 
+	 * @param notes
+	 *            The notes to be added. Any unloaded notes will be returned.
 	 * @return any unloaded notes
 	 */
 	public List<Banknote> refillBanknoteDispenser(List<Banknote> notes) {
@@ -1194,7 +1227,7 @@ public class Checkout {
 	 * @param quantity
 	 *            The amount of paper being added
 	 */
-	public void paperAddition(int quantity) {
+	public void addPaper(int quantity) {
 		checkoutStation.printer.addPaper(quantity);
 		paperTotal += quantity;
 	}
@@ -1205,7 +1238,7 @@ public class Checkout {
 	 * @param quantity
 	 *            The amount of ink being added
 	 */
-	public void inkAddition(int quantity) {
+	public void addInk(int quantity) {
 		checkoutStation.printer.addInk(quantity);
 		inkTotal += quantity;
 	}
@@ -1216,7 +1249,10 @@ public class Checkout {
 	 * @return true, if the ink is low, false otherwise
 	 */
 	public boolean isInkLow() {
+<<<<<<< HEAD
 
+=======
+>>>>>>> bf655137a605a4e3fdbb659bdd71726d931997fd
 		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
 	}
 
@@ -1228,5 +1264,29 @@ public class Checkout {
 	public boolean isPaperLow() {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
+<<<<<<< HEAD
 
+	public String getState() {
+		return this.state.toString();
+	}
+=======
+	public String getState() {return this.state.toString();}
+	public int getPaperTotal() {return this.paperTotal;}
+	public int getInkTotal() {return this.inkTotal;}
+	public int getCoinCount() {return checkoutStation.coinStorage.getCoinCount();}
+	public int getNoteCount() {return checkoutStation.banknoteStorage.getBanknoteCount();}
+	
+	protected void shutDown(){
+		this.pState = PowerState.Off;
+	}
+	
+	protected void powerOn(){
+		this.pState = PowerState.On;
+	}
+	
+	protected void setStateScanning() {
+		this.state = CheckoutState.Scanning; 
+	}
+	
+>>>>>>> 420ca5467fe2c97f13e9d1eec21955cf58f057a5
 }
