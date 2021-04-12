@@ -37,7 +37,7 @@ public class AttendantSystem {
 	}
 	
 	/**
-	 * Allows an attendant to attempt to login to the system
+	 * Use Case: Attendant logs in to their control console
 	 * 
 	 * @param employeeNumber
 	 *            the number associated with the employee
@@ -61,6 +61,8 @@ public class AttendantSystem {
 	}
 	
 	/**
+	 * Use Case: Attendant logs out from their control console
+	 * 
 	 * Allows the currently logged in attendant to log out.
 	 * 
 	 */
@@ -87,6 +89,8 @@ public class AttendantSystem {
 	}
 	
 	/**
+	 * Use Case: Attendant removes product from purchases
+	 * 
 	 * Removes an item from the customers cart at a given station. 
 	 * 
 	 * @param stationNum
@@ -105,7 +109,7 @@ public class AttendantSystem {
 	}
 	
 	/**
-	 * 
+	 * Use Case: Attendant looks up a product
 	 * 
 	 * @param name
 	 *            the name of the product
@@ -132,7 +136,7 @@ public class AttendantSystem {
     }
 	
 	/**
-	 * Approves a weight discrepancy of a customer's station. 
+	 * Use Case: Attendant approves a weight discrepancy
 	 * 
 	 * @param stationNum
 	 *            the number associated to the station
@@ -151,6 +155,8 @@ public class AttendantSystem {
 	}
 	
 	/**
+	 * Use Case: Attendant starts up a station
+	 * 
 	 * Starts up the station associated to the station number
 	 * 
 	 * @param stationNum
@@ -168,6 +174,8 @@ public class AttendantSystem {
 	}
 	
 	/**
+	 * Use Case: Attendant shuts down a station
+	 * 
 	 * Shuts down the station associated to the station number
 	 * 
 	 * @param stationNum
