@@ -144,7 +144,7 @@ public class AttendantSystem {
 			Checkout station = this.stations.get(stationNum);
 			if(station.equals(null)) throw new CheckoutException("This station does not exist!");
 			if(station.isPaused()) {
-				station.setStateScanning();
+				station.approveWeightDiscrepency();
 			}
 			// if station is blocked from a weight discrepancy remove block and set station state to Scanning
 		}

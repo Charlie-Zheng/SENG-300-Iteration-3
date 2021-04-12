@@ -860,7 +860,7 @@ public class Checkout {
 	 */
 	public void usePlasticBags(int n) {
 		addBalanceCurr(pricePerPlasticBag.multiply(new BigDecimal(n)));
-
+		addBagsToList(n);
 	}
 
 	/**
@@ -1383,9 +1383,10 @@ public class Checkout {
 	protected void powerOn() {
 		this.pState = PowerState.On;
 	}
-
-	protected void setStateScanning() {
-		this.state = CheckoutState.Scanning;
+	
+	protected void approveWeightDiscrepency() {
+		expectedWeightOnBaggingArea = weightOnBaggingArea;
+		this.state = CheckoutState.Scanning; 
 	}
-
+	
 }
