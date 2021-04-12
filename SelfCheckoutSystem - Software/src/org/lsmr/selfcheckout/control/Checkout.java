@@ -95,7 +95,7 @@ public class Checkout {
 
 	private final double WEIGHT_TOLERANCE = 10;
 	private static BigDecimal pricePerPlasticBag = new BigDecimal("0.05");
-	private static BarcodedProduct plasticBags;
+
 
 	private BigDecimal currentBalance;
 	private boolean customerBag;
@@ -179,7 +179,7 @@ public class Checkout {
 		if (checkoutStation == null) {
 			throw new SimulationException(new NullPointerException("Argument may not be null."));
 		}
-		plasticBags = new BarcodedProduct(new Barcode("123"), "Plastic Bag", pricePerPlasticBag);
+
 		this.checkoutStation = checkoutStation;
 
 		BarcodeScannerUpdateListener scannerListener = new BarcodeScannerUpdateListener(this);
@@ -321,9 +321,10 @@ public class Checkout {
 		productsAdded.add(new ReceiptItem(p, p.getPrice(), weight, p.getPrice()));
 	}
 
-	protected void addBagsToList(int number) {
+	protected void addBagsToList(int number, BigDecimal totalPrice) {
+		BarcodedProduct plasticBags = new BarcodedProduct(new Barcode("000"+number), "Plastic Bag x"+number, totalPrice);
 		for (int i = 0; i < number; i++) {
-			productsAdded.add(new ReceiptItem(plasticBags, pricePerPlasticBag, 0, pricePerPlasticBag));
+			productsAdded.add(new ReceiptItem(plasticBags, totalPrice, 0, totalPrice));
 		}
 
 	}
@@ -859,8 +860,9 @@ public class Checkout {
 	 * @param n
 	 */
 	public void usePlasticBags(int n) {
-		addBalanceCurr(pricePerPlasticBag.multiply(new BigDecimal(n)));
-		addBagsToList(n);
+		BigDecimal totalPrice = pricePerPlasticBag.multiply(new BigDecimal(n));
+		addBalanceCurr(totalPrice);
+		addBagsToList(n,totalPrice);
 	}
 
 	/**
@@ -1109,7 +1111,6 @@ public class Checkout {
 	 */
 	public static void setPricePerPlasticBag(BigDecimal pricePerPlasticBag) {
 		Checkout.pricePerPlasticBag = pricePerPlasticBag;
-		plasticBags = new BarcodedProduct(new Barcode("123"), "Plastic Bag", pricePerPlasticBag);
 	}
 
 	/**
