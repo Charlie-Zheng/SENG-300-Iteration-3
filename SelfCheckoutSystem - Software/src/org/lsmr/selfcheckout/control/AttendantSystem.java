@@ -37,7 +37,7 @@ public class AttendantSystem {
 	}
 	
 	/**
-	 * Use Case: Attendant logs in to their control console
+	 * Allows an attendant to attempt to login to the system
 	 * 
 	 * @param employeeNumber
 	 *            the number associated with the employee
@@ -61,8 +61,6 @@ public class AttendantSystem {
 	}
 	
 	/**
-	 * Use Case: Attendant logs out from their control console
-	 * 
 	 * Allows the currently logged in attendant to log out.
 	 * 
 	 */
@@ -89,8 +87,6 @@ public class AttendantSystem {
 	}
 	
 	/**
-	 * Use Case: Attendant removes product from purchases
-	 * 
 	 * Removes an item from the customers cart at a given station. 
 	 * 
 	 * @param stationNum
@@ -109,7 +105,7 @@ public class AttendantSystem {
 	}
 	
 	/**
-	 * Use Case: Attendant looks up a product
+	 * 
 	 * 
 	 * @param name
 	 *            the name of the product
@@ -136,7 +132,7 @@ public class AttendantSystem {
     }
 	
 	/**
-	 * Use Case: Attendant approves a weight discrepancy
+	 * Approves a weight discrepancy of a customer's station. 
 	 * 
 	 * @param stationNum
 	 *            the number associated to the station
@@ -148,15 +144,13 @@ public class AttendantSystem {
 			Checkout station = this.stations.get(stationNum);
 			if(station.equals(null)) throw new CheckoutException("This station does not exist!");
 			if(station.isPaused()) {
-				station.approveWeightDiscrepency();
+				station.setStateScanning();
 			}
 			// if station is blocked from a weight discrepancy remove block and set station state to Scanning
 		}
 	}
 	
 	/**
-	 * Use Case: Attendant starts up a station
-	 * 
 	 * Starts up the station associated to the station number
 	 * 
 	 * @param stationNum
@@ -174,8 +168,6 @@ public class AttendantSystem {
 	}
 	
 	/**
-	 * Use Case: Attendant shuts down a station
-	 * 
 	 * Shuts down the station associated to the station number
 	 * 
 	 * @param stationNum
@@ -207,6 +199,23 @@ public class AttendantSystem {
 			else throw new CheckoutException("This station does not exist!"); 
 		}
 	}
+	
+	/**
+	 * Blocks a station with the given station number. 
+	 * 
+	 * @param stationNum
+	 *            the number associated to the station
+	 * @throws CheckoutException
+	 *             if the station is not valid
+	 */
+	public void blockCheckout(int stationNum) throws CheckoutException {
+		if(this.state == ConsoleState.LoggedIn){
+			Checkout station = this.stations.get(stationNum);
+			if(station.equals(null)) throw new CheckoutException("This station does not exist!");
+			station.blockStation();
+		}
+	}
+	
 	
 	public String getState(){return this.state.toString();}
 
