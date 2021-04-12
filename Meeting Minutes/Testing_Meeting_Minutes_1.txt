@@ -1,0 +1,42 @@
+Testing Meeting 01
+<April 9, 2021>
+
+Participants:
+Jae 
+Mahmoud
+Nick
+
+Discussed: 
+	- Division of work for testing
+
+Iteration 3 use cases: 
+Nick:
+- Customer returns to adding items
+- Customer does not want to bag a scanned item
+- Customer looks up product
+- Customer enters PLU code for a product
+- Customer enters their membership card information
+Jae:
+- Customer pays with gift card
+- Customer removes purchased items from bagging area
+- Customer enters number of plastic bags used
+- Station detects that the weight in the bagging area does not conform to expectations
+- Station detects that the paper in a receipt printer is low.
+- Station detects that the ink in a receipt printer is low.
+Mahmoud: (other two will help out if necessary)
+- Attendant approves a weight discrepancy
+- Attendant removes product from purchases
+- Attendant looks up a product
+- Attendant adds paper to receipt printer
+- Attendant adds ink to receipt printer
+- Attendant blocks a station
+- Attendant empties the coin storage unit
+- Attendant empties the banknote storage unit
+- Attendant refills the coin dispenser
+- Attendant refills the banknote dispenser
+- Attendant logs in to their control console
+- Attendant logs out from their control console
+- Attendant starts up a station
+- Attendant shuts down a station
+
+Next meeting: General meeting <April 11th, 2021>

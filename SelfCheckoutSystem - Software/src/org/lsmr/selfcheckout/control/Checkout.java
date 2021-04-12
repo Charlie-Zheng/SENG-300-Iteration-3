@@ -65,16 +65,24 @@ import org.lsmr.selfcheckout.products.Product;
  * <p>
  * 4. Choose to start paying
  * <p>
- * 5. Pay with the chosen paying method
+ * 5. Pay with the chosen paying method (user can also choose to cancel payment
+ * and go back to scanning)
  * <p>
+ * 6. Choose to print the receipt, or not to
+ * <p>
+ * 7. Remove the purchased items from the bagging area
  * 
  * @author Group U08-2
  * @date Mar 31, 2021
  */
 public class Checkout {
 	private enum CheckoutState {
-		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done, On, Off
 	};
+
+	private enum PowerState {
+		On, Off
+	}
 
 	public enum PayingState {
 		Cash, Credit, Debit, Gift
@@ -100,10 +108,11 @@ public class Checkout {
 	private String loggedInMemberName;
 	private String loggedInMemberNumber;
 	private CheckoutState state;
+	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
 	private GUIController guiController;
-	
+
 	private StateUpdateListener guiUpdateListener = new StateUpdateListener() {
 
 		@Override
@@ -112,29 +121,27 @@ public class Checkout {
 				int pluCode = (int) data.obtain();
 				try {
 					PriceLookupCode code = new PriceLookupCode(String.valueOf(pluCode));
-					guiController.notifyDataUpdate(new ProductStateData(ProductDatabases.PLU_PRODUCT_DATABASE.get(code)));
+					guiController
+							.notifyDataUpdate(new ProductStateData(ProductDatabases.PLU_PRODUCT_DATABASE.get(code)));
 				} catch (SimulationException e) {
 					// no item in database - notify null
 					guiController.notifyDataUpdate(null);
 				}
-				
-				
+
 			} else if (data instanceof ScannedItemsRequestData) { // buying state is requesting for data
 				guiController.notifyDataUpdate(new ListProductStateData(productsAdded));
-				
 
 			} else if (data instanceof BalanceStateData) { // buying state is requesting for total balance
 				guiController.notifyDataUpdate(new BalanceStateData(getBalance().floatValue()));
-				
-				
+
 			} else if (data instanceof MemberStateData) { // member card state
 				String memberNum = (String) data.obtain();
 				try {
 					guiController.notifyDataUpdate(new BooleanStateData(enterMembershipCardInfo(memberNum)));
 				} catch (CheckoutException e) {
-					System.err.println("Attempting to enter membership when already logged in. Check if the GUI is properly implemented.");
+					System.err.println(
+							"Attempting to enter membership when already logged in. Check if the GUI is properly implemented.");
 				}
-
 
 			} else if (data instanceof LookupStateData) { // search has been made, so we return first search result
 				ArrayList<Product> products = searchProductDatabase((String) data.obtain());
@@ -144,15 +151,12 @@ public class Checkout {
 					guiController.notifyDataUpdate(new ProductStateData(products.get(0)));
 				}
 
-
-				
 			} else if (data instanceof InsertBarcodedProductData) { // inserts a barcoded product into the cart
 				BarcodedProduct p = (BarcodedProduct) data.obtain();
 
 				addBalanceUnit(p.getPrice());
 				addExpectedWeightOnScale(ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
 				addBarcodedProductToList(p, ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.get(p.getBarcode()));
-
 
 			} else if (data instanceof InsertPLUProductData) { // inserts PLU into the cart
 				try {
@@ -161,16 +165,14 @@ public class Checkout {
 					System.err.println("Unknown PLU product");
 				}
 
-
 			} else if (data instanceof RequestPricePerBagData) { // requesting price of bags
 				guiController.notifyDataUpdate(new RequestPricePerBagData(getPricePerPlasticBag().floatValue()));
-
 
 			} else if (data instanceof BuyBagStateData) { // set # of bags to purchase
 				usePlasticBags((int) data.obtain());
 			}
 		}
-		
+
 	};
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
@@ -203,13 +205,10 @@ public class Checkout {
 		giveChange = new GiveChange(checkoutStation);
 		MembershipCardListener membershipListener = new MembershipCardListener(this);
 		checkoutStation.cardReader.register(membershipListener);
-		
-		
-		
-		guiController = new GUIController(checkoutStation.screen.getFrame());		
+
+		guiController = new GUIController(checkoutStation.screen.getFrame());
 		guiController.addStateUpdateListener(guiUpdateListener); // so the checkout station can know of any GUI updates
 		guiController.setState(new AttendantLogInState());
-		
 
 		currentBalance = new BigDecimal(0);
 		customerBag = false;
@@ -226,7 +225,7 @@ public class Checkout {
 		paperTotal = 0;
 
 	}
-	
+
 	public void run() {
 		checkoutStation.screen.setVisible(true);
 	}
@@ -285,8 +284,6 @@ public class Checkout {
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
 		bankNoteOutputListener.reset();
-		inkTotal = 0;
-		paperTotal = 0;
 
 	}
 
@@ -331,6 +328,14 @@ public class Checkout {
 
 	}
 
+	/**
+	 * Adds a PLU product to the receipt list
+	 * 
+	 * @param p
+	 * @param totalPrice
+	 * @param weightInGrams
+	 * @param pricePerKilo
+	 */
 	protected void addPLUProductToList(PLUCodedProduct p, BigDecimal totalPrice, double weightInGrams,
 			BigDecimal pricePerKilo) {
 		productsAdded.add(new ReceiptItem(p, totalPrice, weightInGrams, pricePerKilo));
@@ -420,7 +425,7 @@ public class Checkout {
 	 * @throws CheckoutException
 	 *             if the last added item was not a scanned item
 	 */
-	public void doNotBagLastItem() throws CheckoutException {
+	protected void doNotBagLastItem() throws CheckoutException {
 		Product lastAdded = productsAdded.get(productsAdded.size() - 1).product;
 		if (lastAdded instanceof BarcodedProduct) {
 			Barcode bar = ((BarcodedProduct) lastAdded).getBarcode();
@@ -439,6 +444,8 @@ public class Checkout {
 	/**
 	 * Returns an array list of products with descriptions that contain the search
 	 * string
+	 * <p>
+	 * Use case: customer looks up product
 	 * 
 	 * @param name
 	 * @return A list of products that match the search
@@ -469,9 +476,24 @@ public class Checkout {
 	}
 
 	/**
+	 * Removes the item from the scale
+	 * 
+	 * @param item
+	 * @throws SimulationException
+	 *             If the item is not on the scale
+	 */
+	public void removeItemFromScale(Item item) throws SimulationException {
+		checkoutStation.scale.remove(item);
+	}
+
+	/**
+	 * Expects the item to already be added onto the scale using addItemToScale()
+	 * <p>
 	 * Adds the product specified by the PLUcode to the checkout. The balance is
 	 * incremented by the weight on the scale (in grams) multiplied by the price per
 	 * kilogram of the item, converted appropriately to units match.
+	 * <p>
+	 * Once done, remember to removeItemFromScale()
 	 * <p>
 	 * Throws a checkout exception if the Checkout is currently paused
 	 * 
@@ -501,7 +523,8 @@ public class Checkout {
 	 * membership number list, nothing happens.
 	 * 
 	 * @param number
-	 * @return true if the info associated with the membership card exists, false otherwise
+	 * @return true if the info associated with the membership card exists, false
+	 *         otherwise
 	 * @throws CheckoutException
 	 *             If a member is already logged in
 	 */
@@ -517,7 +540,7 @@ public class Checkout {
 				throw new CheckoutException("Attempted to log in when a member was already logged in");
 			}
 		}
-		
+
 		return false;
 
 	}
@@ -597,7 +620,7 @@ public class Checkout {
 			expectedWeightOnBaggingArea -= i.weightInGrams;
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -690,7 +713,8 @@ public class Checkout {
 	}
 
 	/**
-	 * Checks whether this checkout instance is in the paused state
+	 * Checks whether this checkout instance is in the paused state. Paused state is
+	 * the checkout station waiting for an item to be added to the bagging area
 	 * 
 	 * @return true if this checkout instance is in the paused state, false
 	 *         otherwise
@@ -943,7 +967,7 @@ public class Checkout {
 	 * @throws CheckoutException
 	 */
 	public void printReceipt() throws CheckoutException {
-		if (state != CheckoutState.PrintingReceipt) {
+		if (state == CheckoutState.PrintingReceipt) {
 			for (int i = 0; i < productsAdded.size(); i++) {
 				if (i != 0) {
 					checkoutStation.printer.print('\n');
@@ -1248,11 +1272,8 @@ public class Checkout {
 	 * 
 	 * @param coins
 	 *            The coins to be added. Any unloaded coins will be returned.
-	 * @throws CheckoutException
-	 *             Coin inserted was not real, dispenser was overloaded or if the
-	 *             dispenser was disabled
 	 */
-	public List<Coin> refillCoinDispenser(List<Coin> coins) throws CheckoutException {
+	public List<Coin> refillCoinDispenser(List<Coin> coins) {
 		List<Coin> unloaded = new ArrayList<Coin>();
 
 		for (Coin c : coins) {
@@ -1271,12 +1292,13 @@ public class Checkout {
 	}
 
 	/**
-	 * Attendant refills the banknote dispenser
+	 * Attendant refills the banknote dispenser with a list of banknotes.
 	 * 
-	 * @throws CheckoutException
-	 *             Banknote inserted was not real or the dispenser was overloaded
+	 * @param notes
+	 *            The notes to be added. Any unloaded notes will be returned.
+	 * @return any unloaded notes
 	 */
-	public List<Banknote> refillBanknoteDispenser(List<Banknote> notes) throws CheckoutException {
+	public List<Banknote> refillBanknoteDispenser(List<Banknote> notes) {
 		List<Banknote> unloaded = new ArrayList<Banknote>();
 
 		for (Banknote c : notes) {
@@ -1300,7 +1322,7 @@ public class Checkout {
 	 * @param quantity
 	 *            The amount of paper being added
 	 */
-	public void paperAddition(int quantity) {
+	public void addPaper(int quantity) {
 		checkoutStation.printer.addPaper(quantity);
 		paperTotal += quantity;
 	}
@@ -1311,7 +1333,7 @@ public class Checkout {
 	 * @param quantity
 	 *            The amount of ink being added
 	 */
-	public void inkAddition(int quantity) {
+	public void addInk(int quantity) {
 		checkoutStation.printer.addInk(quantity);
 		inkTotal += quantity;
 	}
@@ -1322,8 +1344,7 @@ public class Checkout {
 	 * @return true, if the ink is low, false otherwise
 	 */
 	public boolean isInkLow() {
-
-		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
+		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
 	}
 
 	/**
@@ -1332,6 +1353,39 @@ public class Checkout {
 	 * @return true, if the paper is low, false otherwise
 	 */
 	public boolean isPaperLow() {
-		return inkTotal < ReceiptPrinter.MAXIMUM_INK * 0.1;
+		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
+
+	public String getState() {
+		return this.state.toString();
+	}
+
+	public int getPaperTotal() {
+		return this.paperTotal;
+	}
+
+	public int getInkTotal() {
+		return this.inkTotal;
+	}
+
+	public int getCoinCount() {
+		return checkoutStation.coinStorage.getCoinCount();
+	}
+
+	public int getNoteCount() {
+		return checkoutStation.banknoteStorage.getBanknoteCount();
+	}
+
+	protected void shutDown() {
+		this.pState = PowerState.Off;
+	}
+
+	protected void powerOn() {
+		this.pState = PowerState.On;
+	}
+
+	protected void setStateScanning() {
+		this.state = CheckoutState.Scanning;
+	}
+
 }

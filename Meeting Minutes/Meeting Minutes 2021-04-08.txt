@@ -1,0 +1,35 @@
+Meeting Minutes: Discord Meeting April 8, 2021
+
+Attendance:
+Alejandro
+Abraham
+Harprabh
+Jae
+John
+Mahmoud
+Marilyn
+Mushfiq
+Vianney
+Xingrui
+Charlie
+
+Nick says he has internet issues
+
+Goals this meeting: Give info about implementation to testing/diagrams team.
+
+Diagrams: 
+	Iteration 1-2 not completely done. Does not need extra team members right now
+
+Implementation:
+	GUI team showed their GUI. Talked about how to simulate physical action and objects within the GUI.
+	GUI keep working on GUI
+
+	Design team talked about some details. Design team write detailed comments/documentation for testing/diagram team.
+
+Testing:
+	Will now start writing tests for iteration 3.
+
+
+Next meeting:
+General meeting:	April 11, 21:30 MST	Also plan to meet on April 13 and April 14
+Test+Design team:	

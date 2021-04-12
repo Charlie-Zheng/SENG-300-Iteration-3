@@ -15,7 +15,7 @@ Goals this meeting: Decide which group's code base to use as a base, assign team
 
 Results: Use U08-2 group's code as base
 
-Nick: Testing
+Nick: 		Testing
 Alejandro: 	Implementation
 Charlie: 	Implementation
 Jae: 		Testing

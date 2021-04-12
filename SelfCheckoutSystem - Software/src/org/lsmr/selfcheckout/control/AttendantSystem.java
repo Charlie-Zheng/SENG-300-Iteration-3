@@ -143,6 +143,9 @@ public class AttendantSystem {
 		if(this.state == ConsoleState.LoggedIn) {
 			Checkout station = this.stations.get(stationNum);
 			if(station.equals(null)) throw new CheckoutException("This station does not exist!");
+			if(station.isPaused()) {
+				station.setStateScanning();
+			}
 			// if station is blocked from a weight discrepancy remove block and set station state to Scanning
 		}
 	}
@@ -159,7 +162,7 @@ public class AttendantSystem {
 		if(this.state == ConsoleState.LoggedIn) {
 			Checkout station = this.stations.get(stationNum); 
 			if(station.equals(null)) throw new CheckoutException("This station does not exist!");
-			
+			station.powerOn();
 			// Change state of checkout to ON? Might need to add a new state for checkout to determine if it is on or not. 
 		}
 	}
@@ -176,9 +179,29 @@ public class AttendantSystem {
 		if(this.state == ConsoleState.LoggedIn) {
 			Checkout station = this.stations.get(stationNum);
 			if(station.equals(null)) throw new CheckoutException("This station does not exist!");
+			station.shutDown();
 			// Change state of checkout to OFF? Might need to add a new state for checkout to determine if it is on or not. 
 		}
 	}
+	
+	/**
+	 * Approves an item that the customer does not want to bag at a given station. 
+	 * 
+	 * @param stationNum
+	 *            the number associated to the station
+	 * @throws CheckoutException
+	 *             if the station is not valid
+	 */
+	public void approveDoNotBagLastItem(int stationNum) throws CheckoutException {
+		if(this.state == ConsoleState.LoggedIn) {
+			Checkout station = this.stations.get(stationNum);
+			if(station != null) station.doNotBagLastItem();
+			else throw new CheckoutException("This station does not exist!"); 
+		}
+	}
+	
+	public String getState(){return this.state.toString();}
+
 }
 
 

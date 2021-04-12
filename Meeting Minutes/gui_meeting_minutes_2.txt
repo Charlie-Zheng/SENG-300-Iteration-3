@@ -1,0 +1,29 @@
+GUI Meeting 02
+<April 8, 2021>
+
+Discussed:
+
+	- Caught each other up on what we did
+	- How to move forward
+	- What we want to have done by the next group meeting (April 11)
+
+Iteration 1 & 2 Use Cases:
+	
+	- Customer scans an item
+	- Customer places item in bagging area
+	- Customer pays with a coin
+	- Customer pays with a banknote
+	- Customer fails to place item in bagging area
+	- Customer scans their membership card
+	- Customer adds their own bag to the bagging area
+	- Customer pays with a credit card
+	- Customer pays with a debit card
+	- Customer receives change
+	- Customer finishes adding items
+
+Assignments:
+
+	- Vianney going to focus more on implementation
+	- Marilyn going to focus more on design
+
+Meet April 11, 2021 with group, discuss via messages in the mean time
