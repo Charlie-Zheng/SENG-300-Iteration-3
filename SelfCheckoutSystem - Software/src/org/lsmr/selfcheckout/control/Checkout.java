@@ -1260,4 +1260,10 @@ public class Checkout {
 	public int getInkTotal() {return this.inkTotal;}
 	public int getCoinCount() {return checkoutStation.coinStorage.getCoinCount();}
 	public int getNoteCount() {return checkoutStation.banknoteStorage.getBanknoteCount();}
+	protected void shutDown(){
+		this.state = CheckoutState.Off
+	}
+	protected void powerOn(){
+		this.state = CheckoutState.On
+	}
 }
