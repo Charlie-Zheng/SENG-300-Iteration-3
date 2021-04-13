@@ -168,7 +168,8 @@ public class Checkout {
 				guiController.notifyDataUpdate(new RequestPricePerBagData(getPricePerPlasticBag().floatValue()));
 
 			} else if (data instanceof BuyBagStateData) { // set # of bags to purchase
-				usePlasticBags((int) data.obtain());
+				int bags = (int) data.obtain();
+				if (bags > 0) usePlasticBags((int) data.obtain());
 			}
 		}
 
