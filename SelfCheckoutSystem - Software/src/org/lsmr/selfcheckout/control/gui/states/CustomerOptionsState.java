@@ -1,7 +1,6 @@
 package org.lsmr.selfcheckout.control.gui.states;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -11,10 +10,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.GrayFilter;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -25,6 +22,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 public class CustomerOptionsState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
+	
 	// customer inserts banknote
 	private JButton insert5;
 	private JButton insert10;
@@ -41,7 +39,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 
 	private JButton scanItem;
 	private JButton scanCard;
-	private JButton addOwnBag;//taken care of by start screen
 	private JButton bagItem;
 
 	// customer places item on scale
@@ -65,9 +62,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 	private JButton tapCard;
 	private JButton insertCard;
 	private JButton swipeCard;
-
-	//insert card
-	//https://icon-library.com/icon/insert-card-icon-22.html
 
 
 	@Override
@@ -121,7 +115,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		imagePanel.add(checkoutLogo);
 
 		JPanel buttonPanel = new JPanel();		
-		//	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
 		Dimension buttonSize = new Dimension(250, 34);
 
@@ -133,7 +126,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel bankNotePanel = new JPanel();
 		bankNotePanel.add(banknoteLabel);
 		banknotePanel.add(bankNotePanel);
-		//banknotePanel.add(newSpacing(0, 10));
 
 		// image for all banknotes downloaded from website below - cropped the image
 		// https://en.wikipedia.org/wiki/Canadian_dollar#/media/File:Canadian_Frontier_Banknotes_faces.png		
@@ -157,7 +149,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel insert5Panel = new JPanel();
 		insert5Panel.add(insert5);
 		banknotePanel.add(insert5Panel);
-		//banknotePanel.add(newSpacing(0,10));
 
 
 		ImageIcon ten = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/10 bill.png");
@@ -180,7 +171,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel insert10Panel = new JPanel();
 		insert10Panel.add(insert10);
 		banknotePanel.add(insert10Panel);
-		//banknotePanel.add(newSpacing(0,10));
 
 		ImageIcon twenty = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/20 bill.png");
 		Image twentyImg = twenty.getImage() ;  
@@ -202,7 +192,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel insert20Panel = new JPanel();
 		insert20Panel.add(insert20);
 		banknotePanel.add(insert20Panel);
-		//banknotePanel.add(newSpacing(0,10));
 
 
 		ImageIcon fifty = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/50 bill.png");
@@ -225,7 +214,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel insert50Panel = new JPanel();
 		insert50Panel.add(insert50);
 		banknotePanel.add(insert50Panel);
-		//banknotePanel.add(newSpacing(0,10));
 
 		ImageIcon hundred = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/100 bill.png");
 		Image hundredImg = hundred.getImage() ;  
@@ -257,7 +245,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel coiNPanel = new JPanel();
 		coiNPanel.add(coinLabel);
 		coinPanel.add(coiNPanel);
-		//coinPanel.add(newSpacing(0, 10));
 
 		// image for nickel downloaded from website below
 		// https://www.cleanpng.com/png-canada-nickel-coin-dime-loonie-6720907/download-png.html
@@ -281,7 +268,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel insertNickelPanel = new JPanel();
 		insertNickelPanel.add(insertNickel);
 		coinPanel.add(insertNickelPanel);
-		//coinPanel.add(newSpacing(0,10));
 
 		// image for dime downloaded from website below
 		// https://www.cleanpng.com/png-150th-anniversary-of-canada-coin-set-royal-canadia-1655179/download-png.html
@@ -305,7 +291,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel insertDimePanel = new JPanel();
 		insertDimePanel.add(insertDime);
 		coinPanel.add(insertDimePanel);
-		//coinPanel.add(newSpacing(0,10));
 
 		// image of quarter downloaded from website below
 		// https://www.cleanpng.com/png-150th-anniversary-of-canada-canadian-coins-quarter-2268512/download-png.html
@@ -329,7 +314,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel insertQuarterPanel = new JPanel();
 		insertQuarterPanel.add(insertQuarter);
 		coinPanel.add(insertQuarterPanel);
-		//coinPanel.add(newSpacing(0,10));
 
 		// image of loonie downloaded from website below
 		// https://www.cleanpng.com/png-dollar-coin-canada-loonie-royal-canadian-mint-unci-3389442/download-png.html
@@ -353,7 +337,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel insertLooniePanel = new JPanel();
 		insertLooniePanel.add(insertLoonie);
 		coinPanel.add(insertLooniePanel);
-		//coinPanel.add(newSpacing(0,10));
 
 		// image of twoonie downloaded from website below
 		// https://www.cleanpng.com/png-canada-toonie-loonie-canadian-dollar-royal-canadia-1109303/download-png.html
@@ -385,7 +368,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel addWeighTPanel = new JPanel();
 		addWeighTPanel.add(addWeightLabel);
 		addWeightPanel.add(addWeighTPanel);
-		//addWeightPanel.add(newSpacing(0, 10));
 
 		// image for both plus sign and minus sign downloaded from website below - cropped the image
 		// https://www.pngitem.com/download/ibbmhT_plus-sign-minus-symbol-math-and-signs-computer/
@@ -409,7 +391,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel add1Panel = new JPanel();
 		add1Panel.add(add1g);
 		addWeightPanel.add(add1Panel);
-		//addWeightPanel.add(newSpacing(0, 10));
 
 		add5g = new JButton();
 		add5g.setLayout(new BorderLayout());
@@ -426,7 +407,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel add5Panel = new JPanel();
 		add5Panel.add(add5g);
 		addWeightPanel.add(add5Panel);
-		//addWeightPanel.add(newSpacing(0, 10));
 
 		add10g = new JButton();
 		add10g.setLayout(new BorderLayout());
@@ -443,7 +423,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel add10Panel = new JPanel();
 		add10Panel.add(add10g);
 		addWeightPanel.add(add10Panel);
-		//addWeightPanel.add(newSpacing(0, 10));
 
 		add20g = new JButton();
 		add20g.setLayout(new BorderLayout());
@@ -460,7 +439,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel add20Panel = new JPanel();
 		add20Panel.add(add20g);
 		addWeightPanel.add(add20Panel);
-		//addWeightPanel.add(newSpacing(0, 10));
 
 		add50g = new JButton();
 		add50g.setLayout(new BorderLayout());
@@ -477,7 +455,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel add50Panel = new JPanel();
 		add50Panel.add(add50g);
 		addWeightPanel.add(add50Panel);
-		//addWeightPanel.add(newSpacing(0, 10));
 
 		add100g = new JButton();
 		add100g.setLayout(new BorderLayout());
@@ -502,7 +479,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel removeWeighTPanel = new JPanel();
 		removeWeighTPanel.add(removeWeightLabel);
 		removeWeightPanel.add(removeWeighTPanel);
-		//removeWeightPanel.add(newSpacing(0, 10));
 
 		ImageIcon minus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/minus.png");
 		Image minusImg = minus.getImage() ;  
@@ -524,7 +500,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel minus1Panel = new JPanel();
 		minus1Panel.add(minus1g);
 		removeWeightPanel.add(minus1Panel);
-		//removeWeightPanel.add(newSpacing(0, 10));
 
 		minus5g = new JButton();
 		minus5g.setLayout(new BorderLayout());
@@ -541,7 +516,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel minus5Panel = new JPanel();
 		minus5Panel.add(minus5g);
 		removeWeightPanel.add(minus5Panel);
-		//removeWeightPanel.add(newSpacing(0, 10));
 
 		minus10g = new JButton();
 		minus10g.setLayout(new BorderLayout());
@@ -558,7 +532,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel minus10Panel = new JPanel();
 		minus10Panel.add(minus10g);
 		removeWeightPanel.add(minus10Panel);
-		//removeWeightPanel.add(newSpacing(0, 10));
 
 		minus20g = new JButton();
 		minus20g.setLayout(new BorderLayout());
@@ -575,7 +548,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel minus20Panel = new JPanel();
 		minus20Panel.add(minus20g);
 		removeWeightPanel.add(minus20Panel);
-		//removeWeightPanel.add(newSpacing(0, 10));
 
 		minus50g = new JButton();
 		minus50g.setLayout(new BorderLayout());
@@ -592,7 +564,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel minus50Panel = new JPanel();
 		minus50Panel.add(minus50g);
 		removeWeightPanel.add(minus50Panel);
-		//	removeWeightPanel.add(newSpacing(0, 10));
 
 		minus100g = new JButton();
 		minus100g.setLayout(new BorderLayout());
@@ -610,9 +581,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		minus100Panel.add(minus100g);
 		removeWeightPanel.add(minus100Panel);
 
-		//	private JButton scanMemberCard;
-		//	private JButton bagItem;
-
 		JPanel actionsPanel = new JPanel();
 		actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
 		actionsPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 135, 0));
@@ -621,7 +589,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel actionSPanel = new JPanel();
 		actionSPanel.add(actionsLabel);
 		actionsPanel.add(actionSPanel);
-		//actionsPanel.add(newSpacing(0, 10));
 
 		//black with yellow scanner
 		//https://www.cleanpng.com/png-barcode-scanners-stock-photography-label-barcode-s-3544761/download-png.html
@@ -645,7 +612,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel scanItemPanel = new JPanel();
 		scanItemPanel.add(scanItem);
 		actionsPanel.add(scanItemPanel);
-		//actionsPanel.add(newSpacing(0, 10));
 
 		scanCard = new JButton();
 		scanCard.setLayout(new BorderLayout());
@@ -662,7 +628,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel scanCardPanel = new JPanel();
 		scanCardPanel.add(scanCard);
 		actionsPanel.add(scanCardPanel);
-		//actionsPanel.add(newSpacing(0, 10));
 
 		// bag of groceries
 		//https://www.cleanpng.com/png-shopping-bags-trolleys-grocery-store-clip-art-blac-3014424/download-png.html
@@ -675,15 +640,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		bagItem = new JButton();
 		bagItem.setLayout(new BorderLayout());
 		JLabel bagItemIcon = new JLabel(bagImgResized);
-		//JLabel bagItemLabel1 = new JLabel("Put Item in Bagging Area", SwingConstants.CENTER);
-		//bagItemLabel1.setFont(new Font("Arial", Font.BOLD, 12));
-		//JLabel bagItemLabel2 = new JLabel("Bagging Area", SwingConstants.CENTER);
-		//bagItemLabel2.setFont(new Font("Arial", Font.BOLD, 12));
-		//JPanel bagItemLabel = new JPanel();
-		//bagItemLabel.setLayout(new BorderLayout());
-		//bagItemLabel.setOpaque(false);
-		//bagItemLabel.add(bagItemLabel1, BorderLayout.NORTH);
-		//bagItemLabel.add(bagItemLabel2, BorderLayout.SOUTH);
 		JLabel bagItemLabel = new JLabel("Place Item in Bagging Area", SwingConstants.CENTER);
 		bagItemLabel.setFont(new Font("Arial", Font.BOLD, 14));
 		bagItem.add(bagItemLabel, BorderLayout.CENTER);
@@ -696,7 +652,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel bagItemPanel = new JPanel();
 		bagItemPanel.add(bagItem);
 		actionsPanel.add(bagItemPanel);
-		//actionsPanel.add(newSpacing(0, 10));
 
 		JPanel payPanel = new JPanel();
 		payPanel.setLayout(new BoxLayout(payPanel, BoxLayout.Y_AXIS));

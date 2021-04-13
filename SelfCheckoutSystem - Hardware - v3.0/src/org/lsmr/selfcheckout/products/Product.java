@@ -28,7 +28,7 @@ public abstract class Product {
 		if(price == null)
 			throw new SimulationException(new NullPointerException("price is null"));
 
-		if(price.compareTo(BigDecimal.ZERO) < 0)
+		if(price.compareTo(BigDecimal.ZERO) <= 0)
 			throw new SimulationException(new IllegalArgumentException("A product's price can only be positive."));
 
 		this.price = price;
