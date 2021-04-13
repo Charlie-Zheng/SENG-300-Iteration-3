@@ -81,6 +81,7 @@ public class AttendantSystem {
 		if (station == null)
 			throw new CheckoutException("You tried to register a station that does not exist.");
 		int stationNum = this.stations.size();
+        station.registerAttendantSystem(this);
 		this.stations.add(station);
 		return stationNum;
 	}
