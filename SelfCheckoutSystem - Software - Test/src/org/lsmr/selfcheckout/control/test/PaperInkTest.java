@@ -79,7 +79,7 @@ public class PaperInkTest extends BaseTest {
 	 * @throws OverloadException, CheckoutException
 	 */
 	@Test
-	public void ReceiptPrintNormalTest() throws OverloadException, CheckoutException{
+	public void ReceiptPrintNormalTest() {
 		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -88,22 +88,32 @@ public class PaperInkTest extends BaseTest {
 			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
 			c.addPaper(10);
 			c.addInk(100);
-			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-			c.scanItem(item);
-			c.addItemToBaggingArea(item);
-			// barcode 30040321 -> price $3.97
-			item = new BarcodedItem(new Barcode("30040321"), 397);
-			c.scanItem(item);
-			c.addItemToBaggingArea(item);
-			c.startPayment(PayingState.Gift);
-			c.payByTappingCard(card);
-			c.printReceipt();
+			try {
+				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+				c.scanItem(item);
+				c.addItemToBaggingArea(item);
+				item = new BarcodedItem(new Barcode("30040321"), 397);
+				c.scanItem(item);
+				c.addItemToBaggingArea(item);
+				c.startPayment(PayingState.Gift);
+				c.payByTappingCard(card);
+				c.printReceipt();
+				success();
+			} catch (OverloadException | CheckoutException e) {
+				fail();
+			}
 
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();			
 		}
 	}
+	
+	/**
+	 * Test whether or not the receipt printer works as intended
+	 * Correctly loaded paper, ink but no product information
+	 * @throws OverloadException, CheckoutException
+	 */
 	
 
 }
