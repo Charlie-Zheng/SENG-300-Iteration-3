@@ -304,17 +304,18 @@ public class BuyingState implements GUIState, ActionListener{
 	public void actionPerformed(ActionEvent event) {
 		JComponent view = (JComponent) event.getSource();
 		if (view == key) {
-			stateController.setState(new KeypadState());
+			//stateController.setState(new KeypadState());
 			//stateController.setState(new RedState());
 			//stateController.setState(new BagItemState());
 			//stateController.setState(new EndState());
 			//stateController.setState(new BlockState());
-			//stateController.setState(new WeightWrongState());
+			stateController.setState(new WeightWrongState());
 			//stateController.setState(new StartState());
 			//stateController.setState(new AttendantState());
 			//stateController.setState(new AttendantLogInState());
 			//stateController.setState(new AttendantAccessState());
-			stateController.setState(new CustomerOptionsState());
+			//stateController.setState(new CustomerOptionsState());
+			//stateController.setState(new AttendantOptionsState());
 		} else if (view == look) {
 			stateController.setState(new LookupState());
 		} else if(view == checkoutButton) {

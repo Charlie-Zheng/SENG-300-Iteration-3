@@ -1,21 +1,26 @@
 package org.lsmr.selfcheckout.control.gui.states;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
-public class WeightWrongState implements GUIState {
+public class WeightWrongState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
+	private JButton logIn;
 
 	/**
 	 * 
@@ -67,10 +72,7 @@ public class WeightWrongState implements GUIState {
 		//https://www.clipartmax.com/middle/m2i8d3m2K9m2G6b1_vector-illustration-of-supermarket-grocery-store-shopper-carry-bags-clipart/		
 		JPanel wordPanel = new JPanel();
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
-		//if because of too much weight
-		//JLabel words = new JLabel("Unexpected item in bagging area.");
-		//if because of removed item -- we could also branch to skip bagging?
-		JLabel words = new JLabel("Please place item back in the bagging area.");
+		JLabel words = new JLabel("Unexpected weight in bagging area.");
 		words.setFont(new Font("Arial", Font.BOLD, 40));
 		wordPanel.add(words);// panel with statement to input item's description
 
@@ -81,15 +83,28 @@ public class WeightWrongState implements GUIState {
 		JPanel errorPanel = new JPanel();
 		ImageIcon errorImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/error icon.png");
 		Image errImg = errorImg.getImage() ;  
-		Image newErrorImg = errImg.getScaledInstance( 400, 400,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image newErrorImg = errImg.getScaledInstance( 375, 375,  java.awt.Image.SCALE_SMOOTH) ;  
 		ImageIcon errorImgResized = new ImageIcon(newErrorImg);
 		JLabel errorImgLabel = new JLabel(errorImgResized);
 		errorPanel.add(errorImgLabel);
-
+		
+		Dimension buttonSize = new Dimension(250, 60);
+		JPanel logInPanel = new JPanel();
+		logInPanel.setLayout(new BorderLayout());
+		logInPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 30));
+		logIn = new JButton("Log In");
+		logIn.setFont(new Font("Arial", Font.BOLD, 40));
+		logIn.addActionListener(this);
+		logIn.setSize(buttonSize);
+		logIn.setPreferredSize(buttonSize);
+		logIn.setMinimumSize(buttonSize);
+		logIn.setMaximumSize(buttonSize);
+		logInPanel.add(logIn, BorderLayout.EAST);
 
 		mainPanel.add(topPanel);
 		mainPanel.add(wordPanel);
 		mainPanel.add(errorPanel);
+		mainPanel.add(logInPanel);
 
 		return mainPanel;
 	}
@@ -101,6 +116,16 @@ public class WeightWrongState implements GUIState {
 	public ReducedState reduce() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JButton button = (JButton) e.getSource();
+		
+		if(button == logIn) {
+			stateController.setState(new AttendantLogInState());
+		}
+		
 	}
 
 }
