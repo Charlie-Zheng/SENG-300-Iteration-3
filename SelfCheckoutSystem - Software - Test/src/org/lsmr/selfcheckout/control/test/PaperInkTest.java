@@ -7,6 +7,7 @@ import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.PLUCodedItem;
+import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.CardIssuerDatabase;
 import org.lsmr.selfcheckout.control.Checkout.PayingState;
 import org.lsmr.selfcheckout.control.CheckoutException;
@@ -75,8 +76,9 @@ public class PaperInkTest extends BaseTest {
 	/**
 	 * Test whether or not the receipt printer works as intended
 	 * Correctly loaded paper, ink and receipt information allows 
-	 * the software to print a receipt
-	 * @throws OverloadException, CheckoutException
+	 * the software to print a receipt (containing 1 barcoded item
+	 * and 1 PLU item)
+	 * 
 	 */
 	@Test
 	public void ReceiptPrintNormalTest() {
@@ -92,12 +94,11 @@ public class PaperInkTest extends BaseTest {
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				c.scanItem(item);
 				c.addItemToBaggingArea(item);
-				item = new BarcodedItem(new Barcode("30040321"), 397);
-				c.scanItem(item);
-				c.addItemToBaggingArea(item);
+				c.enterPLUCode(new PriceLookupCode("12345"));
 				c.startPayment(PayingState.Gift);
 				c.payByTappingCard(card);
 				c.printReceipt();
+				c.removeReceipt();
 				success();
 			} catch (OverloadException | CheckoutException e) {
 				fail();
@@ -111,9 +112,18 @@ public class PaperInkTest extends BaseTest {
 	
 	/**
 	 * Test whether or not the receipt printer works as intended
-	 * Correctly loaded paper, ink but no product information
-	 * @throws OverloadException, CheckoutException
+	 * Correctly loaded paper, ink, but is still scanning
+	 * @throws CheckoutException 
 	 */
-	
+	@Test (expected = CheckoutException.class)
+	public void StillScanningReceiptPrintTest() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			c.addPaper(10);
+			c.addInk(100);
+			c.printReceipt();
+		}
+	}
 
+	
 }
