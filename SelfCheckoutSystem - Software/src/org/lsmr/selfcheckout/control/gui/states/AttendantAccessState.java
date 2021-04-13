@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,10 +22,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.lsmr.selfcheckout.control.ProductTableModel;
+import org.lsmr.selfcheckout.control.ReceiptItem;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.RemoveItemStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class AttendantAccessState implements GUIState, ActionListener {
@@ -33,6 +39,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 
 	private ProductTableModel tableModel = new ProductTableModel();
 
+	private JTable scannedTable;
 	private JButton start;
 	private JButton shutDown;
 	private JButton block;
@@ -182,6 +189,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 		removeItem.setPreferredSize(buttonSize);
 		removeItem.setMinimumSize(buttonSize);
 		removeItem.setMaximumSize(buttonSize);
+		removeItem.setEnabled(false);
 		removeItemPanel.add(removeItem);
 		buttonLayout.add(removeItemPanel);
 		buttonLayout.add(newSpacing(0, 10));
@@ -280,6 +288,9 @@ public class AttendantAccessState implements GUIState, ActionListener {
 		mainPanel.add(checkoutButtonPanel, BorderLayout.LINE_END);
 		mainPanel.add(helpPanel, BorderLayout.PAGE_END);
 		 */
+
+		stateController.notifyListeners(new ScannedItemsRequestData());
+
 		return mainPanel;
 	}
 
@@ -293,7 +304,8 @@ public class AttendantAccessState implements GUIState, ActionListener {
 	public void onDataUpdate(StateData<?> data) {
 		// if only java can support functional programming and Maybe types. would be a one-line code
 		if (data instanceof ListProductStateData) {
-			tableModel.setProductScannedList(((ListProductStateData) data).obtain());
+			List<ReceiptItem> items = ((ListProductStateData) data).obtain();
+			tableModel.setProductScannedList(items);
 		}
 	}
 
@@ -320,7 +332,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 		final int scrollBarWidth = 10;
 
 		// table
-		JTable scannedTable = new JTable(tableModel);
+		scannedTable = new JTable(tableModel);
 
 		scannedTable.setRowHeight(rowHeight);
 		scannedTable.setPreferredScrollableViewportSize(scannedTable.getPreferredSize());
@@ -343,6 +355,14 @@ public class AttendantAccessState implements GUIState, ActionListener {
 			scannedTable.getColumnModel().getColumn(i).setPreferredWidth((int) (tableSize.width * sizeWeight));
 			scannedTable.setFont(new Font("Arial", Font.PLAIN, 18));
 		}
+
+		scannedTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				removeItem.setEnabled(true);
+			}
+		});
 
 		// wrap it in a scroll pane to see table headers
 		JScrollPane container = new JScrollPane(scannedTable);
@@ -375,7 +395,11 @@ public class AttendantAccessState implements GUIState, ActionListener {
 			
 		} else if(button == removeItem) {
 			//remove selected item from table
-			
+			stateController.notifyListeners(new RemoveItemStateData(scannedTable.getSelectedRow()));
+			if (scannedTable.getRowCount() - 1 <= 0) {
+				removeItem.setEnabled(false);
+			}
+
 		} else if(button == logOut) {
 			//back to employee log in screen or buying state? or start state?
 			stateController.setState(new AttendantLogInState());

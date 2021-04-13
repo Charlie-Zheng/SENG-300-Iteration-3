@@ -17,6 +17,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.RemoveItemStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.RequestPricePerBagData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
@@ -93,6 +94,11 @@ public class GUIupdateListener implements StateUpdateListener {
 		} else if (data instanceof BuyBagStateData) { // set # of bags to purchase
 			int bags = (int) data.obtain();
 			if (bags > 0) c.usePlasticBags((int) data.obtain());
+
+
+		} else if (data instanceof RemoveItemStateData) {
+			c.deleteProductAdded(c.getProductsAdded().get((int) data.obtain()));
+			c.guiController.notifyDataUpdate(new ListProductStateData(c.getProductsAdded()));
 		}
 	}
 
