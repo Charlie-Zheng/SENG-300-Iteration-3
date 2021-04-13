@@ -110,6 +110,7 @@ public class Checkout {
 	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
+	private AttendantSystem attendantSystem;
 	protected GUIController guiController;
 
 	private StateUpdateListener guiUpdateListener = new GUIupdateListener(this);
@@ -160,7 +161,6 @@ public class Checkout {
 		state = CheckoutState.Scanning;
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
-
 
 	}
 
@@ -1327,4 +1327,11 @@ public class Checkout {
 		this.state = CheckoutState.Scanning;
 	}
 
+	protected void registerAttendantSystem(AttendantSystem attendantSystem) {
+		this.attendantSystem = attendantSystem;
+	}
+
+	protected AttendantSystem getAttendantSystem() {
+		return attendantSystem;
+	}
 }

@@ -17,6 +17,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.AttendantLogInData;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.RequestPricePerBagData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
@@ -106,6 +107,15 @@ public class GUIupdateListener implements StateUpdateListener {
 				c.deleteProductAdded(c.getProductsAdded().get(payload.second));
 				c.guiController.notifyDataUpdate(new ListProductStateData(c.getProductsAdded()));
 			}
+		} else if( data instanceof AttendantLogInData) {
+			Pair<Integer, Integer> payload = ((AttendantLogInData) data).obtain();
+			if(c.getAttendantSystem().login(payload.first, payload.second)) {
+				((AttendantLogInData) data).success();
+				c.guiController.notifyDataUpdate(data);
+			}else {
+				c.guiController.notifyDataUpdate(data);
+			}
+			
 		}
 	}
 

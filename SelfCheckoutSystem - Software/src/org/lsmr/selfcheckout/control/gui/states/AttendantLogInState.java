@@ -24,6 +24,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.AttendantLogInData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class AttendantLogInState implements GUIState, ActionListener {
@@ -82,6 +83,14 @@ public class AttendantLogInState implements GUIState, ActionListener {
 	@Override
 	public void onDataUpdate(StateData<?> data) {
 		// TODO Auto-generated method stub
+		if(data instanceof AttendantLogInData) {
+			if(((AttendantLogInData) data).isSuccessful()) {
+				stateController.setState(new AttendantState());
+			}else {
+				//display wrong pin message
+			}
+
+		}
 
 	}
 
@@ -275,7 +284,8 @@ public class AttendantLogInState implements GUIState, ActionListener {
 				activeTextField.setText(activeTextField.getText() + buttonText);
 				
 			} else if (buttonText.equals("OK")) {
-				stateController.setState(new AttendantState());
+				stateController.notifyListeners(new AttendantLogInData(Integer.parseInt(employeeNumber.getText()), Integer.parseInt(pin.getText())));
+
 
 				//else pop up screen with wrong pin message?
 			
