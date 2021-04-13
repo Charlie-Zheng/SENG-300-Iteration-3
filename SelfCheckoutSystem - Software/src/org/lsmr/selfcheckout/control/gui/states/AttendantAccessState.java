@@ -40,7 +40,6 @@ public class AttendantAccessState implements GUIState, ActionListener {
 	private JButton approveWeight;
 	private JButton removeItem;
 	private JButton logOut;
-	private JButton checkoutButton;
 	private JButton goBack;
 
 	@Override

@@ -27,7 +27,47 @@ import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class AttendantLogInState implements GUIState, ActionListener {
-
+	
+	
+	//reciept
+	//https://www.cleanpng.com/png-receipt-invoice-computer-icons-cash-register-1154206/download-png.html
+	
+	//coin
+	//https://www.cleanpng.com/png-pile-of-coins-png-picture-10144/download-png.html
+	
+	//banknotes
+	//https://www.cleanpng.com/png-money-banknote-illustration-cartoon-hand-painted-b-141687/download-png.html
+	
+	
+	//ink
+	// https://www.seekpng.com/idown/u2e6e6u2q8r5i1o0_ink-bottle-ink-bottle-ink-clip-art/
+	
+	//white hand holding coins
+	// https://www.cleanpng.com/png-thumb-money-currency-hand-hands-holding-gold-coins-364860/download-png.html
+	
+	//black icon hand remove coin
+	//https://www.cleanpng.com/png-currency-symbol-money-dollar-sign-coin-2005269/download-png.html
+	
+	// other black hand icon for remove coins - two coins
+	//https://www.pngfind.com/download/xoxTho_search-through-more-than-735000-free-icons-browse/
+	
+	
+	// other black icon for coin
+	// https://www.cleanpng.com/png-computer-icons-money-finance-1549437/download-png.html
+	
+	//black icon for banknore remove
+	// https://www.pngkit.com/downpic/u2q8a9r5y3e6q8i1_vector-library-download-refund-icon-free-download-png/
+	
+	//guy at self checkout for customer options
+	//https://www.pngitem.com/download/iwimxbR_supermarket-clipart-transparent-grocery-cart-clipart-png-png/
+	
+	//clerk in purple
+	// https://www.clipartkey.com/downpng/iiwbimw_employee-clipart-shop-owner-grocery-store-employee-clipart/
+	
+	// disabled stamp
+	// https://www.google.com/search?q=disabled+stamp+clipart+transparent+background&tbm=isch&ved=2ahUKEwjgnY__pvnvAhWKFTQIHQOOBBEQ2-cCegQIABAA&oq=disabled+stamp+clipart+transparent+background&gs_lcp=CgNpbWcQA1DArQJY87QCYPK6AmgAcAB4AIABsgGIAYoJkgEDMC44mAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=OY10YKCdA4qr0PEPg5ySiAE&bih=562&biw=1280#imgrc=geARyhpd-K9z2M
+	
+	
 	private StateHandler<GUIState> stateController;
 	private JTextField employeeNumber;
 	private JTextField pin;
@@ -176,7 +216,6 @@ public class AttendantLogInState implements GUIState, ActionListener {
 				((JButton) button).setFont(new Font("Arial", Font.BOLD, 20));
 			}
 		}
-
 
 		middlePanel.add(inPanel);
 		middlePanel.add(keyPadPanel);
