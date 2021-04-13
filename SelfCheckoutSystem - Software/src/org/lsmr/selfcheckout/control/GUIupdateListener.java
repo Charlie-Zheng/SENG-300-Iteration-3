@@ -17,7 +17,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
-import org.lsmr.selfcheckout.control.gui.statedata.RemoveItemStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.AttendantStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.RequestPricePerBagData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
@@ -96,9 +96,16 @@ public class GUIupdateListener implements StateUpdateListener {
 			if (bags > 0) c.usePlasticBags((int) data.obtain());
 
 
-		} else if (data instanceof RemoveItemStateData) {
-			c.deleteProductAdded(c.getProductsAdded().get((int) data.obtain()));
-			c.guiController.notifyDataUpdate(new ListProductStateData(c.getProductsAdded()));
+		} else if (data instanceof AttendantStateData) {
+			Pair<Integer, Integer> payload = ((AttendantStateData) data).obtain();
+
+			if (payload.first == AttendantStateData.APPROVE_WEIGHT) {
+				c.approveWeightDiscrepency();
+				
+			} else if (payload.first == AttendantStateData.REMOVE) {
+				c.deleteProductAdded(c.getProductsAdded().get(payload.second));
+				c.guiController.notifyDataUpdate(new ListProductStateData(c.getProductsAdded()));
+			}
 		}
 	}
 

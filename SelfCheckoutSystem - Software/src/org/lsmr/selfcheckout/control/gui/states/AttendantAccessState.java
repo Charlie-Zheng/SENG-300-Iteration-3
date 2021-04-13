@@ -29,9 +29,10 @@ import org.lsmr.selfcheckout.control.ProductTableModel;
 import org.lsmr.selfcheckout.control.ReceiptItem;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
-import org.lsmr.selfcheckout.control.gui.statedata.RemoveItemStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.AttendantStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
+import org.omg.CORBA.Request;
 
 public class AttendantAccessState implements GUIState, ActionListener {
 
@@ -390,12 +391,13 @@ public class AttendantAccessState implements GUIState, ActionListener {
 			stateController.setState(new AttendantLookUpState());
 			
 		} else if(button == approveWeight) {
+			stateController.notifyListeners(new AttendantStateData(AttendantStateData.APPROVE_WEIGHT));
 			stateController.setState(new BuyingState());
 			//logs out attendant
 			
 		} else if(button == removeItem) {
 			//remove selected item from table
-			stateController.notifyListeners(new RemoveItemStateData(scannedTable.getSelectedRow()));
+			stateController.notifyListeners(new AttendantStateData(AttendantStateData.REMOVE, scannedTable.getSelectedRow()));
 			if (scannedTable.getRowCount() - 1 <= 0) {
 				removeItem.setEnabled(false);
 			}
