@@ -8,17 +8,15 @@ import java.util.Currency;
 
 import org.junit.After;
 import org.junit.Before;
-import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Barcode;
-import org.lsmr.selfcheckout.Coin;
+import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.MembershipCardDatabase;
 import org.lsmr.selfcheckout.control.ProductWeightDatabase;
-import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
+import org.lsmr.selfcheckout.products.PLUCodedProduct;
 
 /**
  * Test suite for Checkout. All tests are run 100 times, and the test passes if
@@ -46,8 +44,9 @@ public abstract class BaseTest {
 	@Before
 	public void setUp() throws Exception {
 		c = makeNewDefaultCheckout();
-		initProductDatabase();
+		initBarcodeProductDatabase();
 		initMembershipCardDatabase();
+		initPLUProductDatabase();
 		totalTests = 0;
 		successfulTests = 0;
 	}
@@ -211,7 +210,7 @@ public abstract class BaseTest {
 	 * <p>
 	 * The prices are exact.
 	 */
-	protected void initProductDatabase() {
+	protected void initBarcodeProductDatabase() {
 		Barcode temp;
 		ProductDatabases.BARCODED_PRODUCT_DATABASE.clear();
 
@@ -231,6 +230,29 @@ public abstract class BaseTest {
 		ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE.put(temp, 397.0);
 	}
 
+	/**
+	 * Clears the product database and initializes it with 3 products
+	 * and their PLUCode.
+	 * <p>
+	 * The prices are exact.
+	 */
+	protected void initPLUProductDatabase() {
+        PriceLookupCode temp;
+        ProductDatabases.PLU_PRODUCT_DATABASE.clear();
+
+        // An product with a PLUCode of 12345 and price $123.45 per kg
+        ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("12345"),
+                new PLUCodedProduct(temp, "Product with barcode of 12345 and price $123.45", new BigDecimal("123.45")));
+
+        // A product with a PLUCode of 98765 and price $98.76 per kg
+        ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("98765"), new PLUCodedProduct(temp,
+                "Product with barcode of 98765 and price $98.76", new BigDecimal("98.76")));
+
+        // A product with a PLUCode of 30040 and price $3.97 per kg
+        ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("30040"),
+                new PLUCodedProduct(temp, "Product with barcode of 30040 and price $3.97", new BigDecimal("3.97")));
+    } 
+	
 	/**
 	 * Clears the membership card database and initializes it with the following 3
 	 * membership numbers
