@@ -1357,4 +1357,12 @@ public class Checkout {
     protected AttendantSystem getAttendantSystem() {
         return attendantSystem;
     }
+
+	protected void registerAttendantSystem(AttendantSystem attendantSystem) {
+		this.attendantSystem = attendantSystem;
+	}
+
+	protected AttendantSystem getAttendantSystem() {
+		return attendantSystem;
+	}
 }
