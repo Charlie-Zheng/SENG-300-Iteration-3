@@ -93,6 +93,7 @@ public class Checkout {
 	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
+    private AttendantSystem attendantSystem;
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
@@ -1319,5 +1320,12 @@ public class Checkout {
 		expectedWeightOnBaggingArea = weightOnBaggingArea;
 		this.state = CheckoutState.Scanning;
 	}
+    protected void registerAttendantSystem(AttendantSystem attendantSystem) {
+        this.attendantSystem = attendantSystem;
+    }
+
+    protected AttendantSystem getAttendantSystem() {
+        return attendantSystem;
+    }
 
 }
