@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
@@ -60,9 +61,8 @@ public class KeypadState implements GUIState, ActionListener {
 			
 		} else if (data instanceof ProductStateData) {
 			inputProduct = (PLUCodedProduct) data.obtain();
-			stateController.setState(new ScaleState());
-
-			//stateController.setState(new BuyingState()); // TEMP: just to see populated data
+			stateController.notifyListeners(new InsertPLUProductData(inputProduct));
+			stateController.setState(new BuyingState()); // TEMP: just to see populated data
 		}
 	}
 

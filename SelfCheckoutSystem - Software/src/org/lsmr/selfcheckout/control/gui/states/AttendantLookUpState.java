@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.InsertBarcodedProductData;
+import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
@@ -44,6 +45,7 @@ public class AttendantLookUpState extends LookupState implements GUIState, Actio
 			
 			if (inputProduct instanceof PLUCodedProduct) {
 				// don't insert prpoduct - we pass it to the next state to get a weighing of it
+				stateController.notifyListeners(new InsertPLUProductData((PLUCodedProduct) inputProduct));
 				stateController.setState(new AttendantAccessState());
 				
 			} else if (inputProduct instanceof BarcodedProduct) {
