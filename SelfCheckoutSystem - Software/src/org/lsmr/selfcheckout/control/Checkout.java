@@ -1286,6 +1286,10 @@ public class Checkout {
 	public String getState() {
 		return this.state.toString();
 	}
+	
+	public String getpState() {
+		return this.pState.toString();
+	}
 
 	public int getPaperTotal() {
 		return this.paperTotal;
