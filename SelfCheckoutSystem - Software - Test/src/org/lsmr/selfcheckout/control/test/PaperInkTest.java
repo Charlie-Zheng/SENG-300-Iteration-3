@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Card;
+import org.lsmr.selfcheckout.PLUCodedItem;
 import org.lsmr.selfcheckout.control.CardIssuerDatabase;
 import org.lsmr.selfcheckout.control.Checkout.PayingState;
 import org.lsmr.selfcheckout.control.CheckoutException;
@@ -47,8 +48,9 @@ public class PaperInkTest extends BaseTest {
 			multiTestAssertEquals(false, c.isInkLow());
 	}
 	/**
-	 * Test whether or not the ink low is configured correctly
+	 * Test whether or not the paper low is configured correctly
 	 * Loads 50 of paper (1024 max, 10% as low)
+	 * @throws CheckoutException
 	 */
 	@Test
 	public void PaperLowTest() throws CheckoutException {
@@ -59,9 +61,8 @@ public class PaperInkTest extends BaseTest {
 		}
 	}
 	/**
-	 * Test whether or not the ink low is configured correctly
-	 * Loads 150 of paper (1024 max, 10% as low)
-	 * @throws CheckoutException 
+	 * Test whether or not the paper low is configured correctly
+	 * Loads 150 of paper (1024 max, 10% as low) 
 	 * @throws OverloadException 
 	 */
 	@Test
@@ -70,4 +71,39 @@ public class PaperInkTest extends BaseTest {
 			c.addPaper(150);
 			multiTestAssertEquals(false, c.isPaperLow());
 		}
+	
+	/**
+	 * Test whether or not the receipt printer works as intended
+	 * Correctly loaded paper, ink and receipt information allows 
+	 * the software to print a receipt
+	 * @throws OverloadException, CheckoutException
+	 */
+	@Test
+	public void ReceiptPrintNormalTest() throws OverloadException, CheckoutException{
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
+			c.addPaper(10);
+			c.addInk(100);
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+			c.scanItem(item);
+			c.addItemToBaggingArea(item);
+			// barcode 30040321 -> price $3.97
+			item = new BarcodedItem(new Barcode("30040321"), 397);
+			c.scanItem(item);
+			c.addItemToBaggingArea(item);
+			c.startPayment(PayingState.Gift);
+			c.payByTappingCard(card);
+			c.printReceipt();
+
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();			
+		}
+	}
+	
+
 }
