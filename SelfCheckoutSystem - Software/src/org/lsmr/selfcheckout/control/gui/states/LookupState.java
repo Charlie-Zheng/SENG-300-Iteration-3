@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.InsertBarcodedProductData;
+import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
@@ -77,7 +78,7 @@ public class LookupState implements GUIState, ActionListener {
 			
 			if (inputProduct instanceof PLUCodedProduct) {
 				// don't insert prpoduct - we pass it to the next state to get a weighing of it
-				stateController.setState(new ScaleState());
+				stateController.notifyListeners(new InsertPLUProductData((PLUCodedProduct) inputProduct));
 				
 			} else if (inputProduct instanceof BarcodedProduct) {
 				stateController.notifyListeners(new InsertBarcodedProductData((BarcodedProduct) inputProduct)); // directly insert product into checkout

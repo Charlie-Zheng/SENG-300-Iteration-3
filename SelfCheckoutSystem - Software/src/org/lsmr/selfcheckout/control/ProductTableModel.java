@@ -1,6 +1,7 @@
 package org.lsmr.selfcheckout.control;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -74,7 +75,7 @@ public class ProductTableModel extends AbstractTableModel {
 	 * 
 	 * @param scannedProducts the new scanned products list
 	 */
-	public void setProductScannedList(ArrayList<ReceiptItem> scannedProducts) {
+	public void setProductScannedList(List<ReceiptItem> scannedProducts) {
 		productsAddedList.clear();
 		productsAddedList.addAll(scannedProducts);
 		fireTableDataChanged();
