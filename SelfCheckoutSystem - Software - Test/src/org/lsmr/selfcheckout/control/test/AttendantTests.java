@@ -319,7 +319,7 @@ public class AttendantTests extends BaseTest {
 	}
 	
 	
-	@Test(expected = IndexOutOfBoundsException.class)
+	@Test(expected = CheckoutException.class)
 	public void attendantBlocksInvalidStation() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
