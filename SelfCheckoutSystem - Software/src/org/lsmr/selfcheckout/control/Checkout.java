@@ -77,12 +77,8 @@ import org.lsmr.selfcheckout.products.Product;
  */
 public class Checkout {
 	private enum CheckoutState {
-		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done, On, Off
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done, Off
 	};
-
-	private enum PowerState {
-		On, Off
-	}
 
 	public enum PayingState {
 		Cash, Credit, Debit, Gift
@@ -107,14 +103,13 @@ public class Checkout {
 	private String loggedInMemberName;
 	private String loggedInMemberNumber;
 	private CheckoutState state;
-	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
-
 	private AttendantSystem attendantSystem;
 	protected GUIController guiController;
 
 	private StateUpdateListener guiUpdateListener = new GUIupdateListener(this);
+
 
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
@@ -306,11 +301,10 @@ public class Checkout {
 	}
 
 	/**
-	 * Use Case: Customer returns to adding items
-	 * Use Case: Station detects that the weight in the bagging area does not conform to expectations
-	 * 
-	 * Adds an item to the bagging area. Resumes scanning state when customer puts
-	 * item in bagging area that they previously did not.
+	 * Use Case: Customer returns to adding items Use Case: Station detects that the
+	 * weight in the bagging area does not conform to expectations Adds an item to
+	 * the bagging area. Resumes scanning state when customer puts item in bagging
+	 * area that they previously did not.
 	 * 
 	 * @param item
 	 *            The item to add to the bagging area
@@ -338,11 +332,10 @@ public class Checkout {
 	}
 
 	/**
-	 * Use Case: Customer removes purchased items from bagging area
-	 * 
-	 * Removes all the previously added items from the bagging area. If the checkout
-	 * is currently done printing the receipt, the checkout will be ready for
-	 * scanning after this is called
+	 * Use Case: Customer removes purchased items from bagging area Removes all the
+	 * previously added items from the bagging area. If the checkout is currently
+	 * done printing the receipt, the checkout will be ready for scanning after this
+	 * is called
 	 * 
 	 * @return The list of items removed from bagging area
 	 */
@@ -357,6 +350,7 @@ public class Checkout {
 
 			}
 		}
+		itemsAdded.clear();
 		if (state == CheckoutState.Done) {
 			state = CheckoutState.Scanning;
 		}
@@ -364,10 +358,9 @@ public class Checkout {
 	}
 
 	/**
-	 * Use Case: Customer does not want to bag a scanned item
-	 * 
-	 * The customer chooses not to add the last scanned item to the bagging area.
-	 * The expected weight is reduced by the weight of the product
+	 * Use Case: Customer does not want to bag a scanned item The customer chooses
+	 * not to add the last scanned item to the bagging area. The expected weight is
+	 * reduced by the weight of the product
 	 * 
 	 * @throws CheckoutException
 	 *             if the last added item was not a scanned item
@@ -389,10 +382,8 @@ public class Checkout {
 	}
 
 	/**
-	 * Use Case: Customer looks up product
-	 * 
-	 * Returns an array list of products with descriptions that contain the search
-	 * string
+	 * Use Case: Customer looks up product Returns an array list of products with
+	 * descriptions that contain the search string
 	 * <p>
 	 * Use case: customer looks up product
 	 * 
@@ -436,9 +427,8 @@ public class Checkout {
 	}
 
 	/**
-	 * Use Case: Customer enters PLU code for a product
-	 * 
-	 * Expects the item to already be added onto the scale using addItemToScale()
+	 * Use Case: Customer enters PLU code for a product Expects the item to already
+	 * be added onto the scale using addItemToScale()
 	 * <p>
 	 * Adds the product specified by the PLUcode to the checkout. The balance is
 	 * incremented by the weight on the scale (in grams) multiplied by the price per
@@ -469,11 +459,10 @@ public class Checkout {
 	}
 
 	/**
-	 * Use Case: Customer enters their membership card information
-	 * 
-	 * The customer logs in by entering the card number. The member name will
-	 * default to the primary account holder. If the card number is not in the
-	 * membership number list, nothing happens.
+	 * Use Case: Customer enters their membership card information The customer logs
+	 * in by entering the card number. The member name will default to the primary
+	 * account holder. If the card number is not in the membership number list,
+	 * nothing happens.
 	 * 
 	 * @param number
 	 * @return true if the info associated with the membership card exists, false
@@ -656,9 +645,8 @@ public class Checkout {
 	}
 
 	/**
-	 * Use Case: Customer pays with gift card
-	 * 
-	 * Initializes the machine to prepare to pay with a gift card
+	 * Use Case: Customer pays with gift card Initializes the machine to prepare to
+	 * pay with a gift card
 	 * 
 	 * @throws CheckoutException
 	 *             if there is an issue initializing the payment machine
@@ -942,7 +930,6 @@ public class Checkout {
 			paidCash = false;
 			expectedWeightOnBaggingArea = 0;
 			productsAdded.clear();
-			itemsAdded.clear();
 			loggedInMemberName = null;
 			loggedInMemberNumber = null;
 
@@ -962,7 +949,6 @@ public class Checkout {
 		paidCash = false;
 		expectedWeightOnBaggingArea = 0;
 		productsAdded.clear();
-		itemsAdded.clear();
 		loggedInMemberName = null;
 		loggedInMemberNumber = null;
 	}
@@ -1312,14 +1298,22 @@ public class Checkout {
 	public boolean isPaperLow() {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
-	
+
 	// Blocks the station from being scanned
 	protected void blockStation() {
-        this.state = CheckoutState.Paused;
-    }
+		this.state = CheckoutState.Paused;
+	}
 
 	public String getState() {
 		return this.state.toString();
+	}
+
+	public String getpState() {
+		if (state == CheckoutState.Off) {
+			return "Off";
+		} else {
+			return "On";
+		}
 	}
 
 	public int getPaperTotal() {
@@ -1339,22 +1333,24 @@ public class Checkout {
 	}
 
 	protected void shutDown() {
-		this.pState = PowerState.Off;
+		state = CheckoutState.Off;
 	}
 
 	protected void powerOn() {
-		this.pState = PowerState.On;
+		state = CheckoutState.Scanning;
 	}
 
 	public void approveWeightDiscrepency() {
 		expectedWeightOnBaggingArea = weightOnBaggingArea;
 		this.state = CheckoutState.Scanning;
 	}
-    protected void registerAttendantSystem(AttendantSystem attendantSystem) {
-        this.attendantSystem = attendantSystem;
-    }
 
-    protected AttendantSystem getAttendantSystem() {
-        return attendantSystem;
-    }
+	protected void registerAttendantSystem(AttendantSystem attendantSystem) {
+		this.attendantSystem = attendantSystem;
+	}
+
+	protected AttendantSystem getAttendantSystem() {
+		return attendantSystem;
+	}
+
 }
