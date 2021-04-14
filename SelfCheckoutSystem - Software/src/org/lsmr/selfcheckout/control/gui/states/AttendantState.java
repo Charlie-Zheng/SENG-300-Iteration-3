@@ -118,20 +118,13 @@ public class AttendantState implements GUIState, ActionListener {
 			tableButton.add(buttonLabel, BorderLayout.NORTH);
 			tableButton.add(new JScrollPane(scannedTable), BorderLayout.SOUTH);
 			//tableButton.addActionListener(this);
-			for(int j = 0; j < activeMachines.length; j++) {
-				if(activeMachines[j]) {
+			if (activeMachines[i]) {
 				tableButton.addMouseListener(new MouseAdapter() {
-
-
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						stateController.setState(new AttendantAccessState());
-
-
 					}
-
 				});
-				}
 			}
 
 			stationsPanel.add(tableButton);
