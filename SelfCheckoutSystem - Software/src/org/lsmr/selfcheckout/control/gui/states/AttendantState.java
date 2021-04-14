@@ -31,10 +31,14 @@ public class AttendantState implements GUIState, ActionListener {
 	private StateHandler<GUIState> stateController;
 
 	private ProductTableModel tableModel;
-//	JButton tableButton;
-	JButton logOut;
-	
-	
+	//	JButton tableButton;
+	private JButton logOut;
+
+	// this is to disable all checkout stations except for the checkout #1
+	// this is because we didn't have time to access all 6 checkout stations
+	private final boolean[] activeMachines = {true, false, false, false, false, false};
+
+
 	/**
 	 * 
 	 */
@@ -59,9 +63,9 @@ public class AttendantState implements GUIState, ActionListener {
 	 */
 	@Override
 	public JPanel getPanel() {
-		
+
 		int numOfStations = 6;
-		
+
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 150, 0, 150));
 		mainPanel.setLayout(new BorderLayout());
@@ -78,7 +82,7 @@ public class AttendantState implements GUIState, ActionListener {
 		words.setBackground(Color.RED.darker());
 		words.setBorder(new LineBorder(Color.RED.darker()));
 		wordPanel.add(words);
-		
+
 		Dimension tableSize = new Dimension(394, 130);
 
 		JPanel stationsPanel = new JPanel();
@@ -87,8 +91,8 @@ public class AttendantState implements GUIState, ActionListener {
 		stationsPanel.setBorder(new LineBorder(Color.RED.darker()));
 		stationsPanel.setBackground(Color.RED.darker());
 
-	
-		
+
+
 		for(int i = 0; i < numOfStations; i++) {
 
 			JButton tableButton = new JButton();
@@ -97,44 +101,49 @@ public class AttendantState implements GUIState, ActionListener {
 			buttonLabel.setText("Checkout #" + (i + 1));
 			buttonLabel.setForeground(Color.white);
 			buttonLabel.setFont(new Font("Arial", Font.BOLD, 20));
-			
+
 			JComponent scannedTable = getProductPanel(tableSize, 50);
 			/*scannedTable.addMouseListener(new MouseAdapter() {
 
-				
+
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					stateController.setState(new AttendantAccessState());
 				}
-					
+
 				});*/
 			tableButton.setBackground(Color.RED.darker());
 			tableButton.setBorder(new LineBorder(Color.RED.darker()));
-			
+
 			tableButton.add(buttonLabel, BorderLayout.NORTH);
 			tableButton.add(new JScrollPane(scannedTable), BorderLayout.SOUTH);
 			//tableButton.addActionListener(this);
-			tableButton.addMouseListener(new MouseAdapter() {
+			for(int j = 0; j < activeMachines.length; j++) {
+				if(activeMachines[j]) {
+				tableButton.addMouseListener(new MouseAdapter() {
 
-				
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					stateController.setState(new AttendantAccessState());
-					
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						stateController.setState(new AttendantAccessState());
+
+
+					}
+
+				});
 				}
-				
-			});
-			
+			}
+
 			stationsPanel.add(tableButton);
 		}
-		
-		
+
+
 		JPanel logOutPanel = new JPanel();
 		logOutPanel.setLayout(new BorderLayout());
 		logOutPanel.setBorder(new LineBorder(Color.RED.darker()));
 		logOutPanel.setBackground(Color.RED.darker());
 		logOutPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-		
+
 		logOut = new JButton("Log Out");
 		logOut.setFont(new Font("Arial", Font.BOLD, 30));
 		Dimension logOutSize = new Dimension(250, 50);
@@ -143,10 +152,10 @@ public class AttendantState implements GUIState, ActionListener {
 		logOut.setMinimumSize(logOutSize);
 		logOut.setMaximumSize(logOutSize);
 		logOut.addActionListener(this);
-		
+
 		logOutPanel.add(logOut, BorderLayout.EAST);
-		
-		
+
+
 		mainPanel.setBackground(Color.RED.darker());
 		mainPanel.add(wordPanel, BorderLayout.PAGE_START);
 		mainPanel.add(stationsPanel, BorderLayout.CENTER);
@@ -154,7 +163,7 @@ public class AttendantState implements GUIState, ActionListener {
 
 		return mainPanel;
 	}
-	
+
 
 	private JComponent getProductPanel(Dimension tableSize, int rowHeight) {
 		final int scrollBarWidth = 10;
@@ -209,15 +218,15 @@ public class AttendantState implements GUIState, ActionListener {
 		if(button == logOut) {
 			stateController.setState(new AttendantLogInState());
 		} /*else if(button == tableButton) {
-			
+
 			String buttonText = button.getText();
-			
+
 			if(buttonText.equals("Checkout #1")) {
 				stateController.setState(new AttendantAccessState()); 
 			}
-			
-		
-			
+
+
+
 			//add bunch of if statements for specific checkout numbers
 			stateController.setState(new AttendantAccessState()); //** not working **
 			/*if(button.getComponent(0).equals(tableButton)) {
@@ -225,7 +234,7 @@ public class AttendantState implements GUIState, ActionListener {
 				stateController.setState(new AttendantAccessState());
 			}*/
 		//}
-		
+
 	}
 
 }
