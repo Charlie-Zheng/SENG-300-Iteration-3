@@ -110,9 +110,12 @@ public class Checkout {
 	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
+
+	private AttendantSystem attendantSystem;
 	protected GUIController guiController;
 
 	private StateUpdateListener guiUpdateListener = new GUIupdateListener(this);
+
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
@@ -160,7 +163,6 @@ public class Checkout {
 		state = CheckoutState.Scanning;
 		weightOnBaggingArea = 0;
 		weightOnScanScale = 0;
-
 
 	}
 
@@ -304,6 +306,9 @@ public class Checkout {
 	}
 
 	/**
+	 * Use Case: Customer returns to adding items
+	 * Use Case: Station detects that the weight in the bagging area does not conform to expectations
+	 * 
 	 * Adds an item to the bagging area. Resumes scanning state when customer puts
 	 * item in bagging area that they previously did not.
 	 * 
@@ -333,6 +338,8 @@ public class Checkout {
 	}
 
 	/**
+	 * Use Case: Customer removes purchased items from bagging area
+	 * 
 	 * Removes all the previously added items from the bagging area. If the checkout
 	 * is currently done printing the receipt, the checkout will be ready for
 	 * scanning after this is called
@@ -357,6 +364,8 @@ public class Checkout {
 	}
 
 	/**
+	 * Use Case: Customer does not want to bag a scanned item
+	 * 
 	 * The customer chooses not to add the last scanned item to the bagging area.
 	 * The expected weight is reduced by the weight of the product
 	 * 
@@ -380,6 +389,8 @@ public class Checkout {
 	}
 
 	/**
+	 * Use Case: Customer looks up product
+	 * 
 	 * Returns an array list of products with descriptions that contain the search
 	 * string
 	 * <p>
@@ -425,6 +436,8 @@ public class Checkout {
 	}
 
 	/**
+	 * Use Case: Customer enters PLU code for a product
+	 * 
 	 * Expects the item to already be added onto the scale using addItemToScale()
 	 * <p>
 	 * Adds the product specified by the PLUcode to the checkout. The balance is
@@ -456,6 +469,8 @@ public class Checkout {
 	}
 
 	/**
+	 * Use Case: Customer enters their membership card information
+	 * 
 	 * The customer logs in by entering the card number. The member name will
 	 * default to the primary account holder. If the card number is not in the
 	 * membership number list, nothing happens.
@@ -641,6 +656,8 @@ public class Checkout {
 	}
 
 	/**
+	 * Use Case: Customer pays with gift card
+	 * 
 	 * Initializes the machine to prepare to pay with a gift card
 	 * 
 	 * @throws CheckoutException
@@ -684,7 +701,7 @@ public class Checkout {
 	}
 
 	/**
-	 * Logs a member in.
+	 * Logs the member in
 	 * 
 	 * @param name
 	 *            The name of the member
@@ -794,6 +811,8 @@ public class Checkout {
 	}
 
 	/**
+	 * Use Case: Customer enters number of plastic bags used
+	 * 
 	 * @param n
 	 */
 	public void usePlasticBags(int n) {
@@ -1192,21 +1211,21 @@ public class Checkout {
 	}
 
 	/**
-	 * Attendant empties the coin storage unit
+	 * Use Case: Attendant empties the coin storage unit
 	 */
 	public void emptyCoinStorage() {
 		checkoutStation.coinStorage.unload();
 	}
 
 	/**
-	 * Attendant empties the banknote storage unit
+	 * Use Case: Attendant empties the banknote storage unit
 	 */
 	public void emptyBanknoteStorage() {
 		checkoutStation.banknoteStorage.unload();
 	}
 
 	/**
-	 * Attendant refills the coin dispenser
+	 * Use Case: Attendant refills the coin dispenser
 	 * 
 	 * @param coins
 	 *            The coins to be added. Any unloaded coins will be returned.
@@ -1230,7 +1249,7 @@ public class Checkout {
 	}
 
 	/**
-	 * Attendant refills the banknote dispenser with a list of banknotes.
+	 * Use Case: Attendant refills the banknote dispenser
 	 * 
 	 * @param notes
 	 *            The notes to be added. Any unloaded notes will be returned.
@@ -1255,7 +1274,7 @@ public class Checkout {
 	}
 
 	/**
-	 * Attendant adds paper to receipt printer
+	 * Use Case: Attendant adds paper to receipt printer
 	 * 
 	 * @param quantity
 	 *            The amount of paper being added
@@ -1266,7 +1285,7 @@ public class Checkout {
 	}
 
 	/**
-	 * Attendant adds ink to receipt printer
+	 * Use Case: Attendant adds ink to receipt printer
 	 * 
 	 * @param quantity
 	 *            The amount of ink being added
@@ -1277,7 +1296,7 @@ public class Checkout {
 	}
 
 	/**
-	 * Detects if the ink in the receipt printer is low
+	 * Use Case: Station detects that the ink in a receipt printer is low.
 	 * 
 	 * @return true, if the ink is low, false otherwise
 	 */
@@ -1286,13 +1305,18 @@ public class Checkout {
 	}
 
 	/**
-	 * Detects if the ink in the receipt printer is low
+	 * Use Case: Station detects that the paper in a receipt printer is low.
 	 * 
 	 * @return true, if the paper is low, false otherwise
 	 */
 	public boolean isPaperLow() {
 		return paperTotal < ReceiptPrinter.MAXIMUM_PAPER * 0.1;
 	}
+	
+	// Blocks the station from being scanned
+	protected void blockStation() {
+        this.state = CheckoutState.Paused;
+    }
 
 	public String getState() {
 		return this.state.toString();
@@ -1326,5 +1350,11 @@ public class Checkout {
 		expectedWeightOnBaggingArea = weightOnBaggingArea;
 		this.state = CheckoutState.Scanning;
 	}
+    protected void registerAttendantSystem(AttendantSystem attendantSystem) {
+        this.attendantSystem = attendantSystem;
+    }
 
+    protected AttendantSystem getAttendantSystem() {
+        return attendantSystem;
+    }
 }
