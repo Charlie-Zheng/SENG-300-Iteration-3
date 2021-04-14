@@ -71,8 +71,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 	private JButton insertCard;
 	private JButton swipeCard;
 
-	private JButton goBack;
-
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
@@ -125,11 +123,11 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 
 		JPanel buttonPanel = new JPanel();		
 
-		Dimension buttonSize = new Dimension(250, 34);
+		Dimension buttonSize = new Dimension(250, 32);
 
 		JPanel banknotePanel = new JPanel();
 		banknotePanel.setLayout(new BoxLayout(banknotePanel, BoxLayout.Y_AXIS));
-		banknotePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+		banknotePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 80, 0));
 		JLabel banknoteLabel = new JLabel("Insert Banknote");
 		banknoteLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel bankNotePanel = new JPanel();
@@ -248,7 +246,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 
 		JPanel coinPanel = new JPanel();
 		coinPanel.setLayout(new BoxLayout(coinPanel, BoxLayout.Y_AXIS));
-		coinPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+		coinPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 80, 0));
 		JLabel coinLabel = new JLabel("Insert Coin");
 		coinLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel coiNPanel = new JPanel();
@@ -371,6 +369,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		coinPanel.add(insertTwooniePanel);
 
 		JPanel addWeightPanel = new JPanel();
+		addWeightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
 		addWeightPanel.setLayout(new BoxLayout(addWeightPanel, BoxLayout.Y_AXIS));
 		JLabel addWeightLabel = new JLabel("Add Weight to Scale");
 		addWeightLabel.setFont(new Font("Arial", Font.BOLD, 26));
@@ -483,6 +482,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		addWeightPanel.add(add100Panel);
 
 		JPanel removeWeightPanel = new JPanel();
+		removeWeightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
 		removeWeightPanel.setLayout(new BoxLayout(removeWeightPanel, BoxLayout.Y_AXIS));
 		JLabel removeWeightLabel = new JLabel("Remove Weight from Scale");
 		removeWeightLabel.setFont(new Font("Arial", Font.BOLD, 26));
@@ -606,23 +606,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		Image scanImg = scanner.getImage() ;  
 		Image newScanImg = scanImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
 		ImageIcon scanImgResized = new ImageIcon(newScanImg);
-
-		scanToy = new JButton();
-		scanToy.setLayout(new BorderLayout());
-		JLabel scanToyIcon = new JLabel(scanImgResized);
-		JLabel scanToyLabel = new JLabel("Scan Item", SwingConstants.CENTER);
-		scanToyLabel.setFont(new Font("Arial", Font.BOLD, 22));
-		scanToy.add(scanToyLabel, BorderLayout.CENTER);
-		scanToy.add(scanToyIcon, BorderLayout.WEST);
-		scanToy.setSize(buttonSize);
-		scanToy.setPreferredSize(buttonSize);
-		scanToy.setMinimumSize(buttonSize);
-		scanToy.setMaximumSize(buttonSize);
-		scanToy.addActionListener(this);
-		JPanel scanToyPanel = new JPanel();
-		scanItemPanel.add(scanToy);
-		actionsPanel.add(scanToyPanel);
-
+		
 		scanCard = new JButton();
 		scanCard.setLayout(new BorderLayout());
 		JLabel scanCardIcon = new JLabel(scanImgResized);
@@ -639,6 +623,54 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		scanCardPanel.add(scanCard);
 		actionsPanel.add(scanCardPanel);
 
+		scanToy = new JButton();
+		scanToy.setLayout(new BorderLayout());
+		JLabel scanToyIcon = new JLabel(scanImgResized);
+		JLabel scanToyLabel = new JLabel("Scan Toy", SwingConstants.CENTER);
+		scanToyLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		scanToy.add(scanToyLabel, BorderLayout.CENTER);
+		scanToy.add(scanToyIcon, BorderLayout.WEST);
+		scanToy.setSize(buttonSize);
+		scanToy.setPreferredSize(buttonSize);
+		scanToy.setMinimumSize(buttonSize);
+		scanToy.setMaximumSize(buttonSize);
+		scanToy.addActionListener(this);
+		JPanel scanToyPanel = new JPanel();
+		scanToyPanel.add(scanToy);
+		actionsPanel.add(scanToyPanel);
+
+		scanPiano = new JButton();
+		scanPiano.setLayout(new BorderLayout());
+		JLabel scanPianoIcon = new JLabel(scanImgResized);
+		JLabel scanPianoLabel = new JLabel("Scan Piano", SwingConstants.CENTER);
+		scanPianoLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		scanPiano.add(scanPianoLabel, BorderLayout.CENTER);
+		scanPiano.add(scanPianoIcon, BorderLayout.WEST);
+		scanPiano.setSize(buttonSize);
+		scanPiano.setPreferredSize(buttonSize);
+		scanPiano.setMinimumSize(buttonSize);
+		scanPiano.setMaximumSize(buttonSize);
+		scanPiano.addActionListener(this);
+		JPanel scanPianoPanel = new JPanel();
+		scanPianoPanel.add(scanPiano);
+		actionsPanel.add(scanPianoPanel);
+		
+		scanPlayStation = new JButton();
+		scanPlayStation.setLayout(new BorderLayout());
+		JLabel scanPlayStationIcon = new JLabel(scanImgResized);
+		JLabel scanPlayStationLabel = new JLabel("Scan PlayStation", SwingConstants.CENTER);
+		scanPlayStationLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		scanPlayStation.add(scanPlayStationLabel, BorderLayout.CENTER);
+		scanPlayStation.add(scanPlayStationIcon, BorderLayout.WEST);
+		scanPlayStation.setSize(buttonSize);
+		scanPlayStation.setPreferredSize(buttonSize);
+		scanPlayStation.setMinimumSize(buttonSize);
+		scanPlayStation.setMaximumSize(buttonSize);
+		scanPlayStation.addActionListener(this);
+		JPanel scanPlayStationPanel = new JPanel();
+		scanPlayStationPanel.add(scanPlayStation);
+		actionsPanel.add(scanPlayStationPanel);
+
 		// bag of groceries
 		//https://www.cleanpng.com/png-shopping-bags-trolleys-grocery-store-clip-art-blac-3014424/download-png.html
 		ImageIcon bag = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/bag of groceries.png");
@@ -647,25 +679,58 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		ImageIcon bagImgResized = new ImageIcon(newBagImg);
 
 
-		bagItem = new JButton();
-		bagItem.setLayout(new BorderLayout());
-		JLabel bagItemIcon = new JLabel(bagImgResized);
-		JLabel bagItemLabel = new JLabel("Place Item in Bagging Area", SwingConstants.CENTER);
-		bagItemLabel.setFont(new Font("Arial", Font.BOLD, 14));
-		bagItem.add(bagItemLabel, BorderLayout.CENTER);
-		bagItem.add(bagItemIcon, BorderLayout.WEST);
-		bagItem.setSize(buttonSize);
-		bagItem.setPreferredSize(buttonSize);
-		bagItem.setMinimumSize(buttonSize);
-		bagItem.setMaximumSize(buttonSize);
-		bagItem.addActionListener(this);
-		JPanel bagItemPanel = new JPanel();
-		bagItemPanel.add(bagItem);
-		actionsPanel.add(bagItemPanel);
+		bagToy = new JButton();
+		bagToy.setLayout(new BorderLayout());
+		JLabel bagToyIcon = new JLabel(bagImgResized);
+		JLabel bagToyLabel = new JLabel("Bag Toy", SwingConstants.CENTER);
+		bagToyLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		bagToy.add(bagToyLabel, BorderLayout.CENTER);
+		bagToy.add(bagToyIcon, BorderLayout.WEST);
+		bagToy.setSize(buttonSize);
+		bagToy.setPreferredSize(buttonSize);
+		bagToy.setMinimumSize(buttonSize);
+		bagToy.setMaximumSize(buttonSize);
+		bagToy.addActionListener(this);
+		JPanel bagToyPanel = new JPanel();
+		bagToyPanel.add(bagToy);
+		actionsPanel.add(bagToyPanel);
+		
+		bagPiano = new JButton();
+		bagPiano.setLayout(new BorderLayout());
+		JLabel bagPianoIcon = new JLabel(bagImgResized);
+		JLabel bagPianoLabel = new JLabel("Bag Piano", SwingConstants.CENTER);
+		bagPianoLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		bagPiano.add(bagPianoLabel, BorderLayout.CENTER);
+		bagPiano.add(bagPianoIcon, BorderLayout.WEST);
+		bagPiano.setSize(buttonSize);
+		bagPiano.setPreferredSize(buttonSize);
+		bagPiano.setMinimumSize(buttonSize);
+		bagPiano.setMaximumSize(buttonSize);
+		bagPiano.addActionListener(this);
+		JPanel bagPianoPanel = new JPanel();
+		bagPianoPanel.add(bagPiano);
+		actionsPanel.add(bagPianoPanel);
+		
+		bagPlayStation = new JButton();
+		bagPlayStation.setLayout(new BorderLayout());
+		JLabel bagPlayStationIcon = new JLabel(bagImgResized);
+		JLabel bagPlayStationLabel = new JLabel("Bag PlayStation", SwingConstants.CENTER);
+		bagPlayStationLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		bagPlayStation.add(bagPlayStationLabel, BorderLayout.CENTER);
+		bagPlayStation.add(bagPlayStationIcon, BorderLayout.WEST);
+		bagPlayStation.setSize(buttonSize);
+		bagPlayStation.setPreferredSize(buttonSize);
+		bagPlayStation.setMinimumSize(buttonSize);
+		bagPlayStation.setMaximumSize(buttonSize);
+		bagPlayStation.addActionListener(this);
+		JPanel bagPlayStationPanel = new JPanel();
+		bagPlayStationPanel.add(bagPlayStation);
+		actionsPanel.add(bagPlayStationPanel);
+		
 
 		JPanel payPanel = new JPanel();
 		payPanel.setLayout(new BoxLayout(payPanel, BoxLayout.Y_AXIS));
-		payPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 85, 0));
+		payPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 125, 0));
 		JLabel payLabel = new JLabel("Use PIN Pad");
 		payLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel paYPanel = new JPanel();
@@ -763,29 +828,8 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel enterPinPanel = new JPanel();
 		enterPinPanel.add(enterPin);
 		payPanel.add(enterPinPanel);
+
 		
-		// set up bottom panel with payment and back button
-		// image of black arrow downloaded from below website
-		// https://www.pikpng.com/downpngs/oxJooi_simpleicons-interface-undo-black-arrow-pointing-to-tanda/
-		JPanel goBackPanel = new JPanel();
-		goBackPanel.setLayout(new BorderLayout(275, 0));
-		ImageIcon arrow = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/black arrow.png");
-		Image img = arrow.getImage() ;  
-		Image newimg = img.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
-		ImageIcon arrowResized = new ImageIcon(newimg);
-
-		goBack = new JButton();
-		goBack.setLayout(new BorderLayout()); //so we can add an icon
-		JLabel iconLabel = new JLabel(arrowResized);
-		JLabel back = new JLabel("Go Back", SwingConstants.CENTER);
-
-		back.setFont(new Font("Arial", Font.BOLD, 40));
-		goBack.add(back, BorderLayout.CENTER);
-		goBack.add(iconLabel, BorderLayout.WEST);
-		goBack.addActionListener(this);
-		payPanel.add(goBack);
-
-
 		buttonPanel.add(banknotePanel);
 		buttonPanel.add(coinPanel);
 
@@ -848,13 +892,13 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		} else if(button == scanPlayStation) {
 			
 		} else if(button == scanPiano) {
-		}
-			
+		
 		} else if(button == scanCard) {
 			
 		} else if(button == bagToy) {
 			
-		} else if(button == bagPlay) {
+		} else if(button == bagPlayStation) {
+			
 		} else if(button == bagPiano) {
 		}
 
@@ -910,10 +954,6 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 			weight -= 0.100;
 			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
 			
-		}
-		
-		else if(button == goBack) {
-			stateController.setState(new KeypadState());
 		}
 
 		// for using pin pad
