@@ -124,6 +124,37 @@ public class AttendantTests extends BaseTest {
 		}
 	}
 	
+	@Test(expected = CheckoutException.class)
+	public void attendantStartupInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			boolean bool = sys.login(num,2002);
+			int stationNum = sys.register(c);
+			sys.startUp(5);
+
+		}
+	}
+	
+	@Test(expected = CheckoutException.class)
+	public void attendantStartupInvalidStation2() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			boolean bool = sys.login(num,2002);
+			int stationNum = sys.register(null);
+			sys.startUp(5);
+
+		}
+	}
+	
+	
 	@Test
 	public void attendantShutdown() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
@@ -153,6 +184,21 @@ public class AttendantTests extends BaseTest {
 		}
 	}
 	
+	@Test(expected = CheckoutException.class)
+	public void attendantShutdownInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			boolean bool = sys.login(num,2002);
+			int stationNum = sys.register(c);
+			sys.shutDown(4);
+
+		}
+	}
+	
 	@Test
 	public void attendantApproveWeight() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
@@ -170,6 +216,23 @@ public class AttendantTests extends BaseTest {
 			sys.shutDown(stationNum);
 		}
 	}
+	
+	@Test(expected = CheckoutException.class)
+	public void attendantApproveWeightOnInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+			int stationNum = sys.register(c);
+			sys.startUp(stationNum);
+			sys.blockCheckout(stationNum);
+			sys.approveWeight(stationNum+1);
+		}
+	}
+	
 	@Test
 	public void attendantRemoveItem() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
@@ -192,6 +255,26 @@ public class AttendantTests extends BaseTest {
 		}
 	}
 	
+	@Test(expected = CheckoutException.class)
+	public void attendantRemoveItemOnInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+			int stationNum = sys.register(c);
+			sys.startUp(stationNum);
+			Barcode b = new Barcode("8888");
+			Product p = new BarcodedProduct(b, "fake item" ,BigDecimal.valueOf(5));
+			BigDecimal bal = c.getBalance();
+			ReceiptItem itemToRemove = new ReceiptItem(p, BigDecimal.valueOf(5), stationNum, BigDecimal.valueOf(5));
+			sys.removeItem(2, itemToRemove);
+			BigDecimal newBal = bal.subtract(BigDecimal.valueOf(5));
+			
+		}
+	}
 	
 	@Test
 	public void attendantAddPaper() throws CheckoutException {
