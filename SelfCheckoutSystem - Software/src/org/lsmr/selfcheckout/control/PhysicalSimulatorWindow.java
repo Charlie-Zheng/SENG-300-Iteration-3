@@ -1,4 +1,4 @@
-package org.lsmr.selfcheckout.control.gui.states;
+package org.lsmr.selfcheckout.control;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;

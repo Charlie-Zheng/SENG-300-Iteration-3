@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.PriceLookupCode;
-import org.lsmr.selfcheckout.control.gui.states.PhysicalSimulatorWindow;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
