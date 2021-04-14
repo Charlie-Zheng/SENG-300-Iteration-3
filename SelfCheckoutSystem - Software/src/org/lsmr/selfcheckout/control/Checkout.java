@@ -108,9 +108,6 @@ public class Checkout {
 	private AttendantSystem attendantSystem;
 	protected GUIController guiController;
 
-	private StateUpdateListener guiUpdateListener = new GUIupdateListener(this);
-
-
 
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
@@ -143,9 +140,6 @@ public class Checkout {
 		MembershipCardListener membershipListener = new MembershipCardListener(this);
 		checkoutStation.cardReader.register(membershipListener);
 
-		guiController = new GUIController(checkoutStation.screen.getFrame());
-		guiController.addStateUpdateListener(guiUpdateListener); // so the checkout station can know of any GUI updates
-		guiController.setState(new AttendantLogInState());
 
 		currentBalance = new BigDecimal(0);
 		customerBag = false;
@@ -1073,7 +1067,6 @@ public class Checkout {
 	 */
 	protected void setWeightOnScanScale(double weight) {
 		weightOnScanScale = weight;
-		guiController.notifyDataUpdate(new ScaleStateData(weight));
 	}
 
 	/**

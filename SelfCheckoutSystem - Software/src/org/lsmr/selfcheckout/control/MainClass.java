@@ -9,6 +9,9 @@ import java.util.Map;
 
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.PriceLookupCode;
+import org.lsmr.selfcheckout.control.gui.GUIController;
+import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
+import org.lsmr.selfcheckout.control.gui.states.AttendantLogInState;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
@@ -123,13 +126,23 @@ public class MainClass {
 
 		AttendantSystem attendentSystem = new AttendantSystem(employees);
 
+	
+
+		
 		Currency cad = Currency.getInstance("CAD");
 		int[] banknoteDenominations = { 5, 10, 20, 50, 100 };
 		BigDecimal[] coinDenominations = { new BigDecimal("0.05"), new BigDecimal("0.10"), new BigDecimal("0.25"),
 				new BigDecimal("1.00"), new BigDecimal("2.00") };
 		SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations, 122, 1);
 		Checkout c = new Checkout(station);
-
+	
+		StateUpdateListener guiUpdateListener = new GUIupdateListener(c);
+		
+		GUIController guiController = new GUIController(station.screen.getFrame());
+		guiController.addStateUpdateListener(guiUpdateListener); // so the checkout station can know of any GUI updates
+		guiController.setState(new AttendantLogInState());
+		
+		c.guiController = guiController;
 		try {
 			attendentSystem.register(c);
 		} catch (CheckoutException e) {
@@ -138,7 +151,7 @@ public class MainClass {
 		c.run();
 
 		// fire up our simulator
-		PhysicalSimulatorWindow window = new PhysicalSimulatorWindow(c);
+		PhysicalSimulatorWindow window = new PhysicalSimulatorWindow(c, guiController);
 		window.createWindow();
 
 	}
