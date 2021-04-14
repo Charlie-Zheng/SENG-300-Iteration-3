@@ -137,5 +137,9 @@ public class MainClass {
 
 		c.run();
 
+		// fire up our simulator
+		PhysicalSimulatorWindow window = new PhysicalSimulatorWindow(c);
+		window.createWindow();
+
 	}
 }
