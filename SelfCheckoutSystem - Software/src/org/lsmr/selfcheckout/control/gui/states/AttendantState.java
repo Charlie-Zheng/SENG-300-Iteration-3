@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -14,9 +15,11 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -76,7 +79,7 @@ public class AttendantState implements GUIState, ActionListener {
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
 		wordPanel.setBorder(new LineBorder(Color.RED.darker()));
 		wordPanel.setBackground(Color.RED.darker());
-		JLabel words = new JLabel("Select a checkout");
+		JLabel words = new JLabel("Select a Checkout");
 		words.setFont(new Font("Arial", Font.BOLD, 40));
 		words.setForeground(Color.WHITE);
 		words.setBackground(Color.RED.darker());
@@ -103,6 +106,15 @@ public class AttendantState implements GUIState, ActionListener {
 			buttonLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
 			JComponent scannedTable = getProductPanel(tableSize, 50);
+			
+			// disabled stamp
+			// https://www.google.com/search?q=disabled+stamp+clipart+transparent+background&tbm=isch&ved=2ahUKEwjgnY__pvnvAhWKFTQIHQOOBBEQ2-cCegQIABAA&oq=disabled+stamp+clipart+transparent+background&gs_lcp=CgNpbWcQA1DArQJY87QCYPK6AmgAcAB4AIABsgGIAYoJkgEDMC44mAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=OY10YKCdA4qr0PEPg5ySiAE&bih=562&biw=1280#imgrc=geARyhpd-K9z2M
+			ImageIcon disabledImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/disabled-stamp.jpg");
+			Image disImg = disabledImg.getImage() ;  
+			Image newDisabledImg = disImg.getScaledInstance( 410, 130,  java.awt.Image.SCALE_SMOOTH) ;  
+			ImageIcon disabledImgResized = new ImageIcon(newDisabledImg);
+			JLabel disabledImgLabel = new JLabel(disabledImgResized);
+			
 			/*scannedTable.addMouseListener(new MouseAdapter() {
 
 
@@ -116,7 +128,13 @@ public class AttendantState implements GUIState, ActionListener {
 			tableButton.setBorder(new LineBorder(Color.RED.darker()));
 
 			tableButton.add(buttonLabel, BorderLayout.NORTH);
-			tableButton.add(new JScrollPane(scannedTable), BorderLayout.SOUTH);
+			if(activeMachines[i]) {
+				tableButton.add(new JScrollPane(scannedTable), BorderLayout.SOUTH);
+			} else {
+				tableButton.add(disabledImgLabel, BorderLayout.SOUTH);
+			}
+			//tableButton.add(new JScrollPane(scannedTable), BorderLayout.SOUTH);
+			//tableButton.add(disabledImgLabel, BorderLayout.SOUTH);
 			//tableButton.addActionListener(this);
 			if (activeMachines[i]) {
 				tableButton.addMouseListener(new MouseAdapter() {

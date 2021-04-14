@@ -75,11 +75,9 @@ public class WeightWrongState implements GUIState, ActionListener {
 		wordPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 		wordPanel.setLayout(new GridBagLayout());
 		JLabel words = new JLabel("Unexpected weight in bagging area! Please wait for an attendant.");
-		//JLabel words2 = new JLabel("Please wait for an attendant.");
 		words.setFont(new Font("Arial", Font.BOLD, 35));
-		//words2.setFont(new Font("Arial", Font.BOLD, 35));
 		wordPanel.add(words);// panel with statement to input item's description
-		//wordPanel.add(words2);
+
 
 
 		// error icon panel
