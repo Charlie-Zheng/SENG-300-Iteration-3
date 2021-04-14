@@ -2,6 +2,7 @@ package org.lsmr.selfcheckout.control;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.lsmr.selfcheckout.control.gui.Pair;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.states.AttendantLogInState;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+import org.lsmr.selfcheckout.external.CardIssuer;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
@@ -98,6 +100,22 @@ public class GUIMainClass {
 
 	private static HashMap<Integer, Attendant> employees = new HashMap<Integer, Attendant>();
 
+	/**
+	 * Helper method to generate a Calendar instance with the given date. Used in
+	 * creating card instances.
+	 * 
+	 * @param month
+	 *            the month starting with January = 1
+	 * @param year
+	 *            the four-digit year
+	 * @return a new calendar instance
+	 */
+	protected static Calendar getCalendar(int month, int year) {
+		Calendar date = Calendar.getInstance();
+		date.set(year, month - 1, 1);
+		return date;
+	}
+
 	public static void initializeDatabases() {
 		addAll(ProductDatabases.PLU_PRODUCT_DATABASE,
 				pluProductsOf(new String[][] { { "5425", "Apple", "1.12" }, { "4523", "Pear", "0.95" } }));
@@ -109,7 +127,23 @@ public class GUIMainClass {
 				new String[][] { { "1124341", "70.1" }, { "0101010", "150.9" }, { "12345", "321.0" }, }));
 
 		addAll(MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE,
-				membershipsOf(new String[][] { { "111122223333", "Robert James Walker" } }));
+				membershipsOf(new String[][] { { "123456789", "Robert James Walker" } }));
+
+		CardIssuer debitIssuer = new CardIssuer("DebitCards LTD");
+		debitIssuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(1000000));
+
+		CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(debitIssuer);
+
+		CardIssuer creditIssuer = new CardIssuer("Real Canadian CreditCards");
+		creditIssuer.addCardData("7777", "Jane Doe", getCalendar(12, 2023), "123", new BigDecimal(1000000));
+
+		CardIssuerDatabase.CREDIT_ISSUER_DATABASE.add(creditIssuer);
+
+		CardIssuer giftIssuer = new CardIssuer("SelfCheckout INC.");
+		giftIssuer.addCardData("123456", "Jas Jome", getCalendar(12, 2023), "123", new BigDecimal(1000000));
+
+		CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(giftIssuer);
+
 		try {
 			employees.put(1234, new Attendant(1234, "James", 1234));
 			employees.put(1111, new Attendant(1111, "Ones", 1111));
@@ -126,28 +160,25 @@ public class GUIMainClass {
 
 		AttendantSystem attendentSystem = new AttendantSystem(employees);
 
-	
-
-		
 		Currency cad = Currency.getInstance("CAD");
 		int[] banknoteDenominations = { 5, 10, 20, 50, 100 };
 		BigDecimal[] coinDenominations = { new BigDecimal("0.05"), new BigDecimal("0.10"), new BigDecimal("0.25"),
 				new BigDecimal("1.00"), new BigDecimal("2.00") };
 		SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations, 10000, 1);
 		Checkout c = new Checkout(station);
-	
+
 		StateUpdateListener guiUpdateListener = new GUIupdateListener(c);
-		
+
 		GUIController guiController = new GUIController(station.screen.getFrame());
 		guiController.addStateUpdateListener(guiUpdateListener); // so the checkout station can know of any GUI updates
 		guiController.setState(new AttendantLogInState());
-		
+
 		c.guiController = guiController;
-		
+
 		c.addInk(10000);
 		c.addPaper(1000);
 		c.reset();
-		
+
 		try {
 			attendentSystem.register(c);
 		} catch (CheckoutException e) {

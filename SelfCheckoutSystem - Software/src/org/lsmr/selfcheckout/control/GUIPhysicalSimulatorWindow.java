@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
+import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.PLUCodedItem;
 import org.lsmr.selfcheckout.PriceLookupCode;
@@ -32,8 +33,10 @@ import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
@@ -108,6 +111,11 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 
 	private PLUCodedItem apples = new PLUCodedItem(new PriceLookupCode("5425"), 645);
 	private PLUCodedItem pears = new PLUCodedItem(new PriceLookupCode("4523"), 918);
+
+	private Card memberCard = new Card("Membership", "123456789", "Robert James Walker", null, null, true, false);
+	private Card debitCard = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
+	private Card creditCard = new Card("credit", "7777", "Jane Doe", "123", "0909", true, true);
+	private Card giftCard = new Card("gift", "123456", "Jas Home", "123", "0909", true, true);
 
 	private JFrame frame;
 
@@ -1109,6 +1117,15 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 
 		} else if (button == enterPin) {
 
+		} else if (button == scanCard) {
+			try {
+				checkout.swipeCard(memberCard);
+				if (checkout.getLoggedInMemberNumber() != null) {
+					stateHandler.notifyDataUpdate(new BooleanStateData(true));
+				}
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		}
 
 	}

@@ -186,7 +186,7 @@ public class MemberCardState implements GUIState, ActionListener {
 		constraints.gridx = 1;
 		constraints.weightx = 0.1;
 		constraints.anchor = GridBagConstraints.LINE_END;
-		centerPanel.add(scanCard, constraints);
+//		centerPanel.add(scanCard, constraints);
 		
 		constraints.gridx = 1;
 		constraints.weightx = 0.1;
