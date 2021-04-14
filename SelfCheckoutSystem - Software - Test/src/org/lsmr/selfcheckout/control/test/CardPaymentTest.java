@@ -16,6 +16,8 @@ import org.lsmr.selfcheckout.control.CardIssuerDatabase;
 import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.CheckoutException;
 import org.lsmr.selfcheckout.control.Checkout.PayingState;
+import org.lsmr.selfcheckout.devices.DisabledException;
+import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.external.CardIssuer;
 
@@ -284,6 +286,7 @@ public class CardPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
@@ -302,10 +305,9 @@ public class CardPaymentTest extends BaseTest {
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Gift);
 				c.payByInsertingCard(card, "0909");
-				fail();
-			} catch (CheckoutException e) {
+				c.removeCard();
 				success();
-			} catch (OverloadException e) {
+			} catch (OverloadException | CheckoutException e) {
 				fail();
 			}
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
@@ -315,6 +317,7 @@ public class CardPaymentTest extends BaseTest {
 		for (int i = 0; i < REPEAT; i++) {
 			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
 			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
 			CardIssuerDatabase.GIFT_ISSUER_DATABASE.add(issuer);
 			// don't add the card to the issuer
 
@@ -332,12 +335,10 @@ public class CardPaymentTest extends BaseTest {
 				c.addItemToBaggingArea(item);
 				c.startPayment(PayingState.Gift);
 				c.payBySwipingCard(card, new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
-				fail();
-			} catch (CheckoutException e) {
 				success();
-			} catch (OverloadException e) {
+			} catch (OverloadException | CheckoutException e) {
 				fail();
-			}
+			} 
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
@@ -890,7 +891,7 @@ public class CardPaymentTest extends BaseTest {
 
 			// Try out all three payment types
 
-			// tap
+			// swipe
 			c.reset();
 			
 			try {
@@ -1010,4 +1011,111 @@ public class CardPaymentTest extends BaseTest {
 		}
 	}
 	
+	/**
+	 * The customer attempts to pay with a card via the three methods
+	 * when the self checkout device is not ready to accept card payment
+	 * @throws OverloadException
+	 */
+	@Test
+	public void CardPaymentisNotReadyTest() throws OverloadException {
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+		
+		//Insert
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+			try {
+				c.reset();
+				c.scanItem(item);
+				c.addItemToBaggingArea(item);
+				c.payByInsertingCard(card, "0909");
+				fail();
+			} catch (CheckoutException e) {
+				success();
+			}
+			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();
+			CardIssuerDatabase.GIFT_ISSUER_DATABASE.clear();
+		}
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+		
+		
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+
+			// Try out all three payment types
+
+			// Swipe
+			try {
+				c.reset();
+				c.scanItem(item);
+				c.addItemToBaggingArea(item);
+				c.payBySwipingCard(card, new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+				fail();
+			} catch (CheckoutException e1) {
+				success();
+			}
+		}
+		
+		for (int i = 0; i < REPEAT; i++) {
+			Card card = new Card("debit", "1111222233334444", "John Doe", "123", "0909", true, true);
+			CardIssuer issuer = new CardIssuer("abcdefg");
+			issuer.addCardData("1111222233334444", "John Doe", getCalendar(12, 2023), "123", new BigDecimal(999999));
+			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.add(issuer);
+		
+		
+			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
+			
+			// Try out all three payment types
+
+			// Tap
+			try {
+				c.reset();
+				c.scanItem(item);
+				c.addItemToBaggingArea(item);
+				c.payByTappingCard(card);
+				fail();
+			} catch (CheckoutException e2) {
+				success();
+			}
+		}
+	}
+	
+	/**
+	 * The customer attempts to pay with a card when the self checkout device
+	 *  is done (not scanning or paused)
+	 * @throws OverloadException
+	 */
+	@Test
+	public void NotScanningPayment() throws OverloadException {
+		for (int i = 0; i < REPEAT; i++) {
+			try {
+				Currency cad = Currency.getInstance("CAD");
+				c.reset();
+				BarcodedItem item = new BarcodedItem(new Barcode("30040321"), 397);
+				// balance is 3.97
+				c.scanItem(item);
+				c.addItemToBaggingArea(item);
+				c.startPayment(Checkout.PayingState.Cash);
+
+				Banknote note = new Banknote(20, cad);
+				c.payWithBanknote(note);
+
+				c.emitChange();
+				c.getChangeFromCoinTray();
+				c.getChangeFromBanknoteSlots();
+				c.removeRejectedBanknote();
+				c.startPayment(PayingState.Debit);
+				fail();
+
+			} catch (OverloadException | CheckoutException | EmptyException | DisabledException e) {
+				success();
+			}
+		}
+	}
 }
