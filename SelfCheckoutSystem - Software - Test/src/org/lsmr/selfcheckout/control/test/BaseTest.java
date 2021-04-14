@@ -252,15 +252,15 @@ public abstract class BaseTest {
 
 		// An product with a PLUCode of 12345 and price $123.45 per kg
 		ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("12345"),
-				new PLUCodedProduct(temp, "Product with barcode of 12345 and price $123.45", new BigDecimal("123.45")));
+				new PLUCodedProduct(temp, "Product with PLUCode of 12345 and price $123.45", new BigDecimal("123.45")));
 
 		// A product with a PLUCode of 98765 and price $98.76 per kg
 		ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("98765"),
-				new PLUCodedProduct(temp, "Product with barcode of 98765 and price $98.76", new BigDecimal("98.76")));
+				new PLUCodedProduct(temp, "Product with PLUCode of 98765 and price $98.76", new BigDecimal("98.76")));
 
 		// A product with a PLUCode of 30040 and price $3.97 per kg
 		ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("30040"),
-				new PLUCodedProduct(temp, "Product with barcode of 30040 and price $3.97", new BigDecimal("3.97")));
+				new PLUCodedProduct(temp, "Product with PLUCode of 30040 and price $3.97", new BigDecimal("3.97")));
 	}
 
 	/**
