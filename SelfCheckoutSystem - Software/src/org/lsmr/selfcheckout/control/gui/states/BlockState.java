@@ -32,6 +32,7 @@ public class BlockState implements GUIState, ActionListener {
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
+		attendantWindow = new PhysicalAttendantSimulatorWindow();
 		attendantWindow.createWindow();
 	}
 

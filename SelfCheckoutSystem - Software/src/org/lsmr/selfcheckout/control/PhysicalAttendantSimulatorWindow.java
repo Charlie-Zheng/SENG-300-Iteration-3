@@ -36,6 +36,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 
 	private Checkout checkout;
 	private GUIController stateHandler;
+	StateHandler<GUIState> stateController;
 	
 	// attendant refills banknote dispenser
 	private JButton refill5;
@@ -75,6 +76,10 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 	public PhysicalAttendantSimulatorWindow(Checkout c, GUIController s) {
 		this.checkout = c;
 		this.stateHandler = s;
+	}
+	
+	public PhysicalAttendantSimulatorWindow() {
+		
 	}
 
 	public void createWindow() {
