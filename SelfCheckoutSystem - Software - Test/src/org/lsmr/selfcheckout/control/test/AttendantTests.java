@@ -350,6 +350,35 @@ public class AttendantTests extends BaseTest {
 	}
 	
 	@Test
+	public void attendantSearchesPLUProduct() throws CheckoutException {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+			initPLUProductDatabase();
+			ArrayList<Product> results = sys.searchProductDatabase("price $3.97");
+			System.out.println(results);
+			assertEquals("org.lsmr.selfcheckout.products.PLUCodedProduct@5c18298f", results.get(0).toString());
+		
+	}
+
+	@Test
+	public void attendantSearchesBarcodedProduct() throws CheckoutException {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+			initBarcodeProductDatabase();
+			ArrayList<Product> results = sys.searchProductDatabase("barcode of 30040321");
+			assertEquals("[org.lsmr.selfcheckout.products.BarcodedProduct@706a04ae]", results.toString());
+		
+	}
+	
+	@Test
 	public void attendantRefillsCoinDispenser() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
