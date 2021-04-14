@@ -79,7 +79,7 @@ public class LookupState implements GUIState, ActionListener {
 			if (inputProduct instanceof PLUCodedProduct) {
 				// don't insert prpoduct - we pass it to the next state to get a weighing of it
 				stateController.notifyListeners(new InsertPLUProductData((PLUCodedProduct) inputProduct));
-				
+				stateController.setState(new BuyingState());
 			} else if (inputProduct instanceof BarcodedProduct) {
 				stateController.notifyListeners(new InsertBarcodedProductData((BarcodedProduct) inputProduct)); // directly insert product into checkout
 				stateController.setState(new BuyingState());

@@ -12,4 +12,10 @@ public class BaggingAreaWeightData extends FloatStateData {
 	public BaggingAreaWeightData(float weight) {
 		super(weight);
 	}
+	/**
+	 * @param weightOnBaggingArea
+	 */
+	public BaggingAreaWeightData(double weightOnBaggingArea) {
+		super((float) weightOnBaggingArea);
+	}
 }

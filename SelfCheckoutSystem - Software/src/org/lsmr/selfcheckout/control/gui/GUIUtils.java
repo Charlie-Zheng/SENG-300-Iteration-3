@@ -51,7 +51,14 @@ public class GUIUtils {
 		this.view = view;
 	}
 	
-
+	public static void flashError(JComponent view) {
+		GUIUtils
+		.begin(view)
+		.setError()
+		.waitFor(0.4f)
+		.restore()
+		.execute();
+	}
 
 	/**
 	 * Sets the view to have an error bg color

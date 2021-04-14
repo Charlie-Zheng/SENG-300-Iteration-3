@@ -1,12 +1,15 @@
 package org.lsmr.selfcheckout.control;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.util.Currency;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,19 +21,27 @@ import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 import javax.swing.SwingConstants;
 
+import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
+import org.lsmr.selfcheckout.Coin;
+import org.lsmr.selfcheckout.PLUCodedItem;
+import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.gui.GUIController;
+import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
+import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
+import org.lsmr.selfcheckout.devices.DisabledException;
+import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 
-public class PhysicalSimulatorWindow implements ActionListener {
+public class GUIPhysicalSimulatorWindow implements ActionListener {
 
 	private Checkout checkout;
 	private GUIController stateHandler;
@@ -63,16 +74,21 @@ public class PhysicalSimulatorWindow implements ActionListener {
 	private float weight;
 
 	// customer places item on scale
-	private JButton add100g;
-	private JButton add50g;
+	private JButton bagPears;
+	private JButton bagApples;
 	private JButton add20g;
 	private JButton add10g;
-	private JButton add5g;
-	private JButton add1g;
+
+	private JButton addPears;
+	private JButton addApples;
+	private JLabel addPearsLabel;
+	private JLabel addApplesLabel;
+	private JLabel bagApplesLabel;
+	private JLabel bagPearsLabel;
 
 	// here incase they add too much weight by accident
-	private JButton minus100g;
-	private JButton minus50g;
+	private JButton takeReceipt;
+	private JButton takeChange;
 	private JButton minus20g;
 	private JButton minus10g;
 	private JButton minus5g;
@@ -87,12 +103,15 @@ public class PhysicalSimulatorWindow implements ActionListener {
 	private JButton goBack;
 
 	private BarcodedItem toy = new BarcodedItem(new Barcode("1124341"), 70.1);
-	private BarcodedItem ps6 = new BarcodedItem(new Barcode("0101010"), 150.9);
+	private BarcodedItem ps6 = new BarcodedItem(new Barcode("0101010"), 150.1);
 	private BarcodedItem piano = new BarcodedItem(new Barcode("12345"), 321);
+
+	private PLUCodedItem apples = new PLUCodedItem(new PriceLookupCode("5425"), 645);
+	private PLUCodedItem pears = new PLUCodedItem(new PriceLookupCode("4523"), 918);
 
 	private JFrame frame;
 
-	public PhysicalSimulatorWindow(Checkout c, GUIController s) {
+	public GUIPhysicalSimulatorWindow(Checkout c, GUIController s) {
 		this.checkout = c;
 		this.stateHandler = s;
 	}
@@ -152,6 +171,13 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		Image fiveImg = five.getImage();
 		Image newFiveImg = fiveImg.getScaledInstance(50, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon fiveImgResized = new ImageIcon(newFiveImg);
+
+		// bag of groceries
+		//https://www.cleanpng.com/png-shopping-bags-trolleys-grocery-store-clip-art-blac-3014424/download-png.html
+		ImageIcon bag = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/bag of groceries.png");
+		Image bagImg = bag.getImage();
+		Image newBagImg = bagImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
+		ImageIcon bagImgResized = new ImageIcon(newBagImg);
 
 		insert5 = new JButton();
 		insert5.setLayout(new BorderLayout());
@@ -394,37 +420,37 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		Image newPlusImg = plusImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon plusImgResized = new ImageIcon(newPlusImg);
 
-		add1g = new JButton();
-		add1g.setLayout(new BorderLayout());
-		JLabel add1Icon = new JLabel(plusImgResized);
-		JLabel add1Label = new JLabel("Add 1g to Scale", SwingConstants.CENTER);
-		add1Label.setFont(new Font("Arial", Font.BOLD, 22));
-		add1g.add(add1Label, BorderLayout.CENTER);
-		add1g.add(add1Icon, BorderLayout.WEST);
-		add1g.setSize(buttonSize);
-		add1g.setPreferredSize(buttonSize);
-		add1g.setMinimumSize(buttonSize);
-		add1g.setMaximumSize(buttonSize);
-		add1g.addActionListener(this);
-		JPanel add1Panel = new JPanel();
-		add1Panel.add(add1g);
-		addWeightPanel.add(add1Panel);
+		addApples = new JButton();
+		addApples.setLayout(new BorderLayout());
+		JLabel addApplesIcon = new JLabel(plusImgResized);
+		addApplesLabel = new JLabel("Add " + apples.getWeight() + "g of Apples", SwingConstants.CENTER);
+		addApplesLabel.setFont(new Font("Arial", Font.BOLD, 15));
+		addApples.add(addApplesLabel, BorderLayout.CENTER);
+		addApples.add(addApplesIcon, BorderLayout.WEST);
+		addApples.setSize(buttonSize);
+		addApples.setPreferredSize(buttonSize);
+		addApples.setMinimumSize(buttonSize);
+		addApples.setMaximumSize(buttonSize);
+		addApples.addActionListener(this);
+		JPanel addApplesPanel = new JPanel();
+		addApplesPanel.add(addApples);
+		addWeightPanel.add(addApplesPanel);
 
-		add5g = new JButton();
-		add5g.setLayout(new BorderLayout());
-		JLabel add5Icon = new JLabel(plusImgResized);
-		JLabel add5Label = new JLabel("Add 5g to Scale", SwingConstants.CENTER);
-		add5Label.setFont(new Font("Arial", Font.BOLD, 22));
-		add5g.add(add5Label, BorderLayout.CENTER);
-		add5g.add(add5Icon, BorderLayout.WEST);
-		add5g.setSize(buttonSize);
-		add5g.setPreferredSize(buttonSize);
-		add5g.setMinimumSize(buttonSize);
-		add5g.setMaximumSize(buttonSize);
-		add5g.addActionListener(this);
-		JPanel add5Panel = new JPanel();
-		add5Panel.add(add5g);
-		addWeightPanel.add(add5Panel);
+		addPears = new JButton();
+		addPears.setLayout(new BorderLayout());
+		JLabel addPearsIcon = new JLabel(plusImgResized);
+		addPearsLabel = new JLabel("Add " + pears.getWeight() + "g of Pears", SwingConstants.CENTER);
+		addPearsLabel.setFont(new Font("Arial", Font.BOLD, 15));
+		addPears.add(addPearsLabel, BorderLayout.CENTER);
+		addPears.add(addPearsIcon, BorderLayout.WEST);
+		addPears.setSize(buttonSize);
+		addPears.setPreferredSize(buttonSize);
+		addPears.setMinimumSize(buttonSize);
+		addPears.setMaximumSize(buttonSize);
+		addPears.addActionListener(this);
+		JPanel addPearsPanel = new JPanel();
+		addPearsPanel.add(addPears);
+		addWeightPanel.add(addPearsPanel);
 
 		add10g = new JButton();
 		add10g.setLayout(new BorderLayout());
@@ -458,37 +484,37 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		add20Panel.add(add20g);
 		addWeightPanel.add(add20Panel);
 
-		add50g = new JButton();
-		add50g.setLayout(new BorderLayout());
-		JLabel add50Icon = new JLabel(plusImgResized);
-		JLabel add50Label = new JLabel("Add 50g to Scale", SwingConstants.CENTER);
-		add50Label.setFont(new Font("Arial", Font.BOLD, 22));
-		add50g.add(add50Label, BorderLayout.CENTER);
-		add50g.add(add50Icon, BorderLayout.WEST);
-		add50g.setSize(buttonSize);
-		add50g.setPreferredSize(buttonSize);
-		add50g.setMinimumSize(buttonSize);
-		add50g.setMaximumSize(buttonSize);
-		add50g.addActionListener(this);
-		JPanel add50Panel = new JPanel();
-		add50Panel.add(add50g);
-		addWeightPanel.add(add50Panel);
+		bagApples = new JButton();
+		bagApples.setLayout(new BorderLayout());
+		JLabel bagApplesIcon = new JLabel(bagImgResized);
+		bagApplesLabel = new JLabel("Bag Apples", SwingConstants.CENTER);
+		bagApplesLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		bagApples.add(bagApplesLabel, BorderLayout.CENTER);
+		bagApples.add(bagApplesIcon, BorderLayout.WEST);
+		bagApples.setSize(buttonSize);
+		bagApples.setPreferredSize(buttonSize);
+		bagApples.setMinimumSize(buttonSize);
+		bagApples.setMaximumSize(buttonSize);
+		bagApples.addActionListener(this);
+		JPanel bagApplesPanel = new JPanel();
+		bagApplesPanel.add(bagApples);
+		addWeightPanel.add(bagApplesPanel);
 
-		add100g = new JButton();
-		add100g.setLayout(new BorderLayout());
-		JLabel add100Icon = new JLabel(plusImgResized);
-		JLabel add100Label = new JLabel("Add 100g to Scale", SwingConstants.CENTER);
-		add100Label.setFont(new Font("Arial", Font.BOLD, 20));
-		add100g.add(add100Label, BorderLayout.CENTER);
-		add100g.add(add100Icon, BorderLayout.WEST);
-		add100g.setSize(buttonSize);
-		add100g.setPreferredSize(buttonSize);
-		add100g.setMinimumSize(buttonSize);
-		add100g.setMaximumSize(buttonSize);
-		add100g.addActionListener(this);
-		JPanel add100Panel = new JPanel();
-		add100Panel.add(add100g);
-		addWeightPanel.add(add100Panel);
+		bagPears = new JButton();
+		bagPears.setLayout(new BorderLayout());
+		JLabel bagPearsIcon = new JLabel(bagImgResized);
+		bagPearsLabel = new JLabel("Bag Pears", SwingConstants.CENTER);
+		bagPearsLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		bagPears.add(bagPearsLabel, BorderLayout.CENTER);
+		bagPears.add(bagPearsIcon, BorderLayout.WEST);
+		bagPears.setSize(buttonSize);
+		bagPears.setPreferredSize(buttonSize);
+		bagPears.setMinimumSize(buttonSize);
+		bagPears.setMaximumSize(buttonSize);
+		bagPears.addActionListener(this);
+		JPanel bagPearsPanel = new JPanel();
+		bagPearsPanel.add(bagPears);
+		addWeightPanel.add(bagPearsPanel);
 
 		JPanel removeWeightPanel = new JPanel();
 		removeWeightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
@@ -568,37 +594,37 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		minus20Panel.add(minus20g);
 		removeWeightPanel.add(minus20Panel);
 
-		minus50g = new JButton();
-		minus50g.setLayout(new BorderLayout());
-		JLabel minus50Icon = new JLabel(minusImgResized);
-		JLabel minus50Label = new JLabel("Remove 50g from Scale", SwingConstants.CENTER);
-		minus50Label.setFont(new Font("Arial", Font.BOLD, 16));
-		minus50g.add(minus50Label, BorderLayout.CENTER);
-		minus50g.add(minus50Icon, BorderLayout.WEST);
-		minus50g.setSize(buttonSize);
-		minus50g.setPreferredSize(buttonSize);
-		minus50g.setMinimumSize(buttonSize);
-		minus50g.setMaximumSize(buttonSize);
-		minus50g.addActionListener(this);
-		JPanel minus50Panel = new JPanel();
-		minus50Panel.add(minus50g);
-		removeWeightPanel.add(minus50Panel);
+		takeChange = new JButton();
+		takeChange.setLayout(new BorderLayout());
+		JLabel takeChangeIcon = new JLabel(minusImgResized);
+		JLabel takeChangeLabel = new JLabel("Take change", SwingConstants.CENTER);
+		takeChangeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+		takeChange.add(takeChangeLabel, BorderLayout.CENTER);
+		takeChange.add(takeChangeIcon, BorderLayout.WEST);
+		takeChange.setSize(buttonSize);
+		takeChange.setPreferredSize(buttonSize);
+		takeChange.setMinimumSize(buttonSize);
+		takeChange.setMaximumSize(buttonSize);
+		takeChange.addActionListener(this);
+		JPanel takeChangePanel = new JPanel();
+		takeChangePanel.add(takeChange);
+		removeWeightPanel.add(takeChangePanel);
 
-		minus100g = new JButton();
-		minus100g.setLayout(new BorderLayout());
-		JLabel minus100Icon = new JLabel(minusImgResized);
-		JLabel minus100Label = new JLabel("Remove 100g from Scale", SwingConstants.CENTER);
-		minus100Label.setFont(new Font("Arial", Font.BOLD, 15));
-		minus100g.add(minus100Label, BorderLayout.CENTER);
-		minus100g.add(minus100Icon, BorderLayout.WEST);
-		minus100g.setSize(buttonSize);
-		minus100g.setPreferredSize(buttonSize);
-		minus100g.setMinimumSize(buttonSize);
-		minus100g.setMaximumSize(buttonSize);
-		minus100g.addActionListener(this);
-		JPanel minus100Panel = new JPanel();
-		minus100Panel.add(minus100g);
-		removeWeightPanel.add(minus100Panel);
+		takeReceipt = new JButton();
+		takeReceipt.setLayout(new BorderLayout());
+		JLabel takeReceiptIcon = new JLabel(minusImgResized);
+		JLabel takeReceiptLabel = new JLabel("Take receipt", SwingConstants.CENTER);
+		takeReceiptLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		takeReceipt.add(takeReceiptLabel, BorderLayout.CENTER);
+		takeReceipt.add(takeReceiptIcon, BorderLayout.WEST);
+		takeReceipt.setSize(buttonSize);
+		takeReceipt.setPreferredSize(buttonSize);
+		takeReceipt.setMinimumSize(buttonSize);
+		takeReceipt.setMaximumSize(buttonSize);
+		takeReceipt.addActionListener(this);
+		JPanel takeReceiptPanel = new JPanel();
+		takeReceiptPanel.add(takeReceipt);
+		removeWeightPanel.add(takeReceiptPanel);
 
 		JPanel actionsPanel = new JPanel();
 		actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
@@ -679,13 +705,6 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		JPanel scanPlayStationPanel = new JPanel();
 		scanPlayStationPanel.add(scanPlayStation);
 		actionsPanel.add(scanPlayStationPanel);
-
-		// bag of groceries
-		//https://www.cleanpng.com/png-shopping-bags-trolleys-grocery-store-clip-art-blac-3014424/download-png.html
-		ImageIcon bag = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/bag of groceries.png");
-		Image bagImg = bag.getImage();
-		Image newBagImg = bagImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
-		ImageIcon bagImgResized = new ImageIcon(newBagImg);
 
 		bagToy = new JButton();
 		bagToy.setLayout(new BorderLayout());
@@ -864,30 +883,81 @@ public class PhysicalSimulatorWindow implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		JButton button = (JButton) arg0.getSource();
-
+		Currency cad = Currency.getInstance("CAD");
 		// for inserting banknotes
+
 		if (button == insert5) {
-
+			try {
+				checkout.payWithBanknote(new Banknote(5, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (OverloadException | CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insert10) {
-
+			try {
+				checkout.payWithBanknote(new Banknote(10, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (OverloadException | CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insert20) {
-
+			try {
+				checkout.payWithBanknote(new Banknote(20, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (OverloadException | CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insert50) {
-
+			try {
+				checkout.payWithBanknote(new Banknote(50, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (OverloadException | CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insert100) {
-
+			try {
+				checkout.payWithBanknote(new Banknote(100, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (OverloadException | CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		}
 		// for inserting coins
 		else if (button == insertNickel) {
-
+			try {
+				checkout.payWithCoin(new Coin(new BigDecimal("0.05"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insertDime) {
-
+			try {
+				checkout.payWithCoin(new Coin(new BigDecimal("0.10"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insertQuarter) {
-
+			try {
+				checkout.payWithCoin(new Coin(new BigDecimal("0.25"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insertLoonie) {
-
+			try {
+				checkout.payWithCoin(new Coin(new BigDecimal("1.00"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insertTwoonie) {
-
+			try {
+				checkout.payWithCoin(new Coin(new BigDecimal("2.00"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		}
 
 		// action items at checkout
@@ -913,7 +983,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 					stateHandler.notifyDataUpdate(new BaggingAreaWeightData(0));
 				}
 			}
-		} else if (button == bagToy || button == bagPlayStation || button == bagPiano) {
+		} else if (button == bagToy || button == bagPlayStation || button == bagPiano || button == bagApples
+				|| button == bagPears) {
 			try {
 				if (button == bagToy) {
 					if (bagToyLabel.getText().startsWith("Bag")) {
@@ -932,13 +1003,29 @@ public class PhysicalSimulatorWindow implements ActionListener {
 						checkout.removeItemFromBaggingArea(ps6);
 						bagPlayStationLabel.setText("Bag PlayStation");
 					}
-				} else {
+				} else if (button == bagPiano) {
 					if (bagPianoLabel.getText().startsWith("Bag")) {
 						bagPianoLabel.setText("Unbag Piano");
 						checkout.addItemToBaggingArea(piano);
 					} else {
 						checkout.removeItemFromBaggingArea(piano);
 						bagPianoLabel.setText("Bag Piano");
+					}
+				} else if (button == bagApples) {
+					if (bagApplesLabel.getText().startsWith("Bag")) {
+						bagApplesLabel.setText("Unbag Apples");
+						checkout.addItemToBaggingArea(apples);
+					} else {
+						bagApplesLabel.setText("Bag Apples");
+						checkout.removeItemFromBaggingArea(apples);
+					}
+				} else if (button == bagPears) {
+					if (bagPearsLabel.getText().startsWith("Bag")) {
+						bagPearsLabel.setText("Unbag Pears");
+						checkout.addItemToBaggingArea(pears);
+					} else {
+						bagPearsLabel.setText("Bag Pears");
+						checkout.removeItemFromBaggingArea(pears);
 					}
 				}
 
@@ -957,11 +1044,25 @@ public class PhysicalSimulatorWindow implements ActionListener {
 			//} else if(button == bagPlay) {
 
 			// add weight to scale
-		} else if (button == add1g) {
-			weight += 0.001;
+		} else if (button == addApples) {
+			if (addApplesLabel.getText().startsWith("Add")) {
+				checkout.addItemToScale(apples);
+				addApplesLabel.setText("Remove " + apples.getWeight() + "g of Apples");
+			} else {
+				checkout.removeItemFromScale(apples);
+				addApplesLabel.setText("Add " + apples.getWeight() + "g of Apples");
+			}
+			stateHandler.notifyDataUpdate(new ScaleStateData(checkout.getWeightOnScale()));
+		} else if (button == addPears) {
+			if (addPearsLabel.getText().startsWith("Add")) {
+				checkout.addItemToScale(pears);
+				addPearsLabel.setText("Remove " + pears.getWeight() + "g of Pears");
+			} else {
+				checkout.removeItemFromScale(pears);
+				addPearsLabel.setText("Add " + pears.getWeight() + "g of Pears");
+			}
 
-		} else if (button == add5g) {
-			weight += 0.005;
+			stateHandler.notifyDataUpdate(new ScaleStateData(checkout.getWeightOnScale()));
 
 		} else if (button == add10g) {
 			weight += 0.010;
@@ -969,16 +1070,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		} else if (button == add20g) {
 			weight += 0.20;
 
-		} else if (button == add50g) {
-			weight += 0.050;
-
-		} else if (button == add100g) {
-			weight += 0.100;
-
-		}
-
-		// remove weight from scale
-		else if (button == minus1g) {
+			// remove weight from scale
+		} else if (button == minus1g) {
 			weight -= 0.001;
 
 		} else if (button == minus5g) {
@@ -990,11 +1083,17 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		} else if (button == minus20g) {
 			weight -= 0.020;
 
-		} else if (button == minus50g) {
-			weight -= 0.050;
-
-		} else if (button == minus100g) {
-			weight -= 0.100;
+		} else if (button == takeChange) {
+			checkout.getChangeFromCoinTray();
+			checkout.getChangeFromBanknoteSlots();
+		} else if (button == takeReceipt) {
+			try {
+				checkout.printReceipt();
+				System.out.println(checkout.removeReceipt());
+			} catch (CheckoutException e) {
+				e.printStackTrace();
+				GUIUtils.flashError(button);
+			}
 
 		}
 

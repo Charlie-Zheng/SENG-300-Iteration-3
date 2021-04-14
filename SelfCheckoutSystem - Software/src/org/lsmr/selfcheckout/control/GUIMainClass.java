@@ -10,6 +10,7 @@ import java.util.Map;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.gui.GUIController;
+import org.lsmr.selfcheckout.control.gui.Pair;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.states.AttendantLogInState;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
@@ -17,7 +18,7 @@ import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
 
-public class MainClass {
+public class GUIMainClass {
 
 	/**
 	 * Adds the list of keys and list of values into the specified map. Number of
@@ -111,7 +112,6 @@ public class MainClass {
 				membershipsOf(new String[][] { { "111122223333", "Robert James Walker" } }));
 		try {
 			employees.put(1234, new Attendant(1234, "James", 1234));
-			employees.put(0000, new Attendant(0000, "Zeroes", 0000));
 			employees.put(1111, new Attendant(1111, "Ones", 1111));
 		} catch (CheckoutException e) {
 		}
@@ -143,6 +143,11 @@ public class MainClass {
 		guiController.setState(new AttendantLogInState());
 		
 		c.guiController = guiController;
+		
+		c.addInk(10000);
+		c.addPaper(1000);
+		c.reset();
+		
 		try {
 			attendentSystem.register(c);
 		} catch (CheckoutException e) {
@@ -151,7 +156,7 @@ public class MainClass {
 		c.run();
 
 		// fire up our simulator
-		PhysicalSimulatorWindow window = new PhysicalSimulatorWindow(c, guiController);
+		GUIPhysicalSimulatorWindow window = new GUIPhysicalSimulatorWindow(c, guiController);
 		window.createWindow();
 
 	}

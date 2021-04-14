@@ -3,7 +3,7 @@
  */
 package org.lsmr.selfcheckout.control.gui.statedata;
 
-import org.lsmr.selfcheckout.control.Pair;
+import org.lsmr.selfcheckout.control.gui.Pair;
 
 /**
  * @author charl

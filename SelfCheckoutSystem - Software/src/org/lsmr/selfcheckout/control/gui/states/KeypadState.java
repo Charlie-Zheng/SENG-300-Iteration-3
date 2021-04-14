@@ -39,7 +39,7 @@ public class KeypadState implements GUIState, ActionListener {
 	private JLabel topStatement;
 	private PLUCodedProduct inputProduct;
 	private JLabel weight;
-	private float changeWeight;
+	private double changeWeight;
 
 	/*
 	 * 
@@ -55,27 +55,21 @@ public class KeypadState implements GUIState, ActionListener {
 	@Override
 	public void onDataUpdate(StateData<?> data) {
 		if (data == null) {
-			GUIUtils
-			.begin(input)
-			.setError()
-			.waitFor(0.5f)
-			.restore()
-			.execute();
-			
-			
+			GUIUtils.begin(input).setError().waitFor(0.5f).restore().execute();
+
 		} else if (data instanceof ProductStateData) {
 			inputProduct = (PLUCodedProduct) data.obtain();
 			stateController.notifyListeners(new InsertPLUProductData(inputProduct));
 			stateController.setState(new BuyingState()); // TEMP: just to see populated data
-		
+
 		} else if (data instanceof ScaleStateData) {
-			changeWeight = (float) data.obtain();
-			weight.setText(String.format("$%.3f kg", changeWeight));
+			changeWeight = ((ScaleStateData) data).obtain();
+			weight.setText(String.format("$%.3f kg", changeWeight/1000));
 		}
 	}
 
 	/**
-	 *  This sets up all of the widgets to be used on the keypad state screen
+	 * This sets up all of the widgets to be used on the keypad state screen
 	 */
 	@Override
 	public JPanel getPanel() {
@@ -93,8 +87,8 @@ public class KeypadState implements GUIState, ActionListener {
 		topStatement = new JLabel("Key In Item's Code");
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
 		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
-		Image coOpImg = coopImg.getImage() ;  
-		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image coOpImg = coopImg.getImage();
+		Image newCoOpImg = coOpImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
 		JLabel coOpLogo = new JLabel(coOpImgResized);
 		topPanel.add(topStatement, BorderLayout.CENTER);
@@ -108,7 +102,6 @@ public class KeypadState implements GUIState, ActionListener {
 		input.setBackground(Color.WHITE);
 		//topPanel.add(input, BorderLayout.CENTER);
 
-
 		// the keypad that user will enter codes with
 		JPanel keyPadPanel = new JPanel();
 		keyPadPanel.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100)); // for margins
@@ -117,7 +110,7 @@ public class KeypadState implements GUIState, ActionListener {
 		keyPadPanel.setMaximumSize(size);
 		keyPadPanel.setPreferredSize(size);
 		keyPadPanel.setSize(size);
-		keyPadPanel.setLayout(new GridLayout(4,3,10,10));
+		keyPadPanel.setLayout(new GridLayout(4, 3, 10, 10));
 		keyPadPanel.add(new JButton("1"));
 		keyPadPanel.add(new JButton("2"));
 		keyPadPanel.add(new JButton("3"));
@@ -133,7 +126,7 @@ public class KeypadState implements GUIState, ActionListener {
 		keyPadPanel.add(new JButton("OK"));
 		for (Component button : keyPadPanel.getComponents()) {
 			((JButton) button).addActionListener(this);
-			if(button != delete) {
+			if (button != delete) {
 				((JButton) button).setFont(new Font("Arial", Font.PLAIN, 40));
 			} else {
 				((JButton) button).setFont(new Font("Arial", Font.BOLD, 20));
@@ -146,8 +139,8 @@ public class KeypadState implements GUIState, ActionListener {
 		JPanel goBackPanel = new JPanel();
 		goBackPanel.setLayout(new BorderLayout(275, 0));
 		ImageIcon arrow = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/black arrow.png");
-		Image img = arrow.getImage() ;  
-		Image newimg = img.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image img = arrow.getImage();
+		Image newimg = img.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon arrowResized = new ImageIcon(newimg);
 
 		goBack = new JButton();
@@ -180,7 +173,7 @@ public class KeypadState implements GUIState, ActionListener {
 		mainPanel.add(input);
 		mainPanel.add(keyPadPanel);
 		mainPanel.add(goBackPanel);
-
+		stateController.notifyListeners(new ScaleStateData(0));
 		return mainPanel;
 	}
 
@@ -192,16 +185,17 @@ public class KeypadState implements GUIState, ActionListener {
 		return new KeypadReducedState(inputProduct);
 	}
 
-
 	/**
 	 * This reacts to button presses
-	 * @param e This is the button that is being pushed
+	 * 
+	 * @param e
+	 *            This is the button that is being pushed
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton button = (JButton) e.getSource();
 		// The go back button takes user back to buying screen
-		if(button == goBack) {
+		if (button == goBack) {
 			stateController.setState(new BuyingState());
 
 		} else {
@@ -213,7 +207,7 @@ public class KeypadState implements GUIState, ActionListener {
 
 			} else if (buttonText.equals("Delete")) {
 				if (text.length() > 0) {
-					text = text.substring(0, text.length()-1);
+					text = text.substring(0, text.length() - 1);
 				}
 
 			} else if (buttonText.equals("OK")) {
@@ -223,22 +217,20 @@ public class KeypadState implements GUIState, ActionListener {
 
 				stateController.notifyListeners(new KeypadStateData(Integer.valueOf(text)));
 
-			} 
-		} 
+			}
+		}
 
 		input.setText(text);
 	}
 }
 
 /**
- * 
  * This allows to reduce the state of the key pad state to only the input text
- *
  */
 class KeypadReducedState extends ReducedState {
 
 	private PLUCodedProduct product;
-	
+
 	public KeypadReducedState(PLUCodedProduct p) {
 		product = p;
 	}

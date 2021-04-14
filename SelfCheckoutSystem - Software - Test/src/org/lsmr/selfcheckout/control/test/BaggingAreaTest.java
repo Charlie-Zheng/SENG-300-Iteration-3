@@ -9,6 +9,8 @@ import java.util.Currency;
 import org.junit.Test;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
+import org.lsmr.selfcheckout.PLUCodedItem;
+import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.CheckoutException;
 import org.lsmr.selfcheckout.devices.OverloadException;
@@ -149,7 +151,7 @@ public class BaggingAreaTest extends BaseTest {
 	 * @throws CheckoutException
 	 */
 	@Test
-	public void testGetWeightOnScaleOverweight() throws CheckoutException {
+	public void testGetWeightOnScaleOverweight() throws OverloadException, CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
 
 			Currency cad = Currency.getInstance("CAD");
@@ -160,10 +162,11 @@ public class BaggingAreaTest extends BaseTest {
 					1);
 			Checkout c = new Checkout(station);
 
-
-			BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
-			c.scanItem(item);
-
+			PriceLookupCode plc = new PriceLookupCode("12345");
+			PLUCodedItem item = new PLUCodedItem(plc, 123);
+			c.addItemToScale(item);
+			multiTestAssertEquals(true, Double.isNaN(c.getWeightOnScale()));
+			c.removeItemFromScale(item);
 			try {
 				c.addItemToBaggingArea(item);
 			} catch (OverloadException e) {

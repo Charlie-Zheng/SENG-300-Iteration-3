@@ -1,4 +1,4 @@
-package org.lsmr.selfcheckout.control;
+package org.lsmr.selfcheckout.control.gui;
 
 public class Pair<K, V> {
 	public K first;

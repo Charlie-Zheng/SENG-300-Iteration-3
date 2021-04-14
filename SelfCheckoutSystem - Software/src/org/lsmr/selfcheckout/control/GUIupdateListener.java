@@ -7,10 +7,12 @@ import java.util.ArrayList;
 
 import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.Checkout.PayingState;
+import org.lsmr.selfcheckout.control.gui.Pair;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.BuyBagStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.EmitChangeStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.InsertBarcodedProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
@@ -21,9 +23,14 @@ import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.PurchasingStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantLogInData;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
 import org.lsmr.selfcheckout.control.gui.statedata.RequestPricePerBagData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
+import org.lsmr.selfcheckout.devices.DisabledException;
+import org.lsmr.selfcheckout.devices.EmptyException;
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
@@ -40,15 +47,14 @@ public class GUIupdateListener implements StateUpdateListener {
 	public GUIupdateListener(Checkout c) {
 		this.c = c;
 	}
-	
+
 	@Override
 	public void onStateUpdate(StateData<?> data) {
 		if (data instanceof KeypadStateData) { // keypad state
 			int pluCode = (int) data.obtain();
 			try {
 				PriceLookupCode code = new PriceLookupCode(String.valueOf(pluCode));
-				c.guiController
-						.notifyDataUpdate(new ProductStateData(ProductDatabases.PLU_PRODUCT_DATABASE.get(code)));
+				c.guiController.notifyDataUpdate(new ProductStateData(ProductDatabases.PLU_PRODUCT_DATABASE.get(code)));
 			} catch (SimulationException e) {
 				// no item in database - notify null
 				c.guiController.notifyDataUpdate(null);
@@ -96,25 +102,25 @@ public class GUIupdateListener implements StateUpdateListener {
 
 		} else if (data instanceof BuyBagStateData) { // set # of bags to purchase
 			int bags = (int) data.obtain();
-			if (bags > 0) c.usePlasticBags((int) data.obtain());
-
+			if (bags > 0)
+				c.usePlasticBags((int) data.obtain());
 
 		} else if (data instanceof AttendantStateData) {
 			Pair<Integer, Integer> payload = ((AttendantStateData) data).obtain();
 
 			if (payload.first == AttendantStateData.APPROVE_WEIGHT) {
 				c.approveWeightDiscrepency();
-				
+
 			} else if (payload.first == AttendantStateData.REMOVE) {
 				c.deleteProductAdded(c.getProductsAdded().get(payload.second));
 				c.guiController.notifyDataUpdate(new ListProductStateData(c.getProductsAdded()));
 			}
-		} else if( data instanceof AttendantLogInData) {
+		} else if (data instanceof AttendantLogInData) {
 			Pair<Integer, Integer> payload = ((AttendantLogInData) data).obtain();
-			if(c.getAttendantSystem().login(payload.first, payload.second)) {
+			if (c.getAttendantSystem().login(payload.first, payload.second)) {
 				((AttendantLogInData) data).success();
 				c.guiController.notifyDataUpdate(data);
-			}else {
+			} else {
 				c.guiController.notifyDataUpdate(data);
 			}
 
@@ -126,6 +132,23 @@ public class GUIupdateListener implements StateUpdateListener {
 			} catch (CheckoutException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		} else if (data instanceof BaggingAreaWeightData) {
+			if (c.isPaused()) {
+				if (c.expectedWeightOnBaggingArea > c.getWeightOnBaggingArea()) {
+					c.guiController.notifyDataUpdate(new BaggingAreaWeightData(-1));
+				} else {
+					c.guiController.notifyDataUpdate(new BaggingAreaWeightData(1));
+				}
+			} else {
+				c.guiController.notifyDataUpdate(new BaggingAreaWeightData(0));
+			}
+		} else if (data instanceof ScaleStateData) {
+			c.guiController.notifyDataUpdate(new ScaleStateData(c.getWeightOnScale()));
+		} else if (data instanceof EmitChangeStateData) {
+			try {
+				c.emitChange();
+			} catch (EmptyException | DisabledException | OverloadException | CheckoutException e) {
 			}
 		}
 	}

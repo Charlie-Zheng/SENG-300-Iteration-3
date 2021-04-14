@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.EmitChangeStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class CashPaymentState implements GUIState, ActionListener {

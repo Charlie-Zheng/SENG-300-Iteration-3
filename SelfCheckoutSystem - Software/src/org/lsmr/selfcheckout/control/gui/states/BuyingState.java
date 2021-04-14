@@ -38,7 +38,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.StringStateData;
 /**
  * The state that displays the checkout screen
  */
-public class BuyingState implements GUIState, ActionListener{
+public class BuyingState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
 
@@ -50,6 +50,7 @@ public class BuyingState implements GUIState, ActionListener{
 	private JButton help;
 	private JLabel balancePrintOut;
 	private float cost;
+	private boolean weightOkay = true;
 
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
@@ -60,8 +61,6 @@ public class BuyingState implements GUIState, ActionListener{
 		stateController.notifyListeners(new ScannedItemsRequestData()); // request a copy of products
 
 		//}
-
-
 
 		//if (reducedState instanceof BaseReducedState) {
 		//	System.out.println("Counter received is: " + reducedState.getData());
@@ -74,7 +73,6 @@ public class BuyingState implements GUIState, ActionListener{
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20)); // for margins
 		mainPanel.setLayout(new BorderLayout());
 
-
 		// set up statement at top of screen
 		// image for coop logo downloaded from website below
 		// https://www.google.com/search?q=coop+png&tbm=isch&ved=2ahUKEwjC9bTd-PHvAhU8AzQIHSiLAkkQ2-cCegQIABAA&oq=coop+png&gs_lcp=CgNpbWcQAzIECAAQQzICCAAyBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeUM-sA1jPrANg67IDaABwAHgAgAFDiAFDkgEBMZgBAKABAaoBC2d3cy13aXotaW1nwAEB&sclient=img&ei=MLFwYMKdCryG0PEPqJaKyAQ&bih=619&biw=1280#imgrc=EmUG01nblMHYrM
@@ -82,8 +80,8 @@ public class BuyingState implements GUIState, ActionListener{
 		topPanel.setLayout(new BorderLayout(275, 0));
 		JLabel topStatement = new JLabel("Scan & Bag Items");
 		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
-		Image coOpImg = coopImg.getImage() ;  
-		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image coOpImg = coopImg.getImage();
+		Image newCoOpImg = coOpImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
 		JLabel coOpLogo = new JLabel(coOpImgResized);
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
@@ -91,14 +89,12 @@ public class BuyingState implements GUIState, ActionListener{
 		topPanel.add(topStatement, BorderLayout.CENTER);
 		topPanel.add(coOpLogo, BorderLayout.EAST);
 
-
-
 		// ----- center panel of layout ----
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gridConstraints = new GridBagConstraints(); // to align views
 
-		JComponent scannedTable = getProductPanel(new Dimension(650, 500), 50); 
+		JComponent scannedTable = getProductPanel(new Dimension(650, 500), 50);
 		gridConstraints.gridx = 0;
 		gridConstraints.gridy = 1;
 		gridConstraints.weighty = 0.9;
@@ -117,8 +113,8 @@ public class BuyingState implements GUIState, ActionListener{
 		// Checkout button
 		JPanel checkoutPanel = new JPanel();
 		ImageIcon check = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/dollar sign.png");
-		Image checkImg = check.getImage() ;  
-		Image newCheckImg = checkImg.getScaledInstance( 75, 75,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image checkImg = check.getImage();
+		Image newCheckImg = checkImg.getScaledInstance(75, 75, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon checkImgResized = new ImageIcon(newCheckImg);
 
 		checkoutButton = new JButton();
@@ -142,8 +138,8 @@ public class BuyingState implements GUIState, ActionListener{
 		// https://pngio.com/PNG/a79545-numeric-keypad-png.html
 		JPanel keyPanel = new JPanel();
 		ImageIcon keyPad = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/number pad.png");
-		Image keyImg = keyPad.getImage() ;  
-		Image newKeyImg = keyImg.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image keyImg = keyPad.getImage();
+		Image newKeyImg = keyImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon keyImgResized = new ImageIcon(newKeyImg);
 
 		key = new JButton();
@@ -167,8 +163,8 @@ public class BuyingState implements GUIState, ActionListener{
 		// https://www.cleanpng.com/png-magnifying-glass-light-clip-art-loupe-650531/download-png.html		
 		JPanel lookPanel = new JPanel();
 		ImageIcon lookUp = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/magnifying glass.png");
-		Image lookImg = lookUp.getImage() ;  
-		Image newLookImg = lookImg.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image lookImg = lookUp.getImage();
+		Image newLookImg = lookImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon lookImgResized = new ImageIcon(newLookImg);
 
 		look = new JButton();
@@ -199,17 +195,16 @@ public class BuyingState implements GUIState, ActionListener{
 		helpPanel.setBorder(BorderFactory.createEmptyBorder(0, 70, 20, 0));
 		help = new JButton("Help");
 		help.setFont(new Font("Arial", Font.BOLD, 20));
-		
+
 		Dimension helpSize = new Dimension(100, 30); // for custom checkout button size
 		help.setSize(helpSize);
 		help.setPreferredSize(helpSize);
 		help.setMinimumSize(helpSize);
 		help.setMaximumSize(helpSize);
-		
+
 		help.addActionListener(this);
 		helpPanel.add(help, BorderLayout.WEST);
-		
-		
+
 		//balancePrintOut.setText("Total: $" + checkout.getBalance()); //causes error right now
 		buttonLayout.add(labelPanel);
 
@@ -244,9 +239,11 @@ public class BuyingState implements GUIState, ActionListener{
 			balancePrintOut.setText(String.format("Total: $%.2f", cost));
 		} else if (data instanceof BaggingAreaWeightData) {
 			double weightDelta = (float) data.obtain();
-			if(weightDelta < 0) {
+			if (weightDelta < 0) {
+				weightOkay = false;
 				stateController.setState(new BagItemState());
-			}else if(weightDelta > 0) {
+			} else if (weightDelta > 0) {
+				weightOkay = false;
 				stateController.setState(new WeightWrongState());
 			}
 		}
@@ -254,8 +251,11 @@ public class BuyingState implements GUIState, ActionListener{
 
 	/**
 	 * Creates a spacing placeholder to place certain elements at specific locations
-	 * @param width the spacing width
-	 * @param height the spacing height
+	 * 
+	 * @param width
+	 *            the spacing width
+	 * @param height
+	 *            the spacing height
 	 * @return a new JComponent that acts as a spacer
 	 */
 	private JComponent newSpacing(int width, int height) {
@@ -286,10 +286,11 @@ public class BuyingState implements GUIState, ActionListener{
 		scannedTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 20));
 		// should dynamically change font in all columns we add but seeing if
 		// code in for loop will work first
-		/*Object dce = scannedTable.getDefaultEditor(Object.class);
-		if(dce instanceof DefaultCellEditor) {
-		    ((DefaultCellEditor) dce).getComponent().setFont(new Font("Arial", Font.PLAIN, 18));
-		}*/
+		/*
+		 * Object dce = scannedTable.getDefaultEditor(Object.class); if(dce instanceof
+		 * DefaultCellEditor) { ((DefaultCellEditor) dce).getComponent().setFont(new
+		 * Font("Arial", Font.PLAIN, 18)); }
+		 */
 
 		// dynamic, so we only adjust the model and everything should work
 		for (int i = 0; i < tableModel.getColumnCount(); i++) {
@@ -307,29 +308,33 @@ public class BuyingState implements GUIState, ActionListener{
 		return container;
 	}
 
-
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		JComponent view = (JComponent) event.getSource();
-		if (view == key) {
-			stateController.setState(new KeypadState());
-			//stateController.setState(new RedState());
-			//stateController.setState(new BagItemState());
-			//stateController.setState(new EndState());
-			//stateController.setState(new BlockState());
-			//stateController.setState(new WeightWrongState());
-			//stateController.setState(new StartState());
-			//stateController.setState(new AttendantState());
-			//stateController.setState(new AttendantLogInState());
-			//stateController.setState(new AttendantAccessState());
-			//stateController.setState(new CustomerOptionsState());
-			//stateController.setState(new AttendantOptionsState());
-		} else if (view == look) {
-			stateController.setState(new LookupState());
-		} else if(view == checkoutButton) {
-			stateController.setState(new BuyBagsState());
-		} else if(view == help) {
+		if (view == help) {
 			stateController.setState(new AttendantLogInState());
+		} else {
+			stateController.notifyListeners(new BaggingAreaWeightData(0)); // request weight update
+			if (weightOkay) {
+				if (view == key) {
+					stateController.setState(new KeypadState());
+					//stateController.setState(new RedState());
+					//stateController.setState(new BagItemState());
+					//stateController.setState(new EndState());
+					//stateController.setState(new BlockState());
+					//stateController.setState(new WeightWrongState());
+					//stateController.setState(new StartState());
+					//stateController.setState(new AttendantState());
+					//stateController.setState(new AttendantLogInState());
+					//stateController.setState(new AttendantAccessState());
+					//stateController.setState(new CustomerOptionsState());
+					//stateController.setState(new AttendantOptionsState());
+				} else if (view == look) {
+					stateController.setState(new LookupState());
+				} else if (view == checkoutButton) {
+					stateController.setState(new BuyBagsState());
+				}
+			}
 		}
 	}
 }
@@ -337,7 +342,7 @@ public class BuyingState implements GUIState, ActionListener{
 class BuyingReducedState extends ReducedState {
 
 	private float cost;
-	
+
 	public BuyingReducedState(float cost) {
 		this.cost = cost;
 	}
@@ -346,5 +351,5 @@ class BuyingReducedState extends ReducedState {
 	public Object getData() {
 		return cost;
 	}
-	
+
 }
