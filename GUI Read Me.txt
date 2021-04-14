@@ -1,0 +1,21 @@
+To start running the GUI, run the GUIMainClass.java file
+
+There will be two screens presented: the fullscreen one is the GUI. The windowed one is an options panel for the user to simulate physical actions that would not appear on the real GUI.
+
+To start, an attendant must log in to start the Checkout. The preset attendant number/pin combos are:
+Number: 1234	Pin: 1234
+Number: 1111	Pin: 1111
+
+After logging in, chose the checkout station (only 1 is implemented currently), and start it.
+
+Then proceed through the checkout process.
+
+Valid member numbers are:	123456789
+Valid PLU codes are:		5425		Apple
+				4523		Pear
+The searchable products are:	Apple
+				Pear
+				Checkout Machine Toy
+				PlayStation 6 (PS6)
+				Grand Piano
+When a receipt is successfully taken, the content of the receipt is printed to standard out.

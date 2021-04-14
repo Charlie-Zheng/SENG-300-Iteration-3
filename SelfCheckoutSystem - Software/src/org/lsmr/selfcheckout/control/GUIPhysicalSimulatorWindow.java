@@ -79,7 +79,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 	// customer places item on scale
 	private JButton bagPears;
 	private JButton bagApples;
-	private JButton add20g;
+	private JButton addOwnBag;
 	private JButton add10g;
 
 	private JButton addPears;
@@ -476,21 +476,21 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		add10Panel.add(add10g);
 		addWeightPanel.add(add10Panel);
 
-		add20g = new JButton();
-		add20g.setLayout(new BorderLayout());
-		JLabel add20Icon = new JLabel(plusImgResized);
-		JLabel add20Label = new JLabel("Add 20g to Scale", SwingConstants.CENTER);
-		add20Label.setFont(new Font("Arial", Font.BOLD, 22));
-		add20g.add(add20Label, BorderLayout.CENTER);
-		add20g.add(add20Icon, BorderLayout.WEST);
-		add20g.setSize(buttonSize);
-		add20g.setPreferredSize(buttonSize);
-		add20g.setMinimumSize(buttonSize);
-		add20g.setMaximumSize(buttonSize);
-		add20g.addActionListener(this);
-		JPanel add20Panel = new JPanel();
-		add20Panel.add(add20g);
-		addWeightPanel.add(add20Panel);
+		addOwnBag = new JButton();
+		addOwnBag.setLayout(new BorderLayout());
+		JLabel addOwnBagIcon = new JLabel(bagImgResized);
+		JLabel addOwnBagLabel = new JLabel("Add Own Bag", SwingConstants.CENTER);
+		addOwnBagLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		addOwnBag.add(addOwnBagLabel, BorderLayout.CENTER);
+		addOwnBag.add(addOwnBagIcon, BorderLayout.WEST);
+		addOwnBag.setSize(buttonSize);
+		addOwnBag.setPreferredSize(buttonSize);
+		addOwnBag.setMinimumSize(buttonSize);
+		addOwnBag.setMaximumSize(buttonSize);
+		addOwnBag.addActionListener(this);
+		JPanel addOwnBAgPanel = new JPanel();
+		addOwnBAgPanel.add(addOwnBag);
+		addWeightPanel.add(addOwnBAgPanel);
 
 		bagApples = new JButton();
 		bagApples.setLayout(new BorderLayout());
@@ -1076,8 +1076,21 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		} else if (button == add10g) {
 			weight += 0.010;
 
-		} else if (button == add20g) {
-			weight += 0.20;
+		} else if (button == addOwnBag) {
+			try {
+				checkout.addCustomerBag(10);
+				button.setEnabled(false);
+				if (checkout.isPaused()) {
+					if (checkout.expectedWeightOnBaggingArea > checkout.getWeightOnBaggingArea()) {
+						stateHandler.notifyDataUpdate(new BaggingAreaWeightData(-1));
+					} else {
+						stateHandler.notifyDataUpdate(new BaggingAreaWeightData(1));
+					}
+				} else {
+					stateHandler.notifyDataUpdate(new BaggingAreaWeightData(0));
+				}
+			} catch (CheckoutException | OverloadException e) {
+			}
 
 			// remove weight from scale
 		} else if (button == minus1g) {
@@ -1112,9 +1125,9 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		// for using pin pad
 		else if (button == swipeCard) {
 			try {
-				checkout.payBySwipingCard(giftCard,null);
+				checkout.payBySwipingCard(giftCard, null);
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
-	
+
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
@@ -1122,15 +1135,15 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			try {
 				checkout.payByTappingCard(debitCard);
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
-	
+
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insertCard) {
 			try {
-				checkout.payByInsertingCard(creditCard,"0909");
+				checkout.payByInsertingCard(creditCard, "0909");
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
-	
+
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}

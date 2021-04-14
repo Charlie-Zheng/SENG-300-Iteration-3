@@ -140,7 +140,7 @@ public class StartState implements GUIState, ActionListener {
 			stateController.setState(new MemberCardState());
 			
 		} else if(button == ownBag) {
-			stateController.setState(new BagItemState());
+			stateController.setState(new AddBagState());
 			
 		}
 
