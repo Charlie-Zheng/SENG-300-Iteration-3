@@ -15,16 +15,20 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.RepaintManager;
 import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
+import org.lsmr.selfcheckout.devices.OverloadException;
 
 public class PhysicalSimulatorWindow implements ActionListener {
 
@@ -52,6 +56,10 @@ public class PhysicalSimulatorWindow implements ActionListener {
 	private JButton bagPiano;
 	private JButton bagPlayStation;
 
+	private JLabel bagToyLabel;
+	private JLabel bagPianoLabel;
+	private JLabel bagPlayStationLabel;
+
 	private float weight;
 
 	// customer places item on scale
@@ -77,23 +85,24 @@ public class PhysicalSimulatorWindow implements ActionListener {
 	private JButton swipeCard;
 
 	private JButton goBack;
-	
-	private BarcodedItem toy = new BarcodedItem(new Barcode("1124341"), 7.1);
-	private BarcodedItem ps6 = new BarcodedItem(new Barcode("0101010"), 16);
+
+	private BarcodedItem toy = new BarcodedItem(new Barcode("1124341"), 70.1);
+	private BarcodedItem ps6 = new BarcodedItem(new Barcode("0101010"), 150.9);
 	private BarcodedItem piano = new BarcodedItem(new Barcode("12345"), 321);
-	
+
+	private JFrame frame;
+
 	public PhysicalSimulatorWindow(Checkout c, GUIController s) {
 		this.checkout = c;
 		this.stateHandler = s;
 	}
 
 	public void createWindow() {
-		JFrame frame = new JFrame("Simulator");
+		frame = new JFrame("Simulator");
 		// the main panel
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 30));
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-
 
 		// set up statement at top of screen
 		// image for coop logo downloaded from website below
@@ -102,8 +111,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		topPanel.setLayout(new BorderLayout(275, 0));
 		JLabel topStatement = new JLabel("Choose an Option");
 		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
-		Image coOpImg = coopImg.getImage() ;  
-		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image coOpImg = coopImg.getImage();
+		Image newCoOpImg = coOpImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
 		JLabel coOpLogo = new JLabel(coOpImgResized);
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
@@ -115,17 +124,16 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		middlePanel.setLayout(new GridLayout(2, 3, 20, 0));
 		middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-
 		// panel for put item on scale image
 		JPanel imagePanel = new JPanel();
 		ImageIcon checkoutImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/guy at checkout.png");
-		Image checkOutImg = checkoutImg.getImage() ;  
-		Image newCheckoutImg = checkOutImg.getScaledInstance( 450, 350,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image checkOutImg = checkoutImg.getImage();
+		Image newCheckoutImg = checkOutImg.getScaledInstance(450, 350, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon checkoutImgResized = new ImageIcon(newCheckoutImg);
 		JLabel checkoutLogo = new JLabel(checkoutImgResized);
 		imagePanel.add(checkoutLogo);
 
-		JPanel buttonPanel = new JPanel();		
+		JPanel buttonPanel = new JPanel();
 
 		Dimension buttonSize = new Dimension(250, 32);
 
@@ -141,8 +149,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image for all banknotes downloaded from website below - cropped the image
 		// https://en.wikipedia.org/wiki/Canadian_dollar#/media/File:Canadian_Frontier_Banknotes_faces.png		
 		ImageIcon five = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/5 bill.png");
-		Image fiveImg = five.getImage() ;  
-		Image newFiveImg = fiveImg.getScaledInstance( 50, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image fiveImg = five.getImage();
+		Image newFiveImg = fiveImg.getScaledInstance(50, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon fiveImgResized = new ImageIcon(newFiveImg);
 
 		insert5 = new JButton();
@@ -161,10 +169,9 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		insert5Panel.add(insert5);
 		banknotePanel.add(insert5Panel);
 
-
 		ImageIcon ten = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/10 bill.png");
-		Image tenImg = ten.getImage() ;  
-		Image newTenImg = tenImg.getScaledInstance( 50, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image tenImg = ten.getImage();
+		Image newTenImg = tenImg.getScaledInstance(50, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon tenImgResized = new ImageIcon(newTenImg);
 
 		insert10 = new JButton();
@@ -184,8 +191,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		banknotePanel.add(insert10Panel);
 
 		ImageIcon twenty = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/20 bill.png");
-		Image twentyImg = twenty.getImage() ;  
-		Image newTwentyImg = twentyImg.getScaledInstance( 50, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image twentyImg = twenty.getImage();
+		Image newTwentyImg = twentyImg.getScaledInstance(50, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon twentyImgResized = new ImageIcon(newTwentyImg);
 
 		insert20 = new JButton();
@@ -204,10 +211,9 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		insert20Panel.add(insert20);
 		banknotePanel.add(insert20Panel);
 
-
 		ImageIcon fifty = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/50 bill.png");
-		Image fiftyImg = fifty.getImage() ;  
-		Image newFiftyImg = fiftyImg.getScaledInstance( 50, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image fiftyImg = fifty.getImage();
+		Image newFiftyImg = fiftyImg.getScaledInstance(50, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon fiftyImgResized = new ImageIcon(newFiftyImg);
 
 		insert50 = new JButton();
@@ -227,8 +233,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		banknotePanel.add(insert50Panel);
 
 		ImageIcon hundred = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/100 bill.png");
-		Image hundredImg = hundred.getImage() ;  
-		Image newHundredImg = hundredImg.getScaledInstance( 50, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image hundredImg = hundred.getImage();
+		Image newHundredImg = hundredImg.getScaledInstance(50, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon hundredImgResized = new ImageIcon(newHundredImg);
 
 		insert100 = new JButton();
@@ -247,7 +253,6 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		insert100Panel.add(insert100);
 		banknotePanel.add(insert100Panel);
 
-
 		JPanel coinPanel = new JPanel();
 		coinPanel.setLayout(new BoxLayout(coinPanel, BoxLayout.Y_AXIS));
 		coinPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 80, 0));
@@ -260,8 +265,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image for nickel downloaded from website below
 		// https://www.cleanpng.com/png-canada-nickel-coin-dime-loonie-6720907/download-png.html
 		ImageIcon nickel = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/nickel.png");
-		Image nickelImg = nickel.getImage() ;  
-		Image newNickelImg = nickelImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image nickelImg = nickel.getImage();
+		Image newNickelImg = nickelImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon nickelImgResized = new ImageIcon(newNickelImg);
 
 		insertNickel = new JButton();
@@ -283,8 +288,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image for dime downloaded from website below
 		// https://www.cleanpng.com/png-150th-anniversary-of-canada-coin-set-royal-canadia-1655179/download-png.html
 		ImageIcon dime = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/dime.png");
-		Image dimeImg = dime.getImage() ;  
-		Image newDimeImg = dimeImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image dimeImg = dime.getImage();
+		Image newDimeImg = dimeImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon dimeImgResized = new ImageIcon(newDimeImg);
 
 		insertDime = new JButton();
@@ -306,8 +311,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image of quarter downloaded from website below
 		// https://www.cleanpng.com/png-150th-anniversary-of-canada-canadian-coins-quarter-2268512/download-png.html
 		ImageIcon quarter = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/quarter.png");
-		Image quarterImg = quarter.getImage() ;  
-		Image newQuarterImg = quarterImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image quarterImg = quarter.getImage();
+		Image newQuarterImg = quarterImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon quarterImgResized = new ImageIcon(newQuarterImg);
 
 		insertQuarter = new JButton();
@@ -329,8 +334,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image of loonie downloaded from website below
 		// https://www.cleanpng.com/png-dollar-coin-canada-loonie-royal-canadian-mint-unci-3389442/download-png.html
 		ImageIcon loonie = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/loonie.png");
-		Image loonieImg = loonie.getImage() ;  
-		Image newLoonieImg = loonieImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image loonieImg = loonie.getImage();
+		Image newLoonieImg = loonieImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon loonieImgResized = new ImageIcon(newLoonieImg);
 
 		insertLoonie = new JButton();
@@ -352,8 +357,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image of twoonie downloaded from website below
 		// https://www.cleanpng.com/png-canada-toonie-loonie-canadian-dollar-royal-canadia-1109303/download-png.html
 		ImageIcon twoonie = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/twoonie.png");
-		Image twoonieImg = twoonie.getImage() ;  
-		Image newTwoonieImg = twoonieImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image twoonieImg = twoonie.getImage();
+		Image newTwoonieImg = twoonieImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon twoonieImgResized = new ImageIcon(newTwoonieImg);
 
 		insertTwoonie = new JButton();
@@ -385,8 +390,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image for both plus sign and minus sign downloaded from website below - cropped the image
 		// https://www.pngitem.com/download/ibbmhT_plus-sign-minus-symbol-math-and-signs-computer/
 		ImageIcon plus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/plus.png");
-		Image plusImg = plus.getImage() ;  
-		Image newPlusImg = plusImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image plusImg = plus.getImage();
+		Image newPlusImg = plusImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon plusImgResized = new ImageIcon(newPlusImg);
 
 		add1g = new JButton();
@@ -495,8 +500,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		removeWeightPanel.add(removeWeighTPanel);
 
 		ImageIcon minus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/minus.png");
-		Image minusImg = minus.getImage() ;  
-		Image newMinusImg = minusImg.getScaledInstance( 25, 6,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image minusImg = minus.getImage();
+		Image newMinusImg = minusImg.getScaledInstance(25, 6, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon minusImgResized = new ImageIcon(newMinusImg);
 
 		minus1g = new JButton();
@@ -607,8 +612,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		//black with yellow scanner
 		//https://www.cleanpng.com/png-barcode-scanners-stock-photography-label-barcode-s-3544761/download-png.html
 		ImageIcon scanner = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/scanner yellow.png");
-		Image scanImg = scanner.getImage() ;  
-		Image newScanImg = scanImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image scanImg = scanner.getImage();
+		Image newScanImg = scanImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon scanImgResized = new ImageIcon(newScanImg);
 
 		scanCard = new JButton();
@@ -678,15 +683,14 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// bag of groceries
 		//https://www.cleanpng.com/png-shopping-bags-trolleys-grocery-store-clip-art-blac-3014424/download-png.html
 		ImageIcon bag = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/bag of groceries.png");
-		Image bagImg = bag.getImage() ;  
-		Image newBagImg = bagImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image bagImg = bag.getImage();
+		Image newBagImg = bagImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon bagImgResized = new ImageIcon(newBagImg);
-
 
 		bagToy = new JButton();
 		bagToy.setLayout(new BorderLayout());
 		JLabel bagToyIcon = new JLabel(bagImgResized);
-		JLabel bagToyLabel = new JLabel("Bag Toy", SwingConstants.CENTER);
+		bagToyLabel = new JLabel("Bag Toy", SwingConstants.CENTER);
 		bagToyLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		bagToy.add(bagToyLabel, BorderLayout.CENTER);
 		bagToy.add(bagToyIcon, BorderLayout.WEST);
@@ -702,7 +706,7 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		bagPiano = new JButton();
 		bagPiano.setLayout(new BorderLayout());
 		JLabel bagPianoIcon = new JLabel(bagImgResized);
-		JLabel bagPianoLabel = new JLabel("Bag Piano", SwingConstants.CENTER);
+		bagPianoLabel = new JLabel("Bag Piano", SwingConstants.CENTER);
 		bagPianoLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		bagPiano.add(bagPianoLabel, BorderLayout.CENTER);
 		bagPiano.add(bagPianoIcon, BorderLayout.WEST);
@@ -718,7 +722,7 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		bagPlayStation = new JButton();
 		bagPlayStation.setLayout(new BorderLayout());
 		JLabel bagPlayStationIcon = new JLabel(bagImgResized);
-		JLabel bagPlayStationLabel = new JLabel("Bag PlayStation", SwingConstants.CENTER);
+		bagPlayStationLabel = new JLabel("Bag PlayStation", SwingConstants.CENTER);
 		bagPlayStationLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		bagPlayStation.add(bagPlayStationLabel, BorderLayout.CENTER);
 		bagPlayStation.add(bagPlayStationIcon, BorderLayout.WEST);
@@ -730,7 +734,6 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		JPanel bagPlayStationPanel = new JPanel();
 		bagPlayStationPanel.add(bagPlayStation);
 		actionsPanel.add(bagPlayStationPanel);
-
 
 		JPanel payPanel = new JPanel();
 		payPanel.setLayout(new BoxLayout(payPanel, BoxLayout.Y_AXIS));
@@ -744,8 +747,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image for swipe card downloaded from website below
 		// https://www.cleanpng.com/png-credit-card-payment-card-invoice-electronic-bill-p-2048347/download-png.html
 		ImageIcon swipe = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/swipe card.png");
-		Image swipeImg = swipe.getImage() ;  
-		Image newSwipeImg = swipeImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image swipeImg = swipe.getImage();
+		Image newSwipeImg = swipeImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon swipeImgResized = new ImageIcon(newSwipeImg);
 
 		swipeCard = new JButton();
@@ -767,8 +770,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image for tap card downloaded from website below
 		// https://www.cleanpng.com/png-clip-art-scalable-vector-graphics-contactless-paym-6075496/download-png.html
 		ImageIcon tap = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/tap card.png");
-		Image tapImg = tap.getImage() ;  
-		Image newTapImg = tapImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image tapImg = tap.getImage();
+		Image newTapImg = tapImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon tapImgResized = new ImageIcon(newTapImg);
 
 		tapCard = new JButton();
@@ -790,8 +793,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		//image for insert card downloaded from website below
 		// https://icon-library.com/icon/insert-card-icon-22.html
 		ImageIcon insert = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/insert-card-icon-22.jpg");
-		Image insertImg = insert.getImage() ;  
-		Image newInsertImg = insertImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image insertImg = insert.getImage();
+		Image newInsertImg = insertImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon insertImgResized = new ImageIcon(newInsertImg);
 
 		insertCard = new JButton();
@@ -813,8 +816,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		// image for entering pin downloaded from website below
 		// https://www.pngkey.com/download/u2w7t4q8o0u2i1t4_clip-art-royalty-free-download-pad-icon-free/
 		ImageIcon pin = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/enter pin.png");
-		Image pinImg = pin.getImage() ;  
-		Image newPinImg = pinImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image pinImg = pin.getImage();
+		Image newPinImg = pinImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon pinImgResized = new ImageIcon(newPinImg);
 
 		enterPin = new JButton();
@@ -833,7 +836,6 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		enterPinPanel.add(enterPin);
 		payPanel.add(enterPinPanel);
 
-
 		buttonPanel.add(banknotePanel);
 		buttonPanel.add(coinPanel);
 
@@ -844,10 +846,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		middlePanel.add(banknotePanel);
 		middlePanel.add(coinPanel);
 
-
 		mainPanel.add(topPanel);
 		mainPanel.add(middlePanel);
-
 
 		mainPanel.add(topPanel);
 		mainPanel.add(middlePanel);
@@ -858,7 +858,6 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		frame.setVisible(true);
 	}
 
-
 	/**
 	 * Receives button click events and forwards it to the checkout
 	 */
@@ -867,111 +866,149 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		JButton button = (JButton) arg0.getSource();
 
 		// for inserting banknotes
-		if(button == insert5) {
+		if (button == insert5) {
 
-		} else if(button == insert10) {
+		} else if (button == insert10) {
 
-		} else if(button == insert20) {
+		} else if (button == insert20) {
 
-		} else if(button == insert50) {
+		} else if (button == insert50) {
 
-		} else if(button == insert100) {
+		} else if (button == insert100) {
 
 		}
 		// for inserting coins
-		else if(button == insertNickel) {
+		else if (button == insertNickel) {
 
-		} else if(button == insertDime) {
+		} else if (button == insertDime) {
 
-		} else if(button == insertQuarter) {
+		} else if (button == insertQuarter) {
 
-		} else if(button == insertLoonie) {
+		} else if (button == insertLoonie) {
 
-		} else if(button == insertTwoonie) {
+		} else if (button == insertTwoonie) {
 
 		}
 
 		// action items at checkout
-		else if(button == scanToy) {
-			try {
-				checkout.scanItem(toy);
-				
-			} catch (CheckoutException e) {
-				e.printStackTrace();
-			}
-		} else if(button == scanPlayStation) {
-			try {
-				checkout.scanItem(ps6);
-			} catch (CheckoutException e) {
-				e.printStackTrace();
-			}
-		} else if(button == scanPiano) {
-			try {
-				checkout.scanItem(piano);
-			} catch (CheckoutException e) {
-				e.printStackTrace();
-			}
-			//} else if(button == scanCard) {
+		else if (button == scanToy || button == scanPlayStation || button == scanPiano) {
 
-		} else if(button == bagToy) {
+			try {
+				if (button == scanToy) {
+					checkout.scanItem(toy);
+				} else if (button == scanPlayStation) {
+					checkout.scanItem(ps6);
+				} else {
+					checkout.scanItem(piano);
+				}
+				stateHandler.notifyDataUpdate(new ListProductStateData(checkout.getProductsAdded()));
+			} catch (CheckoutException e) {
+				if (checkout.isPaused()) {
+					if (checkout.expectedWeightOnBaggingArea > checkout.getWeightOnBaggingArea()) {
+						stateHandler.notifyDataUpdate(new BaggingAreaWeightData(-1));
+					} else {
+						stateHandler.notifyDataUpdate(new BaggingAreaWeightData(1));
+					}
+				} else {
+					stateHandler.notifyDataUpdate(new BaggingAreaWeightData(0));
+				}
+			}
+		} else if (button == bagToy || button == bagPlayStation || button == bagPiano) {
+			try {
+				if (button == bagToy) {
+					if (bagToyLabel.getText().startsWith("Bag")) {
+						bagToyLabel.setText("Unbag Toy");
+						checkout.addItemToBaggingArea(toy);
+					} else {
+						checkout.removeItemFromBaggingArea(toy);
+						bagToyLabel.setText("Bag Toy");
+					}
 
+				} else if (button == bagPlayStation) {
+					if (bagPlayStationLabel.getText().startsWith("Bag")) {
+						bagPlayStationLabel.setText("Unbag PlayStation");
+						checkout.addItemToBaggingArea(ps6);
+					} else {
+						checkout.removeItemFromBaggingArea(ps6);
+						bagPlayStationLabel.setText("Bag PlayStation");
+					}
+				} else {
+					if (bagPianoLabel.getText().startsWith("Bag")) {
+						bagPianoLabel.setText("Unbag Piano");
+						checkout.addItemToBaggingArea(piano);
+					} else {
+						checkout.removeItemFromBaggingArea(piano);
+						bagPianoLabel.setText("Bag Piano");
+					}
+				}
+
+			} catch (OverloadException | CheckoutException e) {
+
+			}
+			if (checkout.isPaused()) {
+				if (checkout.expectedWeightOnBaggingArea > checkout.getWeightOnBaggingArea()) {
+					stateHandler.notifyDataUpdate(new BaggingAreaWeightData(-1));
+				} else {
+					stateHandler.notifyDataUpdate(new BaggingAreaWeightData(1));
+				}
+			} else {
+				stateHandler.notifyDataUpdate(new BaggingAreaWeightData(0));
+			}
 			//} else if(button == bagPlay) {
-		} else if(button == bagPiano) {
-		}
 
-		// add weight to scale
-		else if(button == add1g) {
+			// add weight to scale
+		} else if (button == add1g) {
 			weight += 0.001;
 
-		} else if(button == add5g) {
+		} else if (button == add5g) {
 			weight += 0.005;
 
-		} else if(button == add10g) {
+		} else if (button == add10g) {
 			weight += 0.010;
 
-		} else if(button == add20g) {
+		} else if (button == add20g) {
 			weight += 0.20;
 
-		} else if(button == add50g) {
+		} else if (button == add50g) {
 			weight += 0.050;
 
-		} else if(button == add100g) {
+		} else if (button == add100g) {
 			weight += 0.100;
 
 		}
 
 		// remove weight from scale
-		else if(button == minus1g) {
+		else if (button == minus1g) {
 			weight -= 0.001;
 
-		} else if(button == minus5g) {
+		} else if (button == minus5g) {
 			weight -= 0.005;
 
-		} else if(button == minus10g) {
+		} else if (button == minus10g) {
 			weight -= 0.010;
 
-		} else if(button == minus20g) {
+		} else if (button == minus20g) {
 			weight -= 0.020;
 
-		} else if(button == minus50g) {
+		} else if (button == minus50g) {
 			weight -= 0.050;
 
-		} else if(button == minus100g) {
+		} else if (button == minus100g) {
 			weight -= 0.100;
 
 		}
 
-		else if(button == goBack) {
+		else if (button == goBack) {
 		}
 
 		// for using pin pad
-		else if(button == swipeCard) {
+		else if (button == swipeCard) {
 
-		} else if(button == tapCard) {
+		} else if (button == tapCard) {
 
-		} else if(button == insertCard) {
+		} else if (button == insertCard) {
 
-		} else if(button == enterPin) {
+		} else if (button == enterPin) {
 
 		}
 

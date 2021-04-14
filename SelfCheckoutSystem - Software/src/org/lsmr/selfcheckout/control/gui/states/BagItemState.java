@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
@@ -37,8 +38,13 @@ public class BagItemState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		if (data instanceof ScaleStateData) {
-			stateController.setState(new BuyingState());
+		if (data instanceof BaggingAreaWeightData) {
+			double weightDelta = (float) data.obtain();
+			if (weightDelta == 0) {
+				stateController.setState(new BuyingState());
+			} else if (weightDelta > 0) {
+				stateController.setState(new WeightWrongState());
+			} 
 		}
 	}
 
@@ -57,8 +63,8 @@ public class BagItemState implements GUIState, ActionListener {
 		topPanel.setLayout(new BorderLayout(250, 0));
 		JLabel topStatement = new JLabel("Bag Item");
 		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
-		Image coOpImg = coopImg.getImage() ;  
-		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image coOpImg = coopImg.getImage();
+		Image newCoOpImg = coOpImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
 		JLabel coOpLogo = new JLabel(coOpImgResized);
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
@@ -78,8 +84,8 @@ public class BagItemState implements GUIState, ActionListener {
 		// panel for bag item image
 		JPanel baggingPanel = new JPanel();
 		ImageIcon bagImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/lady bagging.png");
-		Image baGImg = bagImg.getImage() ;  
-		Image newBagImg = baGImg.getScaledInstance( 450, 350,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image baGImg = bagImg.getImage();
+		Image newBagImg = baGImg.getScaledInstance(450, 350, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon bagImgResized = new ImageIcon(newBagImg);
 		JLabel bagLogo = new JLabel(bagImgResized);
 		baggingPanel.add(bagLogo);
@@ -103,7 +109,7 @@ public class BagItemState implements GUIState, ActionListener {
 		mainPanel.add(topPanel);
 		mainPanel.add(wordPanel);
 		mainPanel.add(baggingPanel);
-	//	mainPanel.add(skipBagPanel, BorderLayout.EAST);
+		//	mainPanel.add(skipBagPanel, BorderLayout.EAST);
 
 		return mainPanel;
 	}
@@ -119,13 +125,15 @@ public class BagItemState implements GUIState, ActionListener {
 
 	/**
 	 * This reacts to buttons being pressed
-	 * @param arg0 The button that is being pressed
+	 * 
+	 * @param arg0
+	 *            The button that is being pressed
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		JButton button = (JButton) arg0.getSource();
 
-		if(button == skipBag) {
+		if (button == skipBag) {
 			//where we have to connect to code for scale weight??
 			stateController.setState(new BuyingState());
 		}

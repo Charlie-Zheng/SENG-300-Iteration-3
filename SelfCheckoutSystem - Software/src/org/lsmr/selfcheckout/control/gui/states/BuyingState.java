@@ -28,6 +28,7 @@ import javax.swing.SwingConstants;
 import org.lsmr.selfcheckout.control.ProductTableModel;
 import org.lsmr.selfcheckout.control.ReceiptItem;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
@@ -241,6 +242,13 @@ public class BuyingState implements GUIState, ActionListener{
 		} else if (data instanceof BalanceStateData) {
 			cost = (float) data.obtain();
 			balancePrintOut.setText(String.format("Total: $%.2f", cost));
+		} else if (data instanceof BaggingAreaWeightData) {
+			double weightDelta = (float) data.obtain();
+			if(weightDelta < 0) {
+				stateController.setState(new BagItemState());
+			}else if(weightDelta > 0) {
+				stateController.setState(new WeightWrongState());
+			}
 		}
 	}
 
@@ -318,7 +326,6 @@ public class BuyingState implements GUIState, ActionListener{
 			//stateController.setState(new AttendantOptionsState());
 		} else if (view == look) {
 			stateController.setState(new LookupState());
-			
 		} else if(view == checkoutButton) {
 			stateController.setState(new BuyBagsState());
 		} else if(view == help) {
