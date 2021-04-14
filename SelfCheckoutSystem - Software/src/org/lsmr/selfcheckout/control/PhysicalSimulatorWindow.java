@@ -20,6 +20,8 @@ import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
+import org.lsmr.selfcheckout.PLUCodedItem;
+import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
@@ -67,8 +69,8 @@ public class PhysicalSimulatorWindow implements ActionListener {
 	private JButton add50g;
 	private JButton add20g;
 	private JButton add10g;
-	private JButton add5g;
-	private JButton add1g;
+	private JButton addPears;
+	private JButton addApples;
 
 	// here incase they add too much weight by accident
 	private JButton minus100g;
@@ -87,9 +89,12 @@ public class PhysicalSimulatorWindow implements ActionListener {
 	private JButton goBack;
 
 	private BarcodedItem toy = new BarcodedItem(new Barcode("1124341"), 70.1);
-	private BarcodedItem ps6 = new BarcodedItem(new Barcode("0101010"), 150.9);
+	private BarcodedItem ps6 = new BarcodedItem(new Barcode("0101010"), 150.1);
 	private BarcodedItem piano = new BarcodedItem(new Barcode("12345"), 321);
 
+	private PLUCodedItem apples = new PLUCodedItem(new PriceLookupCode("5425"), 645);
+	private PLUCodedItem pears = new PLUCodedItem(new PriceLookupCode("4523"), 918);
+	
 	private JFrame frame;
 
 	public PhysicalSimulatorWindow(Checkout c, GUIController s) {
@@ -394,37 +399,37 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		Image newPlusImg = plusImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon plusImgResized = new ImageIcon(newPlusImg);
 
-		add1g = new JButton();
-		add1g.setLayout(new BorderLayout());
-		JLabel add1Icon = new JLabel(plusImgResized);
-		JLabel add1Label = new JLabel("Add 1g to Scale", SwingConstants.CENTER);
-		add1Label.setFont(new Font("Arial", Font.BOLD, 22));
-		add1g.add(add1Label, BorderLayout.CENTER);
-		add1g.add(add1Icon, BorderLayout.WEST);
-		add1g.setSize(buttonSize);
-		add1g.setPreferredSize(buttonSize);
-		add1g.setMinimumSize(buttonSize);
-		add1g.setMaximumSize(buttonSize);
-		add1g.addActionListener(this);
-		JPanel add1Panel = new JPanel();
-		add1Panel.add(add1g);
-		addWeightPanel.add(add1Panel);
+		addApples = new JButton();
+		addApples.setLayout(new BorderLayout());
+		JLabel addApplesIcon = new JLabel(plusImgResized);
+		JLabel addApplesLabel = new JLabel("Add " + apples.getWeight() + "g of Apples to Scale", SwingConstants.CENTER);
+		addApplesLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		addApples.add(addApplesLabel, BorderLayout.CENTER);
+		addApples.add(addApplesIcon, BorderLayout.WEST);
+		addApples.setSize(buttonSize);
+		addApples.setPreferredSize(buttonSize);
+		addApples.setMinimumSize(buttonSize);
+		addApples.setMaximumSize(buttonSize);
+		addApples.addActionListener(this);
+		JPanel addApplesPanel = new JPanel();
+		addApplesPanel.add(addApples);
+		addWeightPanel.add(addApplesPanel);
 
-		add5g = new JButton();
-		add5g.setLayout(new BorderLayout());
-		JLabel add5Icon = new JLabel(plusImgResized);
-		JLabel add5Label = new JLabel("Add 5g to Scale", SwingConstants.CENTER);
-		add5Label.setFont(new Font("Arial", Font.BOLD, 22));
-		add5g.add(add5Label, BorderLayout.CENTER);
-		add5g.add(add5Icon, BorderLayout.WEST);
-		add5g.setSize(buttonSize);
-		add5g.setPreferredSize(buttonSize);
-		add5g.setMinimumSize(buttonSize);
-		add5g.setMaximumSize(buttonSize);
-		add5g.addActionListener(this);
-		JPanel add5Panel = new JPanel();
-		add5Panel.add(add5g);
-		addWeightPanel.add(add5Panel);
+		addPears = new JButton();
+		addPears.setLayout(new BorderLayout());
+		JLabel addPearsIcon = new JLabel(plusImgResized);
+		JLabel addPearsLabel = new JLabel("Add " + pears.getWeight()+ "g of Pears to Scale", SwingConstants.CENTER);
+		addPearsLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		addPears.add(addPearsLabel, BorderLayout.CENTER);
+		addPears.add(addPearsIcon, BorderLayout.WEST);
+		addPears.setSize(buttonSize);
+		addPears.setPreferredSize(buttonSize);
+		addPears.setMinimumSize(buttonSize);
+		addPears.setMaximumSize(buttonSize);
+		addPears.addActionListener(this);
+		JPanel addPearsPanel = new JPanel();
+		addPearsPanel.add(addPears);
+		addWeightPanel.add(addPearsPanel);
 
 		add10g = new JButton();
 		add10g.setLayout(new BorderLayout());
@@ -943,7 +948,7 @@ public class PhysicalSimulatorWindow implements ActionListener {
 				}
 
 			} catch (OverloadException | CheckoutException e) {
-
+				
 			}
 			if (checkout.isPaused()) {
 				if (checkout.expectedWeightOnBaggingArea > checkout.getWeightOnBaggingArea()) {
@@ -957,10 +962,11 @@ public class PhysicalSimulatorWindow implements ActionListener {
 			//} else if(button == bagPlay) {
 
 			// add weight to scale
-		} else if (button == add1g) {
-			weight += 0.001;
-
-		} else if (button == add5g) {
+		} else if (button == addApples) {
+			checkout.addItemToScale(apples);
+			System.out.println(checkout.getWeightOnScale());
+			stateHandler.notifyDataUpdate(new ScaleStateData(checkout.getWeightOnScale()));
+		} else if (button == addPears) {
 			weight += 0.005;
 
 		} else if (button == add10g) {
