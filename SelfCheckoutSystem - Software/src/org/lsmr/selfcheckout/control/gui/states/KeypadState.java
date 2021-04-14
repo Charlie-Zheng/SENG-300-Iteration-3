@@ -173,7 +173,7 @@ public class KeypadState implements GUIState, ActionListener {
 		mainPanel.add(input);
 		mainPanel.add(keyPadPanel);
 		mainPanel.add(goBackPanel);
-
+		stateController.notifyListeners(new ScaleStateData(0));
 		return mainPanel;
 	}
 

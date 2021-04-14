@@ -37,6 +37,8 @@ import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
+import org.lsmr.selfcheckout.devices.DisabledException;
+import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 
 public class GUIPhysicalSimulatorWindow implements ActionListener {
@@ -85,8 +87,8 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 	private JLabel bagPearsLabel;
 
 	// here incase they add too much weight by accident
-	private JButton minus100g;
-	private JButton minus50g;
+	private JButton takeReceipt;
+	private JButton takeChange;
 	private JButton minus20g;
 	private JButton minus10g;
 	private JButton minus5g;
@@ -592,37 +594,37 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		minus20Panel.add(minus20g);
 		removeWeightPanel.add(minus20Panel);
 
-		minus50g = new JButton();
-		minus50g.setLayout(new BorderLayout());
-		JLabel minus50gIcon = new JLabel(minusImgResized);
-		JLabel minus50gLabel = new JLabel("Remove 50g from Scale", SwingConstants.CENTER);
-		minus50gLabel.setFont(new Font("Arial", Font.BOLD, 16));
-		minus50g.add(minus50gLabel, BorderLayout.CENTER);
-		minus50g.add(minus50gIcon, BorderLayout.WEST);
-		minus50g.setSize(buttonSize);
-		minus50g.setPreferredSize(buttonSize);
-		minus50g.setMinimumSize(buttonSize);
-		minus50g.setMaximumSize(buttonSize);
-		minus50g.addActionListener(this);
-		JPanel minus50Panel = new JPanel();
-		minus50Panel.add(minus50g);
-		removeWeightPanel.add(minus50Panel);
+		takeChange = new JButton();
+		takeChange.setLayout(new BorderLayout());
+		JLabel takeChangeIcon = new JLabel(minusImgResized);
+		JLabel takeChangeLabel = new JLabel("Take change", SwingConstants.CENTER);
+		takeChangeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+		takeChange.add(takeChangeLabel, BorderLayout.CENTER);
+		takeChange.add(takeChangeIcon, BorderLayout.WEST);
+		takeChange.setSize(buttonSize);
+		takeChange.setPreferredSize(buttonSize);
+		takeChange.setMinimumSize(buttonSize);
+		takeChange.setMaximumSize(buttonSize);
+		takeChange.addActionListener(this);
+		JPanel takeChangePanel = new JPanel();
+		takeChangePanel.add(takeChange);
+		removeWeightPanel.add(takeChangePanel);
 
-		minus100g = new JButton();
-		minus100g.setLayout(new BorderLayout());
-		JLabel minus100Icon = new JLabel(minusImgResized);
-		JLabel minus100Label = new JLabel("Remove 100g from Scale", SwingConstants.CENTER);
-		minus100Label.setFont(new Font("Arial", Font.BOLD, 15));
-		minus100g.add(minus100Label, BorderLayout.CENTER);
-		minus100g.add(minus100Icon, BorderLayout.WEST);
-		minus100g.setSize(buttonSize);
-		minus100g.setPreferredSize(buttonSize);
-		minus100g.setMinimumSize(buttonSize);
-		minus100g.setMaximumSize(buttonSize);
-		minus100g.addActionListener(this);
-		JPanel minus100Panel = new JPanel();
-		minus100Panel.add(minus100g);
-		removeWeightPanel.add(minus100Panel);
+		takeReceipt = new JButton();
+		takeReceipt.setLayout(new BorderLayout());
+		JLabel takeReceiptIcon = new JLabel(minusImgResized);
+		JLabel takeReceiptLabel = new JLabel("Take receipt", SwingConstants.CENTER);
+		takeReceiptLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		takeReceipt.add(takeReceiptLabel, BorderLayout.CENTER);
+		takeReceipt.add(takeReceiptIcon, BorderLayout.WEST);
+		takeReceipt.setSize(buttonSize);
+		takeReceipt.setPreferredSize(buttonSize);
+		takeReceipt.setMinimumSize(buttonSize);
+		takeReceipt.setMaximumSize(buttonSize);
+		takeReceipt.addActionListener(this);
+		JPanel takeReceiptPanel = new JPanel();
+		takeReceiptPanel.add(takeReceipt);
+		removeWeightPanel.add(takeReceiptPanel);
 
 		JPanel actionsPanel = new JPanel();
 		actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
@@ -1081,12 +1083,26 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		} else if (button == minus20g) {
 			weight -= 0.020;
 
-		} else if (button == minus50g) {
-			weight -= 0.050;
+		} else if (button == takeChange) {
+			try {
+				checkout.emitChange();
+				checkout.getChangeFromCoinTray();
+				checkout.getChangeFromBanknoteSlots();
+			}catch(CheckoutException | EmptyException | DisabledException | OverloadException e) {
+				e.printStackTrace();
+				GUIUtils.flashError(button);
+			}
 
-		} else if (button == minus100g) {
-			weight -= 0.100;
+		} else if (button == takeReceipt) {
+			try {
+				checkout.printReceipt();
+				System.out.println(checkout.removeReceipt());
+			} catch (CheckoutException e) {
+				e.printStackTrace();
+				GUIUtils.flashError(button);
+			}
 
+			
 		}
 
 		else if (button == goBack) {

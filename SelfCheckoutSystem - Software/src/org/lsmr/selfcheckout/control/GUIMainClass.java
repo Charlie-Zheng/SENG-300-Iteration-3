@@ -143,6 +143,11 @@ public class GUIMainClass {
 		guiController.setState(new AttendantLogInState());
 		
 		c.guiController = guiController;
+		
+		c.addInk(10000);
+		c.addPaper(1000);
+		c.reset();
+		
 		try {
 			attendentSystem.register(c);
 		} catch (CheckoutException e) {

@@ -22,7 +22,9 @@ import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.PurchasingStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantLogInData;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
 import org.lsmr.selfcheckout.control.gui.statedata.RequestPricePerBagData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.devices.SimulationException;
@@ -128,6 +130,18 @@ public class GUIupdateListener implements StateUpdateListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if(data instanceof BaggingAreaWeightData) {
+			if (c.isPaused()) {
+				if (c.expectedWeightOnBaggingArea > c.getWeightOnBaggingArea()) {
+					c.guiController.notifyDataUpdate(new BaggingAreaWeightData(-1));
+				} else {
+					c.guiController.notifyDataUpdate(new BaggingAreaWeightData(1));
+				}
+			} else {
+				c.guiController.notifyDataUpdate(new BaggingAreaWeightData(0));
+			}
+		} else if(data instanceof ScaleStateData) {
+			c.guiController.notifyDataUpdate(new ScaleStateData(c.getWeightOnScale()));
 		}
 	}
 
