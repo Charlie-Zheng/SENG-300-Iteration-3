@@ -1,13 +1,8 @@
 package org.lsmr.selfcheckout.control;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.lsmr.selfcheckout.BarcodedItem;
-import org.lsmr.selfcheckout.Item;
-import org.lsmr.selfcheckout.PLUCodedItem;
-import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
@@ -218,10 +213,12 @@ public class AttendantSystem {
 	 */
 	public void blockCheckout(int stationNum) throws CheckoutException {
 		if (this.state == ConsoleState.LoggedIn) {
-			Checkout station = this.stations.get(stationNum);
-			if (station.equals(null))
+			try {
+				Checkout station = this.stations.get(stationNum);
+				station.blockStation();
+			}catch(IndexOutOfBoundsException e) {
 				throw new CheckoutException("This station does not exist!");
-			station.blockStation();
+			}			
 		}
 	}
 
