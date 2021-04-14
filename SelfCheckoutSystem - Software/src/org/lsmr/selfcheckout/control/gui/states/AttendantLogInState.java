@@ -88,7 +88,19 @@ public class AttendantLogInState implements GUIState, ActionListener {
 			if(((AttendantLogInData) data).isSuccessful()) {
 				stateController.setState(new AttendantState());
 			}else {
-				//display wrong pin message
+				GUIUtils
+					.begin(employeeNumber)
+					.setError()
+					.waitFor(0.4f)
+					.restore()
+					.execute();
+				GUIUtils
+					.begin(pin)
+					.setError()
+					.waitFor(0.4f)
+					.restore()
+					.execute();
+
 			}
 
 		}
