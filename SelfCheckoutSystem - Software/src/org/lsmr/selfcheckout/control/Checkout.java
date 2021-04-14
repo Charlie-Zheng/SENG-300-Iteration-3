@@ -541,6 +541,8 @@ public class Checkout {
 					bankNoteOutputListener.addBanknoteToEmit(entry.getKey());
 				}
 			}
+
+			state = CheckoutState.PrintingReceipt;
 			return;
 		}
 		throw new CheckoutException("Attempted to get change without paying enough money");
