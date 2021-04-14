@@ -338,6 +338,7 @@ public class AttendantTests extends BaseTest {
 	
 	@Test
 	public void attendantSearchesProductNotLoggedIn() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Integer num = new Integer(1019);
 			Attendant br = new Attendant(num, "Brian",2002);
@@ -347,20 +348,24 @@ public class AttendantTests extends BaseTest {
 			PLUCodedProduct p = new PLUCodedProduct(lkup, "Fake test item", BigDecimal.valueOf(5));
 			ArrayList<Product> results = sys.searchProductDatabase("test item");
 			assertEquals(null, results);	
-	}
+	
+		}
+	}		
 	
 	@Test
 	public void attendantSearchesPLUProduct() throws CheckoutException {
+	
 			c.reset();
 			Integer num = new Integer(1019);
 			Attendant br = new Attendant(num, "Brian",2002);
 			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
 			AttendantSystem sys = new AttendantSystem(attendants);	
 			sys.login(num,2002);
-			initPLUProductDatabase();
-			ArrayList<Product> results = sys.searchProductDatabase("price $3.97");
-			System.out.println(results);
-			assertEquals("org.lsmr.selfcheckout.products.PLUCodedProduct@5c18298f", results.get(0).toString());
+			PriceLookupCode plk = new PriceLookupCode("5542");
+			PLUCodedProduct fakePProduct = new PLUCodedProduct(plk, "Fake PLU Product with price of $5", new BigDecimal(5.00));
+			ProductDatabases.PLU_PRODUCT_DATABASE.put(plk,fakePProduct);
+			ArrayList<Product> results = sys.searchProductDatabase("Fake plu");
+			assertEquals(fakePProduct.hashCode(), results.get(0).hashCode());
 		
 	}
 
@@ -372,9 +377,11 @@ public class AttendantTests extends BaseTest {
 			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
 			AttendantSystem sys = new AttendantSystem(attendants);	
 			sys.login(num,2002);
-			initBarcodeProductDatabase();
-			ArrayList<Product> results = sys.searchProductDatabase("barcode of 30040321");
-			assertEquals("[org.lsmr.selfcheckout.products.BarcodedProduct@706a04ae]", results.toString());
+			Barcode bc = new Barcode("8830");
+			BarcodedProduct fakeBProduct = new BarcodedProduct(bc, "Fake Barcoded Product with price of $5", new BigDecimal(5.00));
+			ProductDatabases.BARCODED_PRODUCT_DATABASE.put(bc,fakeBProduct);
+			ArrayList<Product> results = sys.searchProductDatabase("Fake Barcoded");
+			assertEquals(fakeBProduct.hashCode(), results.get(0).hashCode());
 		
 	}
 	
