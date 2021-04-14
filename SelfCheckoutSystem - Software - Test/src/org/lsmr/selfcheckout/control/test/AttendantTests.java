@@ -113,14 +113,47 @@ public class AttendantTests extends BaseTest {
 			Attendant br = new Attendant(num, "Brian",2002);
 			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
 			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num, 2002);
 			int stationNum = sys.register(c);
+			sys.shutDown(stationNum);
+			sys.logout();
 			sys.startUp(stationNum);
-			
-			 // exception to be made
+			multiTestAssertEquals("Off", c.getpState());
 			sys.shutDown(stationNum);
 
 		}
 	}
+	
+	@Test(expected = CheckoutException.class)
+	public void attendantStartupInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			boolean bool = sys.login(num,2002);
+			int stationNum = sys.register(c);
+			sys.startUp(5);
+
+		}
+	}
+	
+	@Test(expected = CheckoutException.class)
+	public void attendantStartupInvalidStation2() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			boolean bool = sys.login(num,2002);
+			int stationNum = sys.register(null);
+			sys.startUp(5);
+
+		}
+	}
+	
 	
 	@Test
 	public void attendantShutdown() throws CheckoutException {
@@ -147,7 +180,22 @@ public class AttendantTests extends BaseTest {
 			AttendantSystem sys = new AttendantSystem(attendants);	
 			int stationNum = sys.register(c);
 			sys.shutDown(stationNum);
-			 // exception to be made
+			multiTestAssertEquals("On", c.getpState());
+		}
+	}
+	
+	@Test(expected = CheckoutException.class)
+	public void attendantShutdownInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			boolean bool = sys.login(num,2002);
+			int stationNum = sys.register(c);
+			sys.shutDown(4);
+
 		}
 	}
 	
@@ -168,6 +216,23 @@ public class AttendantTests extends BaseTest {
 			sys.shutDown(stationNum);
 		}
 	}
+	
+	@Test(expected = CheckoutException.class)
+	public void attendantApproveWeightOnInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+			int stationNum = sys.register(c);
+			sys.startUp(stationNum);
+			sys.blockCheckout(stationNum);
+			sys.approveWeight(stationNum+1);
+		}
+	}
+	
 	@Test
 	public void attendantRemoveItem() throws CheckoutException {
 		for (int i = 0; i < REPEAT; i++) {
@@ -190,6 +255,26 @@ public class AttendantTests extends BaseTest {
 		}
 	}
 	
+	@Test(expected = CheckoutException.class)
+	public void attendantRemoveItemOnInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+			int stationNum = sys.register(c);
+			sys.startUp(stationNum);
+			Barcode b = new Barcode("8888");
+			Product p = new BarcodedProduct(b, "fake item" ,BigDecimal.valueOf(5));
+			BigDecimal bal = c.getBalance();
+			ReceiptItem itemToRemove = new ReceiptItem(p, BigDecimal.valueOf(5), stationNum, BigDecimal.valueOf(5));
+			sys.removeItem(2, itemToRemove);
+			BigDecimal newBal = bal.subtract(BigDecimal.valueOf(5));
+			
+		}
+	}
 	
 	@Test
 	public void attendantAddPaper() throws CheckoutException {
@@ -420,7 +505,24 @@ public class AttendantTests extends BaseTest {
 			assertEquals("[3 CAD]",unadded.toString());
 		}
 	}
-	
+	@Test
+	public void attendantRefillsCoinDispenserOverCapacity() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Coin dolla = new Coin(new BigDecimal("1.00"), Currency.getInstance("CAD"));
+			java.util.List<Coin> Coins = new ArrayList<Coin>();
+			Coins.add(dolla);
+			while (i<500) {c.refillCoinDispenser(Coins); i++; }	
+			java.util.List<Coin> unadded = c.refillCoinDispenser(Coins);
+			assertEquals("[1.00 CAD]",unadded.toString());
+		}
+	}
 	
 	
 	@Test
@@ -458,5 +560,22 @@ public class AttendantTests extends BaseTest {
 			assertEquals("[500 CAD]",unadded.toString()); 
 		}
 	}
-	
+	@Test
+	public void attendantRefillsBanknoteDispenserOverCapacity() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Banknote bill = new Banknote(5, Currency.getInstance("CAD"));
+			java.util.List<Banknote> Banknotes = new ArrayList<Banknote>();
+			Banknotes.add(bill);
+			while (i<150) {c.refillBanknoteDispenser(Banknotes); i++; }	
+			java.util.List<Banknote> unadded = c.refillBanknoteDispenser(Banknotes);
+			assertEquals("[5 CAD]",unadded.toString());
+		}
+	}
 }

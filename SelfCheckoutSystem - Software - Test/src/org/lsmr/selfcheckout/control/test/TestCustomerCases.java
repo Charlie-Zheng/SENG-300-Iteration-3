@@ -129,6 +129,25 @@ public class TestCustomerCases extends BaseTest {
 		as.approveDoNotBagLastItem(stationNum);
 		assertTrue(c.getState().equals("Scanning"));
 	}
+	
+	
+	@Test(expected = CheckoutException.class)
+	public void testApproveDoNotBagLastItemOnInvalidStation() throws CheckoutException {
+		Barcode b = new Barcode("12345");
+		BarcodedItem i = new BarcodedItem(b, 123);
+		this.scanUntilThere(i);
+		
+		Attendant a = new Attendant(0, "test", 1234);
+		HashMap<Integer, Attendant> attendants = new HashMap<>();
+		attendants.put(0, a);
+		AttendantSystem as = new AttendantSystem(attendants);
+		int stationNum = as.register(c);
+		as.login(0, 1234);
+		
+		as.approveDoNotBagLastItem(2);
+
+	}
+	
 	/**
 	 * 
 	 * @throws CheckoutException 
