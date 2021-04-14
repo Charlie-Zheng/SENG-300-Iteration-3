@@ -15,13 +15,16 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.lsmr.selfcheckout.control.PhysicalAttendantSimulatorWindow;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.AttendantLogInData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class BlockState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
 	private JButton logIn;
+	private PhysicalAttendantSimulatorWindow attendantWindow;
 	
 	/**
 	 * 
@@ -29,7 +32,7 @@ public class BlockState implements GUIState, ActionListener {
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
-
+		attendantWindow.createWindow();
 	}
 
 	/**
@@ -37,7 +40,6 @@ public class BlockState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
 
 	}
 
