@@ -17,15 +17,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import org.lsmr.selfcheckout.Barcode;
+import org.lsmr.selfcheckout.BarcodedItem;
+import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
+import org.lsmr.selfcheckout.control.gui.states.GUIState;
 
 public class PhysicalSimulatorWindow implements ActionListener {
 
 	private Checkout checkout;
-
+	private GUIController stateHandler;
 	// customer inserts banknote
 	private JButton insert5;
 	private JButton insert10;
@@ -73,9 +77,14 @@ public class PhysicalSimulatorWindow implements ActionListener {
 	private JButton swipeCard;
 
 	private JButton goBack;
-
-	public PhysicalSimulatorWindow(Checkout c) {
+	
+	private BarcodedItem toy = new BarcodedItem(new Barcode("1124341"), 7.1);
+	private BarcodedItem ps6 = new BarcodedItem(new Barcode("0101010"), 16);
+	private BarcodedItem piano = new BarcodedItem(new Barcode("12345"), 321);
+	
+	public PhysicalSimulatorWindow(Checkout c, GUIController s) {
 		this.checkout = c;
+		this.stateHandler = s;
 	}
 
 	public void createWindow() {
@@ -884,11 +893,24 @@ public class PhysicalSimulatorWindow implements ActionListener {
 
 		// action items at checkout
 		else if(button == scanToy) {
-
+			try {
+				checkout.scanItem(toy);
+				
+			} catch (CheckoutException e) {
+				e.printStackTrace();
+			}
 		} else if(button == scanPlayStation) {
-
+			try {
+				checkout.scanItem(ps6);
+			} catch (CheckoutException e) {
+				e.printStackTrace();
+			}
 		} else if(button == scanPiano) {
-
+			try {
+				checkout.scanItem(piano);
+			} catch (CheckoutException e) {
+				e.printStackTrace();
+			}
 			//} else if(button == scanCard) {
 
 		} else if(button == bagToy) {
