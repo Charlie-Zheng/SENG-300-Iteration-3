@@ -44,6 +44,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 	private JButton start;
 	private JButton shutDown;
 	private JButton block;
+	private JButton unblock;
 	private JButton look;
 	private JButton approveWeight;
 	private JButton removeItem;
@@ -71,7 +72,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 		JPanel topPanel = new JPanel();
 		//topPanel.setLayout(new BorderLayout());
 		topPanel.setBackground(Color.RED.darker());
-		JLabel topStatement = new JLabel("Choose an action");
+		JLabel topStatement = new JLabel("Choose an Action");
 		topStatement.setForeground(Color.WHITE);
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
 		topPanel.setBorder(BorderFactory.createEmptyBorder(30, 60, 0, 30));
@@ -102,7 +103,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 		buttonLayout.setLayout(new BoxLayout(buttonLayout, BoxLayout.Y_AXIS));
 		buttonLayout.setBackground(Color.RED.darker());
 
-		Dimension buttonSize = new Dimension(300, 50);
+		Dimension buttonSize = new Dimension(300, 45);
 
 		JPanel startPanel = new JPanel();
 		startPanel.setBackground(Color.RED.darker());
@@ -162,14 +163,8 @@ public class AttendantAccessState implements GUIState, ActionListener {
 
 		JPanel weightPanel = new JPanel();
 		weightPanel.setBackground(Color.RED.darker());
-		approveWeight = new JButton();
-		approveWeight.setLayout(new BorderLayout());
-		JLabel weightLabel1 = new JLabel("Approve Weight", SwingConstants.CENTER);
-		weightLabel1.setFont(new Font("Arial", Font.BOLD, 18));
-		approveWeight.add(weightLabel1, BorderLayout.NORTH);
-		JLabel weightLabel2 = new JLabel("Discrepancy", SwingConstants.CENTER);
-		weightLabel2.setFont(new Font("Arial", Font.BOLD, 18));
-		approveWeight.add(weightLabel2, BorderLayout.SOUTH);
+		approveWeight = new JButton("Approve Weight Discrepancy");
+		approveWeight.setFont(new Font("Arial", Font.BOLD, 18));
 		approveWeight.addActionListener(this);
 		approveWeight.setSize(buttonSize);
 		approveWeight.setPreferredSize(buttonSize);
@@ -202,7 +197,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 		Image newBlockImg = blockImg.getScaledInstance( 40, 40,  java.awt.Image.SCALE_SMOOTH) ;  
 		Image greyBlockImg = GrayFilter.createDisabledImage(newBlockImg);
 		ImageIcon blockImgResized = new ImageIcon(newBlockImg);
-
+		
 		block = new JButton();
 		block.setLayout(new BorderLayout());
 		JLabel blockLabel = new JLabel("Block Station", SwingConstants.CENTER);
@@ -217,6 +212,19 @@ public class AttendantAccessState implements GUIState, ActionListener {
 		block.setMaximumSize(buttonSize);
 		blockPanel.add(block);
 		buttonLayout.add(blockPanel);
+		buttonLayout.add(newSpacing(0, 10));
+		
+		JPanel unblockPanel = new JPanel();
+		unblockPanel.setBackground(Color.RED.darker());
+		unblock = new JButton("Unblock Station");
+		unblock.setFont(new Font("Arial", Font.BOLD, 30));
+		unblock.addActionListener(this);
+		unblock.setSize(buttonSize);
+		unblock.setPreferredSize(buttonSize);
+		unblock.setMinimumSize(buttonSize);
+		unblock.setMaximumSize(buttonSize);
+		unblockPanel.add(unblock);
+		buttonLayout.add(unblockPanel);
 		buttonLayout.add(newSpacing(0, 10));
 
 		JPanel logOutPanel = new JPanel();
