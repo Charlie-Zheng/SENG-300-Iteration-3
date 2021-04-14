@@ -1,4 +1,4 @@
-package org.lsmr.selfcheckout.control.gui.states;
+package org.lsmr.selfcheckout.control;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -21,10 +22,10 @@ import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
-public class CustomerOptionsState implements GUIState, ActionListener {
+public class PhysicalSimulatorWindow implements ActionListener {
 
-	private StateHandler<GUIState> stateController;
-	
+	private Checkout checkout;
+
 	// customer inserts banknote
 	private JButton insert5;
 	private JButton insert10;
@@ -48,7 +49,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 	private JButton bagPlayStation;
 
 	private float weight;
-	
+
 	// customer places item on scale
 	private JButton add100g;
 	private JButton add50g;
@@ -71,20 +72,14 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 	private JButton insertCard;
 	private JButton swipeCard;
 
-	@Override
-	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
-		this.stateController = stateController;
+	private JButton goBack;
 
+	public PhysicalSimulatorWindow(Checkout c) {
+		this.checkout = c;
 	}
 
-	@Override
-	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public JPanel getPanel() {
+	public void createWindow() {
+		JFrame frame = new JFrame("Simulator");
 		// the main panel
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 30));
@@ -606,7 +601,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		Image scanImg = scanner.getImage() ;  
 		Image newScanImg = scanImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
 		ImageIcon scanImgResized = new ImageIcon(newScanImg);
-		
+
 		scanCard = new JButton();
 		scanCard.setLayout(new BorderLayout());
 		JLabel scanCardIcon = new JLabel(scanImgResized);
@@ -654,7 +649,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel scanPianoPanel = new JPanel();
 		scanPianoPanel.add(scanPiano);
 		actionsPanel.add(scanPianoPanel);
-		
+
 		scanPlayStation = new JButton();
 		scanPlayStation.setLayout(new BorderLayout());
 		JLabel scanPlayStationIcon = new JLabel(scanImgResized);
@@ -694,7 +689,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel bagToyPanel = new JPanel();
 		bagToyPanel.add(bagToy);
 		actionsPanel.add(bagToyPanel);
-		
+
 		bagPiano = new JButton();
 		bagPiano.setLayout(new BorderLayout());
 		JLabel bagPianoIcon = new JLabel(bagImgResized);
@@ -710,7 +705,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel bagPianoPanel = new JPanel();
 		bagPianoPanel.add(bagPiano);
 		actionsPanel.add(bagPianoPanel);
-		
+
 		bagPlayStation = new JButton();
 		bagPlayStation.setLayout(new BorderLayout());
 		JLabel bagPlayStationIcon = new JLabel(bagImgResized);
@@ -726,7 +721,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		JPanel bagPlayStationPanel = new JPanel();
 		bagPlayStationPanel.add(bagPlayStation);
 		actionsPanel.add(bagPlayStationPanel);
-		
+
 
 		JPanel payPanel = new JPanel();
 		payPanel.setLayout(new BoxLayout(payPanel, BoxLayout.Y_AXIS));
@@ -829,7 +824,7 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		enterPinPanel.add(enterPin);
 		payPanel.add(enterPinPanel);
 
-		
+
 		buttonPanel.add(banknotePanel);
 		buttonPanel.add(coinPanel);
 
@@ -848,125 +843,116 @@ public class CustomerOptionsState implements GUIState, ActionListener {
 		mainPanel.add(topPanel);
 		mainPanel.add(middlePanel);
 
-		return mainPanel;
+		frame.setContentPane(mainPanel);
+		frame.pack();
+		frame.setAlwaysOnTop(true);
+		frame.setVisible(true);
 	}
 
-	@Override
-	public ReducedState reduce() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+	/**
+	 * Receives button click events and forwards it to the checkout
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		JButton button = (JButton) arg0.getSource();
-		
+
 		// for inserting banknotes
 		if(button == insert5) {
-			
+
 		} else if(button == insert10) {
-			
+
 		} else if(button == insert20) {
-			
+
 		} else if(button == insert50) {
-			
+
 		} else if(button == insert100) {
-			
+
 		}
 		// for inserting coins
 		else if(button == insertNickel) {
-			
+
 		} else if(button == insertDime) {
-			
+
 		} else if(button == insertQuarter) {
-			
+
 		} else if(button == insertLoonie) {
-			
+
 		} else if(button == insertTwoonie) {
-			
+
 		}
-		
+
 		// action items at checkout
 		else if(button == scanToy) {
-			
+
 		} else if(button == scanPlayStation) {
-			
+
 		} else if(button == scanPiano) {
-		
-		} else if(button == scanCard) {
-			
+
+			//} else if(button == scanCard) {
+
 		} else if(button == bagToy) {
-			
-		} else if(button == bagPlayStation) {
-			
+
+			//} else if(button == bagPlay) {
 		} else if(button == bagPiano) {
 		}
 
 		// add weight to scale
 		else if(button == add1g) {
 			weight += 0.001;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == add5g) {
 			weight += 0.005;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == add10g) {
 			weight += 0.010;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == add20g) {
 			weight += 0.20;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == add50g) {
 			weight += 0.050;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == add100g) {
 			weight += 0.100;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		}
 
 		// remove weight from scale
 		else if(button == minus1g) {
 			weight -= 0.001;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == minus5g) {
 			weight -= 0.005;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == minus10g) {
 			weight -= 0.010;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == minus20g) {
 			weight -= 0.020;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == minus50g) {
 			weight -= 0.050;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
 		} else if(button == minus100g) {
 			weight -= 0.100;
-			stateController.notifyListeners(new ScaleStateData(Float.valueOf(weight)));
-			
+
+		}
+
+		else if(button == goBack) {
 		}
 
 		// for using pin pad
 		else if(button == swipeCard) {
-			
+
 		} else if(button == tapCard) {
-			
+
 		} else if(button == insertCard) {
-			
+
 		} else if(button == enterPin) {
-			
+
 		}
-		
+
 	}
 
 }
