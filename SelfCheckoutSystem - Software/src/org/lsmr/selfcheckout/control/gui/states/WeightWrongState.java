@@ -3,6 +3,7 @@ package org.lsmr.selfcheckout.control.gui.states;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -79,10 +80,14 @@ public class WeightWrongState implements GUIState, ActionListener {
 		// image of guy carrying groceries downloaded from website below
 		//https://www.clipartmax.com/middle/m2i8d3m2K9m2G6b1_vector-illustration-of-supermarket-grocery-store-shopper-carry-bags-clipart/		
 		JPanel wordPanel = new JPanel();
-		wordPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
-		JLabel words = new JLabel("Unexpected weight in bagging area.");
-		words.setFont(new Font("Arial", Font.BOLD, 40));
+		wordPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+		wordPanel.setLayout(new GridBagLayout());
+		JLabel words = new JLabel("Unexpected weight in bagging area! Please wait for an attendant.");
+		//JLabel words2 = new JLabel("Please wait for an attendant.");
+		words.setFont(new Font("Arial", Font.BOLD, 35));
+		//words2.setFont(new Font("Arial", Font.BOLD, 35));
 		wordPanel.add(words);// panel with statement to input item's description
+		//wordPanel.add(words2);
 
 		// error icon panel
 		// error icon image downloaded from website below

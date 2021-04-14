@@ -6,9 +6,12 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -20,6 +23,10 @@ import javax.swing.Timer;
  */
 public class GUIUtils {
 
+	// any active views would be ignored
+	private static ConcurrentHashMap<JComponent, Boolean> activeViews = new ConcurrentHashMap<>();
+	private static JComponent placeholder = new JPanel(); // exists so we can ignore views that are currently being manipulated
+
 	private JComponent view;
 
 	public enum Property {
@@ -29,10 +36,15 @@ public class GUIUtils {
 	}
 
 	public static GUIUtils begin(JComponent view) {
+		if (activeViews.getOrDefault(view, false)) {
+			return new GUIUtils(placeholder); // empty so it will not run
+		}
+
+		activeViews.put(view, true); // store active views
 		return new GUIUtils(view);
 	}
 	
-	private Queue<GUIJob> queue = new LinkedList<>();
+	private ConcurrentLinkedQueue<GUIJob> queue = new ConcurrentLinkedQueue<>();
 	private LinkedList<GUIJob> restoreJobs = new LinkedList<>();
 
 	private GUIUtils(JComponent view) {
@@ -104,8 +116,13 @@ public class GUIUtils {
 	
 	
 	public void execute() {
+		if (view == placeholder) return; // happens when a view is already running
+		
 		GUIJob job = queue.peek();
-		if (job == null) return; // termination - end of jobs
+		if (job == null) {
+			terminate();
+			return;
+		}
 		job = queue.poll();
 
 		LinkedList<GUIJob> compiledJobs = new LinkedList<>();
@@ -132,11 +149,18 @@ public class GUIUtils {
 						setItem(job.property, job.data);
 					}
 				}
+
+				if (queue.isEmpty()) {
+					terminate();
+				}
 			}
 		});
 
 		// no more jobs
-		if (job == null) return;
+		if (job == null) {
+			terminate();
+			return;
+		}
 		
 		if (job.property == Property.WAIT) {
 			Timer t = new Timer((int) (((float) job.data) * 1000), new ActionListener() {
@@ -148,6 +172,10 @@ public class GUIUtils {
 			t.setRepeats(false);;
 			t.start();
 		}
+	}
+
+	private void terminate() {
+		activeViews.put(view, false);
 	}
 	
 	
