@@ -95,7 +95,7 @@ public class Checkout {
 	private BigDecimal currentBalance;
 	private boolean customerBag;
 	private boolean paidCash;
-	private double expectedWeightOnBaggingArea;
+	protected double expectedWeightOnBaggingArea;
 	private int inkTotal;
 	private int paperTotal;
 	private ArrayList<ReceiptItem> productsAdded; //Wanna keep track of what was scanned
@@ -338,7 +338,7 @@ public class Checkout {
 		ArrayList<Item> itemsRemoved = new ArrayList<Item>();
 		for (Item item : itemsAdded) {
 			try {
-				checkoutStation.baggingArea.remove(item);
+				
 				itemsRemoved.add(item);
 			} catch (SimulationException e) {
 
@@ -350,7 +350,13 @@ public class Checkout {
 		}
 		return itemsRemoved;
 	}
-
+	/**
+	 * Attempts to remove the item from the bagging area
+	 * @param item
+	 */
+	protected void removeItemFromBaggingArea(Item item) {
+		checkoutStation.baggingArea.remove(item);
+	}
 	/**
 	 * Use Case: Customer does not want to bag a scanned item The customer chooses
 	 * not to add the last scanned item to the bagging area. The expected weight is

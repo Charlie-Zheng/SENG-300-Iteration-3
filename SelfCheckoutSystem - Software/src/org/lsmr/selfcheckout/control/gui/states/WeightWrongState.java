@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class WeightWrongState implements GUIState, ActionListener {
@@ -37,7 +38,14 @@ public class WeightWrongState implements GUIState, ActionListener {
 	@Override
 	public void onDataUpdate(StateData<?> data) {
 		// TODO Auto-generated method stub
-
+		if (data instanceof BaggingAreaWeightData) {
+			double weightDelta = (float) data.obtain();
+			if (weightDelta < 0) {
+				stateController.setState(new BagItemState());
+			} else if (weightDelta == 0) {
+				stateController.setState(new BuyingState());
+			}
+		}
 	}
 
 	/**
@@ -58,8 +66,8 @@ public class WeightWrongState implements GUIState, ActionListener {
 		topPanel.setLayout(new BorderLayout(250, 0));
 		JLabel topStatement = new JLabel("Error");
 		ImageIcon coopImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/cooplogo.png");
-		Image coOpImg = coopImg.getImage() ;  
-		Image newCoOpImg = coOpImg.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image coOpImg = coopImg.getImage();
+		Image newCoOpImg = coOpImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
 		JLabel coOpLogo = new JLabel(coOpImgResized);
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
@@ -76,18 +84,17 @@ public class WeightWrongState implements GUIState, ActionListener {
 		words.setFont(new Font("Arial", Font.BOLD, 40));
 		wordPanel.add(words);// panel with statement to input item's description
 
-
 		// error icon panel
 		// error icon image downloaded from website below
 		//https://www.clipartmax.com/download/m2i8i8m2b1A0A0d3_png-file-error-icono/
 		JPanel errorPanel = new JPanel();
 		ImageIcon errorImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/error icon.png");
-		Image errImg = errorImg.getImage() ;  
-		Image newErrorImg = errImg.getScaledInstance( 375, 375,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image errImg = errorImg.getImage();
+		Image newErrorImg = errImg.getScaledInstance(375, 375, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon errorImgResized = new ImageIcon(newErrorImg);
 		JLabel errorImgLabel = new JLabel(errorImgResized);
 		errorPanel.add(errorImgLabel);
-		
+
 		Dimension buttonSize = new Dimension(250, 60);
 		JPanel logInPanel = new JPanel();
 		logInPanel.setLayout(new BorderLayout());
@@ -121,11 +128,11 @@ public class WeightWrongState implements GUIState, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton button = (JButton) e.getSource();
-		
-		if(button == logIn) {
+
+		if (button == logIn) {
 			stateController.setState(new AttendantLogInState());
 		}
-		
+
 	}
 
 }

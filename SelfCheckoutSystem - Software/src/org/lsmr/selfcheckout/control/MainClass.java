@@ -105,7 +105,7 @@ public class MainClass {
 				barcodedProductsOf(new String[][] { { "1124341", "Checkout Machine Toy", "20.99" },
 						{ "0101010", "PlayStation 6 (PS6)", "699.99" }, { "12345", "Grand Piano", "109000.00" } }));
 		addAll(ProductWeightDatabase.PRODUCT_WEIGHT_DATABASE, productWeightsOf(
-				new String[][] { { "1124341", "7.1" }, { "0101010", "15.9" }, { "12345", "321.0" }, }));
+				new String[][] { { "1124341", "70.1" }, { "0101010", "150.9" }, { "12345", "321.0" }, }));
 
 		addAll(MembershipCardDatabase.MEMBERSHIP_CARD_DATABASE,
 				membershipsOf(new String[][] { { "111122223333", "Robert James Walker" } }));
@@ -133,7 +133,7 @@ public class MainClass {
 		int[] banknoteDenominations = { 5, 10, 20, 50, 100 };
 		BigDecimal[] coinDenominations = { new BigDecimal("0.05"), new BigDecimal("0.10"), new BigDecimal("0.25"),
 				new BigDecimal("1.00"), new BigDecimal("2.00") };
-		SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations, 122, 1);
+		SelfCheckoutStation station = new SelfCheckoutStation(cad, banknoteDenominations, coinDenominations, 10000, 1);
 		Checkout c = new Checkout(station);
 	
 		StateUpdateListener guiUpdateListener = new GUIupdateListener(c);
