@@ -341,7 +341,7 @@ public class Checkout {
 		ArrayList<Item> itemsRemoved = new ArrayList<Item>();
 		for (Item item : itemsAdded) {
 			try {
-				
+				removeItemFromBaggingArea(item);
 				itemsRemoved.add(item);
 			} catch (SimulationException e) {
 

@@ -31,6 +31,7 @@ import org.lsmr.selfcheckout.control.gui.GUIController;
 import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
+import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
@@ -886,30 +887,35 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		if (button == insert5) {
 			try {
 				checkout.payWithBanknote(new Banknote(5, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (OverloadException | CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insert10) {
 			try {
 				checkout.payWithBanknote(new Banknote(10, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (OverloadException | CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insert20) {
 			try {
 				checkout.payWithBanknote(new Banknote(20, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (OverloadException | CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insert50) {
 			try {
 				checkout.payWithBanknote(new Banknote(50, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (OverloadException | CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insert100) {
 			try {
 				checkout.payWithBanknote(new Banknote(100, cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (OverloadException | CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
@@ -918,30 +924,35 @@ public class PhysicalSimulatorWindow implements ActionListener {
 		else if (button == insertNickel) {
 			try {
 				checkout.payWithCoin(new Coin(new BigDecimal("0.05"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insertDime) {
 			try {
 				checkout.payWithCoin(new Coin(new BigDecimal("0.10"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insertQuarter) {
 			try {
 				checkout.payWithCoin(new Coin(new BigDecimal("0.25"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insertLoonie) {
 			try {
 				checkout.payWithCoin(new Coin(new BigDecimal("1.00"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == insertTwoonie) {
 			try {
 				checkout.payWithCoin(new Coin(new BigDecimal("2.00"), cad));
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
