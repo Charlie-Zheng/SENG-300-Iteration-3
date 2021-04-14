@@ -114,6 +114,9 @@ public class Checkout {
 
 		cardPayment = new CardPayment(checkoutStation);
 
+		ScaleWeightUpdateListener scaleWeightListener = new ScaleWeightUpdateListener(this);
+		checkoutStation.scale.register(scaleWeightListener);
+		
 		bankNoteOutputListener = new BanknoteDispenserSlotListener(this, checkoutStation.banknoteDispensers);
 		checkoutStation.banknoteOutput.register(bankNoteOutputListener);
 
@@ -589,8 +592,8 @@ public class Checkout {
 	 */
 	public double getWeightOnScale() {
 		return weightOnScanScale;
+	
 	}
-
 	/**
 	 * Initializes the machine to prepare to pay with a credit card
 	 * 
