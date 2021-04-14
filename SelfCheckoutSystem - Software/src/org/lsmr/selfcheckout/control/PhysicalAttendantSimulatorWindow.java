@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -44,13 +46,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 	private JButton refill20;
 	private JButton refill50;
 	private JButton refill100;
-
-	//attendant empties banknote dispenser
-	private JButton empty5;
-	private JButton empty10;
-	private JButton empty20;
-	private JButton empty50;
-	private JButton empty100;
+	private JButton refillBanknotes;
 
 	// attendant refills coin dispenser
 	private JButton refillNickel;
@@ -58,13 +54,14 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 	private JButton refillQuarter;
 	private JButton refillLoonie;
 	private JButton refillTwoonie;
+	private JButton refillCoins;
 
 	// attendant empties coin dispenser
-	private JButton emptyNickel;
-	private JButton emptyDime;
-	private JButton emptyQuarter;
-	private JButton emptyLoonie;
-	private JButton emptyTwoonie;
+	private JButton emptyCoins;
+	
+	//attendant empties banknote dispenser
+		private JButton emptyBanknotes;
+
 
 	// attendant refills receipt printer	
 	private JButton refillInk;
@@ -87,7 +84,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		frame = new JFrame("Simulator");
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 30));
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));		
 		mainPanel.setBackground(Color.RED.darker());
 
 
@@ -103,6 +100,8 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 
 		JPanel middlePanel = new JPanel();
 		middlePanel.setLayout(new GridLayout(2, 3, 20, 0));
+		//middlePanel.setLayout(new GridBagLayout());
+		//GridBagConstraints constraints = new GridBagConstraints();
 		middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		middlePanel.setBackground(Color.RED.darker());
 
@@ -112,14 +111,14 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		imagePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		ImageIcon clerkImg = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/grocery clerk.png");
 		Image clerKImg = clerkImg.getImage() ;  
-		Image newClerkImg = clerKImg.getScaledInstance( 250, 250,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image newClerkImg = clerKImg.getScaledInstance( 300, 300,  java.awt.Image.SCALE_SMOOTH) ;  
 		ImageIcon clerkImgResized = new ImageIcon(newClerkImg);
 		JLabel clerkLogo = new JLabel(clerkImgResized);
 		imagePanel.add(clerkLogo);
 
 
 		Dimension buttonSize = new Dimension(250, 34);
-
+	
 		JPanel banknoteRefillPanel = new JPanel();
 		banknoteRefillPanel.setBackground(Color.RED.darker());
 		banknoteRefillPanel.setLayout(new BoxLayout(banknoteRefillPanel, BoxLayout.Y_AXIS));
@@ -143,7 +142,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refill5 = new JButton();
 		refill5.setLayout(new BorderLayout());
 		JLabel refillFiveIcon = new JLabel(fiveImgResized);
-		JLabel refillFiveLabel = new JLabel("Refill $5.00s", SwingConstants.CENTER);
+		JLabel refillFiveLabel = new JLabel("Select $5.00s", SwingConstants.CENTER);
 		refillFiveLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refill5.add(refillFiveLabel, BorderLayout.CENTER);
 		refill5.add(refillFiveIcon, BorderLayout.WEST);
@@ -166,7 +165,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refill10 = new JButton();
 		refill10.setLayout(new BorderLayout());
 		JLabel refillTenIcon = new JLabel(tenImgResized);
-		JLabel refillTenLabel = new JLabel("Refill $10.00s", SwingConstants.CENTER);
+		JLabel refillTenLabel = new JLabel("Select $10.00s", SwingConstants.CENTER);
 		refillTenLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refill10.add(refillTenLabel, BorderLayout.CENTER);
 		refill10.add(refillTenIcon, BorderLayout.WEST);
@@ -188,7 +187,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refill20 = new JButton();
 		refill20.setLayout(new BorderLayout());
 		JLabel refillTwentyIcon = new JLabel(twentyImgResized);
-		JLabel refillTwentyLabel = new JLabel("Refill $20.00s", SwingConstants.CENTER);
+		JLabel refillTwentyLabel = new JLabel("Select $20.00s", SwingConstants.CENTER);
 		refillTwentyLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refill20.add(refillTwentyLabel, BorderLayout.CENTER);
 		refill20.add(refillTwentyIcon, BorderLayout.WEST);
@@ -211,7 +210,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refill50 = new JButton();
 		refill50.setLayout(new BorderLayout());
 		JLabel refillFiftyIcon = new JLabel(fiftyImgResized);
-		JLabel refillFiftyLabel = new JLabel("Refill $50.00s", SwingConstants.CENTER);
+		JLabel refillFiftyLabel = new JLabel("Select $50.00s", SwingConstants.CENTER);
 		refillFiftyLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refill50.add(refillFiftyLabel, BorderLayout.CENTER);
 		refill50.add(refillFiftyIcon, BorderLayout.WEST);
@@ -233,7 +232,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refill100 = new JButton();
 		refill100.setLayout(new BorderLayout());
 		JLabel refillHundredIcon = new JLabel(hundredImgResized);
-		JLabel refillHundredLabel = new JLabel("Refill $100.00s", SwingConstants.CENTER);
+		JLabel refillHundredLabel = new JLabel("Select $100.00s", SwingConstants.CENTER);
 		refillHundredLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refill100.add(refillHundredLabel, BorderLayout.CENTER);
 		refill100.add(refillHundredIcon, BorderLayout.WEST);
@@ -246,8 +245,20 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refill100Panel.setBackground(Color.RED.darker());
 		refill100Panel.add(refill100);
 		banknoteRefillPanel.add(refill100Panel);
+		
+		JPanel refillBanknotesPanel = new JPanel();
+		refillBanknotesPanel.setBackground(Color.RED.darker());
+		refillBanknotes = new JButton("Refill Selected Banknotes");
+		refillBanknotes.setFont(new Font("Arial", Font.BOLD, 17));
+		refillBanknotes.addActionListener(this);
+		refillBanknotes.setSize(buttonSize);
+		refillBanknotes.setPreferredSize(buttonSize);
+		refillBanknotes.setMinimumSize(buttonSize);
+		refillBanknotes.setMaximumSize(buttonSize);
+		refillBanknotesPanel.add(refillBanknotes);
+		banknoteRefillPanel.add(refillBanknotesPanel);
 
-		JPanel banknoteEmptyPanel = new JPanel();
+	/*	JPanel banknoteEmptyPanel = new JPanel();
 		banknoteEmptyPanel.setBackground(Color.RED.darker());
 		banknoteEmptyPanel.setLayout(new BoxLayout(banknoteEmptyPanel, BoxLayout.Y_AXIS));
 		banknoteEmptyPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
@@ -344,7 +355,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		empty100Panel.add(empty100);
 		banknoteEmptyPanel.add(empty100Panel);
 
-
+*/
 		JPanel coinRefillPanel = new JPanel();
 		coinRefillPanel.setBackground(Color.RED.darker());
 		coinRefillPanel.setLayout(new BoxLayout(coinRefillPanel, BoxLayout.Y_AXIS));
@@ -368,7 +379,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refillNickel = new JButton();
 		refillNickel.setLayout(new BorderLayout());
 		JLabel refillNickelIcon = new JLabel(nickelImgResized);
-		JLabel refillNickelLabel = new JLabel("Refill $0.05s", SwingConstants.CENTER);
+		JLabel refillNickelLabel = new JLabel("Select $0.05s", SwingConstants.CENTER);
 		refillNickelLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refillNickel.add(refillNickelLabel, BorderLayout.CENTER);
 		refillNickel.add(refillNickelIcon, BorderLayout.WEST);
@@ -393,7 +404,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refillDime = new JButton();
 		refillDime.setLayout(new BorderLayout());
 		JLabel refillDimeIcon = new JLabel(dimeImgResized);
-		JLabel refillDimeLabel = new JLabel("Refill $0.10s", SwingConstants.CENTER);
+		JLabel refillDimeLabel = new JLabel("Select $0.10s", SwingConstants.CENTER);
 		refillDimeLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refillDime.add(refillDimeLabel, BorderLayout.CENTER);
 		refillDime.add(refillDimeIcon, BorderLayout.WEST);
@@ -418,7 +429,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refillQuarter = new JButton();
 		refillQuarter.setLayout(new BorderLayout());
 		JLabel refillQuarterIcon = new JLabel(quarterImgResized);
-		JLabel refillQuarterLabel = new JLabel("Refill $0.25s", SwingConstants.CENTER);
+		JLabel refillQuarterLabel = new JLabel("Select $0.25s", SwingConstants.CENTER);
 		refillQuarterLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refillQuarter.add(refillQuarterLabel, BorderLayout.CENTER);
 		refillQuarter.add(refillQuarterIcon, BorderLayout.WEST);
@@ -443,7 +454,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refillLoonie = new JButton();
 		refillLoonie.setLayout(new BorderLayout());
 		JLabel refillLoonieIcon = new JLabel(loonieImgResized);
-		JLabel refillLoonieLabel = new JLabel("Refill $1.00s", SwingConstants.CENTER);
+		JLabel refillLoonieLabel = new JLabel("Select $1.00s", SwingConstants.CENTER);
 		refillLoonieLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refillLoonie.add(refillLoonieLabel, BorderLayout.CENTER);
 		refillLoonie.add(refillLoonieIcon, BorderLayout.WEST);
@@ -468,7 +479,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refillTwoonie = new JButton();
 		refillTwoonie.setLayout(new BorderLayout());
 		JLabel refillTwoonieIcon = new JLabel(twoonieImgResized);
-		JLabel refillTwoonieLabel = new JLabel("Refill $2.00s", SwingConstants.CENTER);
+		JLabel refillTwoonieLabel = new JLabel("Select $2.00s", SwingConstants.CENTER);
 		refillTwoonieLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		refillTwoonie.add(refillTwoonieLabel, BorderLayout.CENTER);
 		refillTwoonie.add(refillTwoonieIcon, BorderLayout.WEST);
@@ -481,20 +492,81 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refillTwooniePanel.setBackground(Color.RED.darker());
 		refillTwooniePanel.add(refillTwoonie);
 		coinRefillPanel.add(refillTwooniePanel);
+		
+		JPanel refillCoinsPanel = new JPanel();
+		refillCoinsPanel.setBackground(Color.RED.darker());
+		refillCoins = new JButton("Refill Selected Coins");
+		refillCoins.setFont(new Font("Arial", Font.BOLD, 20));
+		refillCoins.addActionListener(this);
+		refillCoins.setSize(buttonSize);
+		refillCoins.setPreferredSize(buttonSize);
+		refillCoins.setMinimumSize(buttonSize);
+		refillCoins.setMaximumSize(buttonSize);
+		refillCoinsPanel.add(refillCoins);
+		coinRefillPanel.add(refillCoinsPanel);
 
-		JPanel coinEmptyPanel = new JPanel();
-		coinEmptyPanel.setBackground(Color.RED.darker());
-		coinEmptyPanel.setLayout(new BoxLayout(coinEmptyPanel, BoxLayout.Y_AXIS));
-		coinEmptyPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
-		JLabel coinEmptyLabel = new JLabel("Empty Coin Storage Unit");
-		coinEmptyLabel.setFont(new Font("Arial", Font.BOLD, 26));
-		coinEmptyLabel.setForeground(Color.WHITE);
-		JPanel coiNEmptyPanel = new JPanel();
-		coiNEmptyPanel.setBackground(Color.RED.darker());
-		coiNEmptyPanel.add(coinEmptyLabel);
-		coinEmptyPanel.add(coiNEmptyPanel);
+		JPanel emptyPanel = new JPanel();
+		emptyPanel.setBackground(Color.RED.darker());
+		emptyPanel.setLayout(new BoxLayout(emptyPanel, BoxLayout.Y_AXIS));
+		emptyPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 225, 0));
+		JLabel emptyLabel = new JLabel("Empty Cash Storage Unit");
+		emptyLabel.setFont(new Font("Arial", Font.BOLD, 26));
+		emptyLabel.setForeground(Color.WHITE);
+		JPanel empTyPanel = new JPanel();
+		empTyPanel.setBackground(Color.RED.darker());
+		empTyPanel.add(emptyLabel);
+		emptyPanel.add(empTyPanel);
+		
+		ImageIcon coins = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/hand coins.png");
+		Image coinsImg = coins.getImage() ;  
+		Image newCoinsImg = coinsImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		ImageIcon coinsImgResized = new ImageIcon(newCoinsImg);
 
-		emptyNickel = new JButton();
+		emptyCoins = new JButton();
+		emptyCoins.setLayout(new BorderLayout());
+		JLabel emptyCoinsIcon = new JLabel(coinsImgResized);
+		JLabel emptyCoinsLabel = new JLabel("Empty Coins", SwingConstants.CENTER);
+		emptyCoinsLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		emptyCoins.add(emptyCoinsLabel, BorderLayout.CENTER);
+		emptyCoins.add(emptyCoinsIcon, BorderLayout.WEST);
+		emptyCoins.setSize(buttonSize);
+		emptyCoins.setPreferredSize(buttonSize);
+		emptyCoins.setMinimumSize(buttonSize);
+		emptyCoins.setMaximumSize(buttonSize);
+		emptyCoins.addActionListener(this);
+		JPanel emptyCoinsPanel = new JPanel();
+		emptyCoinsPanel.setBackground(Color.RED.darker());
+		emptyCoinsPanel.add(emptyCoins);
+		emptyPanel.add(emptyCoinsPanel);
+		
+		ImageIcon banknotes = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/hand bills.png");
+		Image banknotesImg = banknotes.getImage() ;  
+		Image newBanknotesImg = banknotesImg.getScaledInstance( 25, 25,  java.awt.Image.SCALE_SMOOTH) ;  
+		ImageIcon banknotesImgResized = new ImageIcon(newBanknotesImg);
+
+		emptyBanknotes = new JButton();
+		emptyBanknotes.setLayout(new BorderLayout());
+		JLabel emptyBanknotesIcon = new JLabel(banknotesImgResized);
+		JLabel emptyBanknotesLabel = new JLabel("Empty Banknotes", SwingConstants.CENTER);
+		emptyBanknotesLabel.setFont(new Font("Arial", Font.BOLD, 20));
+		emptyBanknotes.add(emptyBanknotesLabel, BorderLayout.CENTER);
+		emptyBanknotes.add(emptyBanknotesIcon, BorderLayout.WEST);
+		emptyBanknotes.setSize(buttonSize);
+		emptyBanknotes.setPreferredSize(buttonSize);
+		emptyBanknotes.setMinimumSize(buttonSize);
+		emptyBanknotes.setMaximumSize(buttonSize);
+		emptyBanknotes.addActionListener(this);
+		JPanel emptyBanknotesPanel = new JPanel();
+		emptyBanknotesPanel.setBackground(Color.RED.darker());
+		emptyBanknotesPanel.add(emptyBanknotes);
+		emptyPanel.add(emptyBanknotesPanel);
+		
+		JPanel blankPanel = new JPanel();
+		blankPanel.setBackground(Color.RED.darker());
+		
+		
+
+/*		emptyNickel = new JButton();
 		emptyNickel.setLayout(new BorderLayout());
 		JLabel emptyNickelIcon = new JLabel(nickelImgResized);
 		JLabel emptyNickelLabel = new JLabel("Empty $0.05s", SwingConstants.CENTER);
@@ -579,11 +651,11 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		emptyTwooniePanel.add(emptyTwoonie);
 		coinEmptyPanel.add(emptyTwooniePanel);
 
-
+*/
 		JPanel refillPrinterPanel = new JPanel();
 		refillPrinterPanel.setBackground(Color.RED.darker());
 		refillPrinterPanel.setLayout(new BoxLayout(refillPrinterPanel, BoxLayout.Y_AXIS));
-		refillPrinterPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 175, 0));
+		refillPrinterPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 225, 0));
 		JLabel refillPrinterLabel = new JLabel("Refill Printer");
 		refillPrinterLabel.setForeground(Color.WHITE);
 		refillPrinterLabel.setFont(new Font("Arial", Font.BOLD, 26));
@@ -640,12 +712,49 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		refillInkPanel.add(refillInk);
 		refillPrinterPanel.add(refillInkPanel);
 
+		/*constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.weighty = 0.6;
+		constraints.weightx = 0.33;
+		//constraints.anchor = GridBagConstraints.WEST;
+		middlePanel.add(imagePanel, constraints);
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.weighty = 0.6;
+		constraints.weightx = 0.33;
+		middlePanel.add(banknoteRefillPanel, constraints);
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.weighty = 0.6;
+		constraints.weightx = 0.33;
+		middlePanel.add(coinRefillPanel, constraints);
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.weighty = 0.4;
+		constraints.weightx = 0.5;
+		middlePanel.add(emptyPanel, constraints);
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.weighty = 0.4;
+		constraints.weightx = 0.33;
+		middlePanel.add(refillPrinterPanel, constraints);
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.weighty = 0.6;
+		constraints.weightx = 0.33;
+		middlePanel.add(banknoteRefillPanel, constraints);
+		constraints.gridx = 2;
+		constraints.gridy = 1;
+		constraints.weighty = 0.6;
+		constraints.weightx = 0.33;
+		middlePanel.add(coinRefillPanel, constraints);*/
+		
 		middlePanel.add(imagePanel);
-		middlePanel.add(banknoteEmptyPanel);
-		middlePanel.add(coinEmptyPanel);
-		middlePanel.add(refillPrinterPanel);
 		middlePanel.add(banknoteRefillPanel);
 		middlePanel.add(coinRefillPanel);
+		middlePanel.add(blankPanel);
+		middlePanel.add(refillPrinterPanel);
+		middlePanel.add(emptyPanel);
 
 
 		mainPanel.add(topPanel);
@@ -681,7 +790,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 
 		}
 
-		// for emptying banknote storage unit
+	/*	// for emptying banknote storage unit
 		else if(button == empty5) {
 
 		} else if(button == empty10) {
@@ -692,7 +801,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 
 		} else if(button == empty100) {
 
-		}
+		}*/
 
 		// for refilling coin storage unit
 		else if(button == refillNickel) {
@@ -708,7 +817,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 		}
 
 		// for emptying coin storage unit
-		else if(button == emptyNickel) {
+	/*	else if(button == emptyNickel) {
 
 		} else if(button == emptyDime) {
 
@@ -718,7 +827,7 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 
 		} else if(button == emptyTwoonie) {
 
-		}
+		}*/
 
 		// for refilling receipt printer
 		else if(button == refillInk) {

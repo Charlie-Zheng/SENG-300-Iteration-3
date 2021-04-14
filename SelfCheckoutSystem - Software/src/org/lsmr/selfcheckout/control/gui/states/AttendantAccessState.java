@@ -194,7 +194,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 		block = new JButton();
 		ImageIcon blocK = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/no-sign.png");
 		Image blockImg = blocK.getImage() ;  
-		Image newBlockImg = blockImg.getScaledInstance( 40, 40,  java.awt.Image.SCALE_SMOOTH) ;  
+		Image newBlockImg = blockImg.getScaledInstance( 38, 38,  java.awt.Image.SCALE_SMOOTH) ;  
 		Image greyBlockImg = GrayFilter.createDisabledImage(newBlockImg);
 		ImageIcon blockImgResized = new ImageIcon(newBlockImg);
 		
