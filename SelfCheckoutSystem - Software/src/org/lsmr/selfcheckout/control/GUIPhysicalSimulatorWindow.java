@@ -781,7 +781,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		swipeCard = new JButton();
 		swipeCard.setLayout(new BorderLayout());
 		JLabel swipeCardIcon = new JLabel(swipeImgResized);
-		JLabel swipeCardLabel = new JLabel("Swipe Card", SwingConstants.CENTER);
+		JLabel swipeCardLabel = new JLabel("Swipe Gift Card", SwingConstants.CENTER);
 		swipeCardLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		swipeCard.add(swipeCardLabel, BorderLayout.CENTER);
 		swipeCard.add(swipeCardIcon, BorderLayout.WEST);
@@ -804,7 +804,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		tapCard = new JButton();
 		tapCard.setLayout(new BorderLayout());
 		JLabel tapCardIcon = new JLabel(tapImgResized);
-		JLabel tapCardLabel = new JLabel("Tap Card", SwingConstants.CENTER);
+		JLabel tapCardLabel = new JLabel("Tap Debit Card", SwingConstants.CENTER);
 		tapCardLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		tapCard.add(tapCardLabel, BorderLayout.CENTER);
 		tapCard.add(tapCardIcon, BorderLayout.WEST);
@@ -827,7 +827,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		insertCard = new JButton();
 		insertCard.setLayout(new BorderLayout());
 		JLabel insertCardIcon = new JLabel(insertImgResized);
-		JLabel insertCardLabel = new JLabel("Insert Card", SwingConstants.CENTER);
+		JLabel insertCardLabel = new JLabel("Insert&Pin Credit Card", SwingConstants.CENTER);
 		insertCardLabel.setFont(new Font("Arial", Font.BOLD, 22));
 		insertCard.add(insertCardLabel, BorderLayout.CENTER);
 		insertCard.add(insertCardIcon, BorderLayout.WEST);
@@ -859,6 +859,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		enterPin.setMinimumSize(buttonSize);
 		enterPin.setMaximumSize(buttonSize);
 		enterPin.addActionListener(this);
+		enterPin.setEnabled(false);
 		JPanel enterPinPanel = new JPanel();
 		enterPinPanel.add(enterPin);
 		payPanel.add(enterPinPanel);
@@ -1110,11 +1111,29 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 
 		// for using pin pad
 		else if (button == swipeCard) {
-
+			try {
+				checkout.payBySwipingCard(giftCard,null);
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+	
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == tapCard) {
-
+			try {
+				checkout.payByTappingCard(debitCard);
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+	
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == insertCard) {
-
+			try {
+				checkout.payByInsertingCard(creditCard,"0909");
+				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+	
+			} catch (CheckoutException e) {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == enterPin) {
 
 		} else if (button == scanCard) {

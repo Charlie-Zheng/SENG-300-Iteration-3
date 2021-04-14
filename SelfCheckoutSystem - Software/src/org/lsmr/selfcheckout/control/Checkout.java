@@ -109,7 +109,6 @@ public class Checkout {
 	private AttendantSystem attendantSystem;
 	protected GUIController guiController;
 
-
 	public Checkout(SelfCheckoutStation checkoutStation) {
 		if (checkoutStation == null) {
 			throw new SimulationException(new NullPointerException("Argument may not be null."));
@@ -143,7 +142,6 @@ public class Checkout {
 		giveChange = new GiveChange(checkoutStation);
 		MembershipCardListener membershipListener = new MembershipCardListener(this);
 		checkoutStation.cardReader.register(membershipListener);
-
 
 		currentBalance = new BigDecimal(0);
 		customerBag = false;
@@ -331,6 +329,7 @@ public class Checkout {
 			if (Math.abs(getWeightOnBaggingArea() - expectedWeightOnBaggingArea) <= WEIGHT_TOLERANCE) {
 				state = CheckoutState.Scanning;
 			} else {
+				state = CheckoutState.Paused;
 				throw new CheckoutException("Weight on bagging area is incorrect (greater than " + WEIGHT_TOLERANCE
 						+ " deviation from expected weight).\n\tExpected: " + expectedWeightOnBaggingArea + "\tActual: "
 						+ getWeightOnBaggingArea());
@@ -353,23 +352,35 @@ public class Checkout {
 			try {
 				removeItemFromBaggingArea(item);
 				itemsRemoved.add(item);
+
 			} catch (SimulationException e) {
 
 			}
 		}
 		itemsAdded.clear();
 		if (state == CheckoutState.Done) {
+			expectedWeightOnBaggingArea = 0;
 			state = CheckoutState.Scanning;
 		}
 		return itemsRemoved;
 	}
+
 	/**
 	 * Attempts to remove the item from the bagging area
+	 * 
 	 * @param item
 	 */
 	protected void removeItemFromBaggingArea(Item item) {
 		checkoutStation.baggingArea.remove(item);
+		if (isScanning() || isPaused()) {
+			if (Math.abs(getWeightOnBaggingArea() - expectedWeightOnBaggingArea) <= WEIGHT_TOLERANCE) {
+				state = CheckoutState.Scanning;
+			} else {
+				state = CheckoutState.Paused;
+			}
+		}
 	}
+
 	/**
 	 * Use Case: Customer does not want to bag a scanned item The customer chooses
 	 * not to add the last scanned item to the bagging area. The expected weight is
