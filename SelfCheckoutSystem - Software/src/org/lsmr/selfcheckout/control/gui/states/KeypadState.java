@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 
 import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
@@ -36,6 +37,8 @@ public class KeypadState implements GUIState, ActionListener {
 	private JButton goBack;
 	private JLabel topStatement;
 	private PLUCodedProduct inputProduct;
+	private JLabel weight;
+	private float changeWeight;
 
 	/*
 	 * 
@@ -63,7 +66,10 @@ public class KeypadState implements GUIState, ActionListener {
 			inputProduct = (PLUCodedProduct) data.obtain();
 			stateController.notifyListeners(new InsertPLUProductData(inputProduct));
 			stateController.setState(new BuyingState()); // TEMP: just to see populated data
-		}
+		} /*else if (data instanceof BalanceStateData) {
+			changeWeight = (float) data.obtain();
+			weight.setText(String.format("Amount Due: $%.2f", changeWeight));
+		}*/
 	}
 
 	/**
@@ -132,9 +138,11 @@ public class KeypadState implements GUIState, ActionListener {
 			}
 		}
 
+		// set up bottom panel with payment and back button
 		// image of black arrow downloaded from below website
 		// https://www.pikpng.com/downpngs/oxJooi_simpleicons-interface-undo-black-arrow-pointing-to-tanda/
 		JPanel goBackPanel = new JPanel();
+		goBackPanel.setLayout(new BorderLayout(275, 0));
 		ImageIcon arrow = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/black arrow.png");
 		Image img = arrow.getImage() ;  
 		Image newimg = img.getScaledInstance( 50, 50,  java.awt.Image.SCALE_SMOOTH) ;  
@@ -145,7 +153,7 @@ public class KeypadState implements GUIState, ActionListener {
 		JLabel iconLabel = new JLabel(arrowResized);
 		JLabel back = new JLabel("Go Back", SwingConstants.CENTER);
 
-		back.setFont(new Font("Arial", Font.BOLD, 36));
+		back.setFont(new Font("Arial", Font.BOLD, 40));
 		goBack.add(back, BorderLayout.CENTER);
 		goBack.add(iconLabel, BorderLayout.WEST);
 		goBack.addActionListener(this);
@@ -157,8 +165,14 @@ public class KeypadState implements GUIState, ActionListener {
 		goBack.setMinimumSize(backSize);
 		goBack.setMaximumSize(backSize);
 
-		goBackPanel.add(goBack);
+		goBackPanel.add(goBack, BorderLayout.EAST);
 		goBackPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100)); // for margins
+
+		// amount due panel
+		weight = new JLabel();
+		weight.setText("0.00 kg");
+		weight.setFont(new Font("Arial", Font.BOLD, 50));
+		goBackPanel.add(weight, BorderLayout.WEST); // for margins
 
 		mainPanel.add(topPanel);
 		mainPanel.add(input);
