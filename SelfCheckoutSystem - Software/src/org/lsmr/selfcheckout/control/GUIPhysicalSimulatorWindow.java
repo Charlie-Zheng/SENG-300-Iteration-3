@@ -1084,15 +1084,8 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			weight -= 0.020;
 
 		} else if (button == takeChange) {
-			try {
-				checkout.emitChange();
-				checkout.getChangeFromCoinTray();
-				checkout.getChangeFromBanknoteSlots();
-			}catch(CheckoutException | EmptyException | DisabledException | OverloadException e) {
-				e.printStackTrace();
-				GUIUtils.flashError(button);
-			}
-
+			checkout.getChangeFromCoinTray();
+			checkout.getChangeFromBanknoteSlots();
 		} else if (button == takeReceipt) {
 			try {
 				checkout.printReceipt();
@@ -1102,7 +1095,6 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 				GUIUtils.flashError(button);
 			}
 
-			
 		}
 
 		else if (button == goBack) {

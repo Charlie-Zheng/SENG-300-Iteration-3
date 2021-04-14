@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.EmitChangeStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class EndState implements GUIState {
@@ -117,9 +118,11 @@ public class EndState implements GUIState {
 		mainPanel.add(duePanel);
 		mainPanel.add(paidPanel);
 
-		// r equest balance
+		// request balance
 		stateController.notifyListeners(new BalanceStateData());
-
+		
+		//request change to be emitted
+		stateController.notifyListeners(new EmitChangeStateData());
 		return mainPanel;
 	}
 

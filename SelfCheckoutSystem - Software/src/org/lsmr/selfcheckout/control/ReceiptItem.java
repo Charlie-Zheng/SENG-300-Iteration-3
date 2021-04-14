@@ -74,8 +74,8 @@ public class ReceiptItem {
 		sb.append('$');
 		sb.append(priceInCents / 100);
 		sb.append('.');
-		sb.append(priceInCents % 100);
-
+		sb.append(priceInCents % 100/10);
+		sb.append(priceInCents % 10);
 		String weight;
 		if (!product.isPerUnit()) {
 			sb.append('\n');
@@ -83,7 +83,7 @@ public class ReceiptItem {
 			weight = String.valueOf(weightInGrams / 1000);
 			sb.append(weight);
 			sb.append('g');
-			for (int i = 0; i < space - 5 - weight.length() - 5; i++) {
+			for (int i = 0; i < space - 5 - weight.length() - 15; i++) {
 				sb.append(' ');
 			}
 			sb.append('$');
