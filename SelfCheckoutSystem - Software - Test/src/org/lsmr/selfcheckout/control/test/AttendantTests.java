@@ -158,8 +158,7 @@ public class AttendantTests extends BaseTest {
 			int stationNum = sys.register(c);
 			sys.startUp(stationNum);
 			sys.approveWeight(stationNum);
-			sys.shutDown(stationNum);
-			multiTestAssertEquals(c.getState(), "Scanning");
+			multiTestAssertEquals("Scanning", c.getState());
 		}
 	}
 	@Test
@@ -187,7 +186,6 @@ public class AttendantTests extends BaseTest {
 	
 	@Test
 	public void attendantAddPaper() throws CheckoutException {
-		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Integer num = new Integer(1019);
 			Attendant br = new Attendant(num, "Brian",2002);
@@ -197,7 +195,7 @@ public class AttendantTests extends BaseTest {
 			int stationNum = sys.register(c);
 			c.addPaper(5);
 			multiTestAssertEquals(5,c.getPaperTotal());
-		}
+		
 	}
 	
 	@Test(expected = SimulationException.class)
@@ -231,7 +229,6 @@ public class AttendantTests extends BaseTest {
 
 	@Test
 	public void attendantAddInk() throws CheckoutException {
-		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Integer num = new Integer(1019);
 			Attendant br = new Attendant(num, "Brian",2002);
@@ -241,7 +238,7 @@ public class AttendantTests extends BaseTest {
 			int stationNum = sys.register(c);
 			c.addInk(50);
 			multiTestAssertEquals(50,c.getInkTotal());
-		}
+		
 	}
 	@Test(expected = SimulationException.class)
 	public void attendantAddInkNegative() throws CheckoutException {
