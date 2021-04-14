@@ -39,7 +39,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
 import org.lsmr.selfcheckout.devices.OverloadException;
 
-public class PhysicalSimulatorWindow implements ActionListener {
+public class GUIPhysicalSimulatorWindow implements ActionListener {
 
 	private Checkout checkout;
 	private GUIController stateHandler;
@@ -109,7 +109,7 @@ public class PhysicalSimulatorWindow implements ActionListener {
 
 	private JFrame frame;
 
-	public PhysicalSimulatorWindow(Checkout c, GUIController s) {
+	public GUIPhysicalSimulatorWindow(Checkout c, GUIController s) {
 		this.checkout = c;
 		this.stateHandler = s;
 	}

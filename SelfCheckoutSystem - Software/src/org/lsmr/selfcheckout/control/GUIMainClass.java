@@ -10,6 +10,7 @@ import java.util.Map;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.gui.GUIController;
+import org.lsmr.selfcheckout.control.gui.Pair;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.states.AttendantLogInState;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
@@ -17,7 +18,7 @@ import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
 
-public class MainClass {
+public class GUIMainClass {
 
 	/**
 	 * Adds the list of keys and list of values into the specified map. Number of
@@ -150,7 +151,7 @@ public class MainClass {
 		c.run();
 
 		// fire up our simulator
-		PhysicalSimulatorWindow window = new PhysicalSimulatorWindow(c, guiController);
+		GUIPhysicalSimulatorWindow window = new GUIPhysicalSimulatorWindow(c, guiController);
 		window.createWindow();
 
 	}

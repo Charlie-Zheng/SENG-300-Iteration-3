@@ -32,7 +32,7 @@ import org.lsmr.selfcheckout.control.gui.states.BlockState;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
 import org.lsmr.selfcheckout.devices.OverloadException;
 
-public class PhysicalAttendantSimulatorWindow implements ActionListener {
+public class GUIPhysicalAttendantSimulatorWindow implements ActionListener {
 
 	private Checkout checkout;
 	private GUIController stateHandler;
@@ -73,12 +73,12 @@ public class PhysicalAttendantSimulatorWindow implements ActionListener {
 
 	private JFrame frame;
 
-	public PhysicalAttendantSimulatorWindow(Checkout c, GUIController s) {
+	public GUIPhysicalAttendantSimulatorWindow(Checkout c, GUIController s) {
 		this.checkout = c;
 		this.stateHandler = s;
 	}
 	
-	public PhysicalAttendantSimulatorWindow() {
+	public GUIPhysicalAttendantSimulatorWindow() {
 		
 	}
 

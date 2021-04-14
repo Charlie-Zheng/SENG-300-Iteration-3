@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.Checkout.PayingState;
+import org.lsmr.selfcheckout.control.gui.Pair;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
