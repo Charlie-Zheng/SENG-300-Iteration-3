@@ -13,11 +13,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class EndState implements GUIState {
 
 	private StateHandler<GUIState> stateController;
+	private JLabel duePrintOut;
+	private JLabel paidPrintOut;
 
 	/**
 	 * 
@@ -33,8 +36,9 @@ public class EndState implements GUIState {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
-
+		if (data instanceof BalanceStateData) {
+			duePrintOut.setText(String.format("Change Due: $%.2f", - ((float) data.obtain())));
+		}
 	}
 
 	/**
@@ -92,14 +96,14 @@ public class EndState implements GUIState {
 		thanksPanel.add(thanks);
 
 		// change due panel
-		JLabel duePrintOut = new JLabel();
+		duePrintOut = new JLabel();
 		duePrintOut.setText("Change Due: $0.00");
 		duePrintOut.setFont(new Font("Arial", Font.BOLD, 40));
 		JPanel duePanel = new JPanel();
 		duePanel.add(duePrintOut);
 
 		// amount paid panel
-		JLabel paidPrintOut = new JLabel();
+		paidPrintOut = new JLabel();
 		paidPrintOut.setText("Amount Paid: $0.00");
 		paidPrintOut.setFont(new Font("Arial", Font.BOLD, 30));
 		JPanel paidPanel = new JPanel();
@@ -112,6 +116,9 @@ public class EndState implements GUIState {
 		mainPanel.add(thanksPanel);
 		mainPanel.add(duePanel);
 		mainPanel.add(paidPanel);
+
+		// r equest balance
+		stateController.notifyListeners(new BalanceStateData());
 
 		return mainPanel;
 	}

@@ -44,6 +44,10 @@ public class CashPaymentState implements GUIState, ActionListener {
 		if (data instanceof BalanceStateData) {
 			cost = (float) data.obtain();
 			duePrintOut.setText(String.format("Amount Due: $%.2f", cost));
+
+			if (cost <= 0) {
+				stateController.setState(new EndState());
+			}
 		}
 	}
 

@@ -6,6 +6,7 @@ package org.lsmr.selfcheckout.control;
 import java.util.ArrayList;
 
 import org.lsmr.selfcheckout.PriceLookupCode;
+import org.lsmr.selfcheckout.control.Checkout.PayingState;
 import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
@@ -17,6 +18,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.LookupStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.PurchasingStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantLogInData;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.RequestPricePerBagData;
@@ -115,7 +117,16 @@ public class GUIupdateListener implements StateUpdateListener {
 			}else {
 				c.guiController.notifyDataUpdate(data);
 			}
-			
+
+		} else if (data instanceof PurchasingStateData) {
+			// obtain method of payment
+			PayingState state = (PayingState) data.obtain();
+			try {
+				c.startPayment(state);
+			} catch (CheckoutException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -37,6 +37,10 @@ public class CardPaymentState implements GUIState {
 		if (data instanceof BalanceStateData) {
 			cost = (float) data.obtain();
 			duePrintOut.setText(String.format("Amount Due: $%.2f", cost));
+
+			if (cost == 0) {
+				stateController.setState(new EndState());
+			}
 		}
 	}
 
