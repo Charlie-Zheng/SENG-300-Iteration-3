@@ -26,6 +26,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.InsertPLUProductData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
 
@@ -66,10 +67,11 @@ public class KeypadState implements GUIState, ActionListener {
 			inputProduct = (PLUCodedProduct) data.obtain();
 			stateController.notifyListeners(new InsertPLUProductData(inputProduct));
 			stateController.setState(new BuyingState()); // TEMP: just to see populated data
-		} /*else if (data instanceof BalanceStateData) {
+		
+		} else if (data instanceof ScaleStateData) {
 			changeWeight = (float) data.obtain();
-			weight.setText(String.format("Amount Due: $%.2f", changeWeight));
-		}*/
+			weight.setText(String.format("$%.3f kg", changeWeight));
+		}
 	}
 
 	/**
@@ -170,7 +172,7 @@ public class KeypadState implements GUIState, ActionListener {
 
 		// amount due panel
 		weight = new JLabel();
-		weight.setText("0.00 kg");
+		weight.setText("0.000 kg");
 		weight.setFont(new Font("Arial", Font.BOLD, 50));
 		goBackPanel.add(weight, BorderLayout.WEST); // for margins
 

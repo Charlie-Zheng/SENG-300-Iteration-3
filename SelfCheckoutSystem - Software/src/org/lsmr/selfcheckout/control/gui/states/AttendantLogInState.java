@@ -286,7 +286,6 @@ public class AttendantLogInState implements GUIState, ActionListener {
 			} else if (buttonText.equals("OK")) {
 				stateController.notifyListeners(new AttendantLogInData(Integer.parseInt(employeeNumber.getText()), Integer.parseInt(pin.getText())));
 
-
 				//else pop up screen with wrong pin message?
 			
 		} else if (buttonText.equals("Delete")) {
