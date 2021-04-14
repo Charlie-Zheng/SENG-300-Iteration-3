@@ -103,6 +103,9 @@ public class Checkout {
 
 		BaggingAreaWeightUpdateListener weightListener = new BaggingAreaWeightUpdateListener(this);
 		checkoutStation.baggingArea.register(weightListener);
+		
+		ScaleWeightUpdateListener scaleListener = new ScaleWeightUpdateListener(this);
+		checkoutStation.scale.register(scaleListener);
 
 		checkoutStation.coinSlot.disable();
 		CoinValidatorBalanceUpdateListener coinListener = new CoinValidatorBalanceUpdateListener(this);
