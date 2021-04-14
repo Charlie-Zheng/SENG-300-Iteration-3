@@ -88,18 +88,8 @@ public class AttendantLogInState implements GUIState, ActionListener {
 			if(((AttendantLogInData) data).isSuccessful()) {
 				stateController.setState(new AttendantState());
 			}else {
-				GUIUtils
-					.begin(employeeNumber)
-					.setError()
-					.waitFor(0.4f)
-					.restore()
-					.execute();
-				GUIUtils
-					.begin(pin)
-					.setError()
-					.waitFor(0.4f)
-					.restore()
-					.execute();
+				GUIUtils.flashError(employeeNumber);
+				GUIUtils.flashError(pin);
 
 			}
 
