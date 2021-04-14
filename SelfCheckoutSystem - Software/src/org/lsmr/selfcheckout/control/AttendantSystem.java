@@ -93,10 +93,13 @@ public class AttendantSystem {
 	 */
 	public void removeItem(int stationNum, ReceiptItem itemToRemove) throws CheckoutException {
 		if (this.state == ConsoleState.LoggedIn) {
-			Checkout station = this.stations.get(stationNum);
-			if (station.equals(null))
+			try {
+				Checkout station = this.stations.get(stationNum);
+				station.deleteProductAdded(itemToRemove);
+			}catch(IndexOutOfBoundsException e) {
 				throw new CheckoutException("This station does not exist!");
-			station.deleteProductAdded(itemToRemove);
+			}			
+			
 		}
 	}
 
@@ -136,12 +139,15 @@ public class AttendantSystem {
 	 */
 	public void approveWeight(int stationNum) throws CheckoutException {
 		if (this.state == ConsoleState.LoggedIn) {
-			Checkout station = this.stations.get(stationNum);
-			if (station.equals(null))
+			try {
+				Checkout station = this.stations.get(stationNum);
+				if (station.isPaused()) {
+					station.approveWeightDiscrepency();
+				}
+			}catch(IndexOutOfBoundsException e) {
 				throw new CheckoutException("This station does not exist!");
-			if (station.isPaused()) {
-				station.approveWeightDiscrepency();
-			}
+			}			
+			
 			// if station is blocked from a weight discrepancy remove block and set station state to Scanning
 		}
 	}
@@ -157,11 +163,12 @@ public class AttendantSystem {
 	 */
 	public void startUp(int stationNum) throws CheckoutException {
 		if (this.state == ConsoleState.LoggedIn) {
-			Checkout station = this.stations.get(stationNum);
-			if (station.equals(null))
+			try {
+				Checkout station = this.stations.get(stationNum);
+				station.powerOn();
+			}catch(IndexOutOfBoundsException e) {
 				throw new CheckoutException("This station does not exist!");
-			station.powerOn();
-			// Change state of checkout to ON? Might need to add a new state for checkout to determine if it is on or not. 
+			}			
 		}
 	}
 
@@ -176,11 +183,13 @@ public class AttendantSystem {
 	 */
 	public void shutDown(int stationNum) throws CheckoutException {
 		if (this.state == ConsoleState.LoggedIn) {
-			Checkout station = this.stations.get(stationNum);
-			if (station.equals(null))
+			try {
+				Checkout station = this.stations.get(stationNum);
+				station.shutDown();
+			}catch(IndexOutOfBoundsException e) {
 				throw new CheckoutException("This station does not exist!");
-			station.shutDown();
-			// Change state of checkout to OFF? Might need to add a new state for checkout to determine if it is on or not. 
+			}			
+	
 		}
 	}
 
@@ -194,11 +203,14 @@ public class AttendantSystem {
 	 */
 	public void approveDoNotBagLastItem(int stationNum) throws CheckoutException {
 		if (this.state == ConsoleState.LoggedIn) {
-			Checkout station = this.stations.get(stationNum);
-			if (station != null)
-				station.doNotBagLastItem();
-			else
+			try {
+				Checkout station = this.stations.get(stationNum);
+				if (station != null)
+					station.doNotBagLastItem();
+			}catch(IndexOutOfBoundsException e) {
 				throw new CheckoutException("This station does not exist!");
+			}
+			
 		}
 	}
 

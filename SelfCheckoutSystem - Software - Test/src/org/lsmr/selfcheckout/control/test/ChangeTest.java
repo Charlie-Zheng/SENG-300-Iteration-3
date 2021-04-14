@@ -153,6 +153,7 @@ public class ChangeTest extends BaseTest {
 				c.emitChange();
 				c.getChangeFromCoinTray();
 				c.getChangeFromBanknoteSlots();
+				c.removeRejectedBanknote();
 				multiTestAssertEquals(true, c.getBalance().compareTo(new BigDecimal(0)) >= 0);
 
 			} catch (OverloadException | CheckoutException | EmptyException | DisabledException e) {

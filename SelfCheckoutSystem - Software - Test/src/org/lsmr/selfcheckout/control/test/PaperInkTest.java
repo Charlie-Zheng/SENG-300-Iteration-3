@@ -78,10 +78,11 @@ public class PaperInkTest extends BaseTest {
 	 * Correctly loaded paper, ink and receipt information allows 
 	 * the software to print a receipt (containing 1 barcoded item
 	 * and 1 PLU item)
+	 * @throws OverloadException 
 	 * 
 	 */
 	@Test
-	public void ReceiptPrintNormalTest() {
+	public void ReceiptPrintNormalTest() throws OverloadException {
 		for (int i = 0; i < REPEAT; i++) {
 			c.reset();
 			Card card = new Card("gift", "1111222233334444", "John Doe", "123", "0909", true, true);
@@ -94,15 +95,23 @@ public class PaperInkTest extends BaseTest {
 				BarcodedItem item = new BarcodedItem(new Barcode("12345"), 123);
 				c.scanItem(item);
 				c.addItemToBaggingArea(item);
+				
+				PLUCodedItem item1 = new PLUCodedItem(new PriceLookupCode("12345"), 100);
+				c.addItemToScale(item1);
+				
+				
 				c.enterPLUCode(new PriceLookupCode("12345"));
+				c.removeItemFromScale(item1);
+				
 				c.startPayment(PayingState.Gift);
 				c.payByTappingCard(card);
 				c.printReceipt();
 				c.removeReceipt();
 				success();
-			} catch (OverloadException | CheckoutException e) {
+			} catch (CheckoutException e) {
 				fail();
 			}
+			
 
 			CardIssuerDatabase.CREDIT_ISSUER_DATABASE.clear();
 			CardIssuerDatabase.DEBIT_ISSUER_DATABASE.clear();

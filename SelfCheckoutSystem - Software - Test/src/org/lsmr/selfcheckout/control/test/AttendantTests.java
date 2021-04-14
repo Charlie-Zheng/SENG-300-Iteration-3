@@ -1,24 +1,25 @@
 package org.lsmr.selfcheckout.control.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashMap;
 
 import org.junit.Test;
+import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Barcode;
-import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Coin;
+import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.control.Attendant;
 import org.lsmr.selfcheckout.control.AttendantSystem;
-import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.CheckoutException;
 import org.lsmr.selfcheckout.control.ReceiptItem;
-import org.lsmr.selfcheckout.devices.CoinStorageUnit;
-import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SimulationException;
+import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
+import org.lsmr.selfcheckout.products.PLUCodedProduct;
 import org.lsmr.selfcheckout.products.Product;
 
 public class AttendantTests extends BaseTest {
@@ -280,4 +281,213 @@ public class AttendantTests extends BaseTest {
 		
 	}
 		
+	
+	@Test
+	public void attendantBlocksStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			sys.blockCheckout(stationNum);
+			multiTestAssertEquals("Paused",c.getState());
+			
+		}
+	}
+	
+	@Test
+	public void attendantBlocksStationNotLoggedIn() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			String preBlock = c.getState();
+			sys.blockCheckout(stationNum);
+			String postBlock = c.getState();
+			multiTestAssertEquals(preBlock,postBlock);
+			
+		}
+	}
+	
+	
+	@Test(expected = CheckoutException.class)
+	public void attendantBlocksInvalidStation() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+
+			sys.blockCheckout(2);
+			
+		}
+	}
+	
+
+	
+	@Test
+	public void attendantSearchesProductNotLoggedIn() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			PriceLookupCode lkup = new PriceLookupCode("5420");
+			PLUCodedProduct p = new PLUCodedProduct(lkup, "Fake test item", BigDecimal.valueOf(5));
+			ArrayList<Product> results = sys.searchProductDatabase("test item");
+			assertEquals(null, results);	
+	
+		}
+	}		
+	
+	@Test
+	public void attendantSearchesPLUProduct() throws CheckoutException {
+	
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+			PriceLookupCode plk = new PriceLookupCode("5542");
+			PLUCodedProduct fakePProduct = new PLUCodedProduct(plk, "Fake PLU Product with price of $5", new BigDecimal(5.00));
+			ProductDatabases.PLU_PRODUCT_DATABASE.put(plk,fakePProduct);
+			ArrayList<Product> results = sys.searchProductDatabase("Fake plu");
+			assertEquals(fakePProduct.hashCode(), results.get(0).hashCode());
+		
+	}
+
+	@Test
+	public void attendantSearchesBarcodedProduct() throws CheckoutException {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num,2002);
+			Barcode bc = new Barcode("8830");
+			BarcodedProduct fakeBProduct = new BarcodedProduct(bc, "Fake Barcoded Product with price of $5", new BigDecimal(5.00));
+			ProductDatabases.BARCODED_PRODUCT_DATABASE.put(bc,fakeBProduct);
+			ArrayList<Product> results = sys.searchProductDatabase("Fake Barcoded");
+			assertEquals(fakeBProduct.hashCode(), results.get(0).hashCode());
+		
+	}
+	
+	@Test
+	public void attendantRefillsCoinDispenser() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Coin dolla = new Coin(new BigDecimal("1.00"), Currency.getInstance("CAD"));
+			java.util.List<Coin> Coins = new ArrayList<Coin>();
+			Coins.add(dolla);
+			java.util.List<Coin> unadded = c.refillCoinDispenser(Coins);
+			assertEquals("[]",unadded.toString()); //empty list since all coins have been loaded successfully
+		}
+	}
+	
+	@Test
+	public void attendantRefillsCoinDispenserWithInvalidDenomination() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Coin dolla = new Coin(new BigDecimal("3"), Currency.getInstance("CAD"));
+			java.util.List<Coin> Coins = new ArrayList<Coin>();
+			Coins.add(dolla);
+			java.util.List<Coin> unadded = c.refillCoinDispenser(Coins);
+			assertEquals("[3 CAD]",unadded.toString());
+		}
+	}
+	@Test
+	public void attendantRefillsCoinDispenserOverCapacity() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Coin dolla = new Coin(new BigDecimal("1.00"), Currency.getInstance("CAD"));
+			java.util.List<Coin> Coins = new ArrayList<Coin>();
+			Coins.add(dolla);
+			while (i<500) {c.refillCoinDispenser(Coins); i++; }	
+			java.util.List<Coin> unadded = c.refillCoinDispenser(Coins);
+			assertEquals("[1.00 CAD]",unadded.toString());
+		}
+	}
+	
+	
+	@Test
+	public void attendantRefillsBanknoteDispenser() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Banknote bill = new Banknote(5, Currency.getInstance("CAD"));
+			java.util.List<Banknote> Banknotes = new ArrayList<Banknote>();
+			Banknotes.add(bill);
+			java.util.List<Banknote> unadded = c.refillBanknoteDispenser(Banknotes);
+			assertEquals("[]",unadded.toString()); //empty list since all coins have been loaded successfully
+		}
+	}
+	
+	@Test
+	public void attendantRefillsBanknoteDispenserWithInvalidDenomination() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Banknote bill = new Banknote(500, Currency.getInstance("CAD"));
+			java.util.List<Banknote> Banknotes = new ArrayList<Banknote>();
+			Banknotes.add(bill);
+			java.util.List<Banknote> unadded = c.refillBanknoteDispenser(Banknotes);
+			assertEquals("[500 CAD]",unadded.toString()); 
+		}
+	}
+	@Test
+	public void attendantRefillsBanknoteDispenserOverCapacity() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Banknote bill = new Banknote(5, Currency.getInstance("CAD"));
+			java.util.List<Banknote> Banknotes = new ArrayList<Banknote>();
+			Banknotes.add(bill);
+			while (i<150) {c.refillBanknoteDispenser(Banknotes); i++; }	
+			java.util.List<Banknote> unadded = c.refillBanknoteDispenser(Banknotes);
+			assertEquals("[5 CAD]",unadded.toString());
+		}
+	}
 }

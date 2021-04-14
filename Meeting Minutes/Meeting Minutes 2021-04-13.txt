@@ -1,0 +1,20 @@
+Meeting Minutes: Discord Meeting April 13, 2021
+
+Attendance:
+Everyone
+
+Goals this meeting: Progress report:
+
+Testing team:
+	All tests are done
+	Checking for coverage now
+
+Diagrams:
+	All diagrams are done
+
+GUI:
+	Still working on it. Demo'd the working parts (Scanning, attendant log in, membership log in)
+	
+
+Next meeting:
+	General meeting:	April 14, 21:30 MST
