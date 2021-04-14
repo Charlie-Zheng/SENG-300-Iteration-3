@@ -83,6 +83,7 @@ public class Checkout {
 	private int paperTotal;
 	private ArrayList<ReceiptItem> productsAdded; //Wanna keep track of what was scanned
 	private ArrayList<Item> itemsAdded = new ArrayList<Item>(); //keep track of items added so they can be removed
+	private ArrayList<Item> itemsOnScale = new ArrayList<Item>(); //keep track of items added so they can be removed
 	private String loggedInMemberName;
 	private String loggedInMemberNumber;
 	private CheckoutState state;
@@ -103,7 +104,7 @@ public class Checkout {
 
 		BaggingAreaWeightUpdateListener weightListener = new BaggingAreaWeightUpdateListener(this);
 		checkoutStation.baggingArea.register(weightListener);
-		
+
 		ScaleWeightUpdateListener scaleListener = new ScaleWeightUpdateListener(this);
 		checkoutStation.scale.register(scaleListener);
 
@@ -147,6 +148,15 @@ public class Checkout {
 	 */
 	public void reset() {
 		removePurchasedItemFromBaggingArea();
+
+		for (Item item : itemsOnScale) {
+			try {
+				checkoutStation.scale.remove(item);
+			} catch (SimulationException e) {
+
+			}
+
+		}
 		checkoutStation.banknoteInput.removeDanglingBanknote();
 		checkoutStation.banknoteStorage.unload();
 		checkoutStation.cardReader.remove();
@@ -387,6 +397,7 @@ public class Checkout {
 	 * @param item
 	 */
 	public void addItemToScale(Item item) {
+		itemsOnScale.add(item);
 		checkoutStation.scale.add(item);
 	}
 
@@ -399,6 +410,7 @@ public class Checkout {
 	 */
 	public void removeItemFromScale(Item item) throws SimulationException {
 		checkoutStation.scale.remove(item);
+		itemsOnScale.remove(item);
 	}
 
 	/**

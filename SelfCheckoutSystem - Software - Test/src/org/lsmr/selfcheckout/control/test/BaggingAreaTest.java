@@ -170,7 +170,6 @@ public class BaggingAreaTest extends BaseTest {
 			PLUCodedItem item = new PLUCodedItem(plc, 123);
 			c.addItemToScale(item);
 			multiTestAssertEquals(true, Double.isNaN(c.getWeightOnScale()));
-			c.enterPLUCode(plc);
 			c.removeItemFromScale(item);
 			try {
 				c.addItemToBaggingArea(item);
