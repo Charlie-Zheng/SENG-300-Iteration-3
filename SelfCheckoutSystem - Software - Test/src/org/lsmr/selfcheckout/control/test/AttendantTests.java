@@ -113,10 +113,12 @@ public class AttendantTests extends BaseTest {
 			Attendant br = new Attendant(num, "Brian",2002);
 			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
 			AttendantSystem sys = new AttendantSystem(attendants);	
+			sys.login(num, 2002);
 			int stationNum = sys.register(c);
+			sys.shutDown(stationNum);
+			sys.logout();
 			sys.startUp(stationNum);
-			
-			 // exception to be made
+			multiTestAssertEquals("Off", c.getpState());
 			sys.shutDown(stationNum);
 
 		}
@@ -147,7 +149,7 @@ public class AttendantTests extends BaseTest {
 			AttendantSystem sys = new AttendantSystem(attendants);	
 			int stationNum = sys.register(c);
 			sys.shutDown(stationNum);
-			 // exception to be made
+			multiTestAssertEquals("On", c.getpState());
 		}
 	}
 	
