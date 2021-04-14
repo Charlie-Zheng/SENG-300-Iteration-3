@@ -111,7 +111,6 @@ public class MainClass {
 				membershipsOf(new String[][] { { "111122223333", "Robert James Walker" } }));
 		try {
 			employees.put(1234, new Attendant(1234, "James", 1234));
-			employees.put(0000, new Attendant(0000, "Zeroes", 0000));
 			employees.put(1111, new Attendant(1111, "Ones", 1111));
 		} catch (CheckoutException e) {
 		}
