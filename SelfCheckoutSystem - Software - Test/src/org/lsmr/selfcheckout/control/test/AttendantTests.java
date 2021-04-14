@@ -420,7 +420,24 @@ public class AttendantTests extends BaseTest {
 			assertEquals("[3 CAD]",unadded.toString());
 		}
 	}
-	
+	@Test
+	public void attendantRefillsCoinDispenserOverCapacity() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Coin dolla = new Coin(new BigDecimal("1.00"), Currency.getInstance("CAD"));
+			java.util.List<Coin> Coins = new ArrayList<Coin>();
+			Coins.add(dolla);
+			while (i<500) {c.refillCoinDispenser(Coins); i++; }	
+			java.util.List<Coin> unadded = c.refillCoinDispenser(Coins);
+			assertEquals("[1.00 CAD]",unadded.toString());
+		}
+	}
 	
 	
 	@Test
@@ -458,5 +475,22 @@ public class AttendantTests extends BaseTest {
 			assertEquals("[500 CAD]",unadded.toString()); 
 		}
 	}
-	
+	@Test
+	public void attendantRefillsBanknoteDispenserOverCapacity() throws CheckoutException {
+		for (int i = 0; i < REPEAT; i++) {
+			c.reset();
+			Integer num = new Integer(1019);
+			Attendant br = new Attendant(num, "Brian",2002);
+			HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(num, br);}};
+			AttendantSystem sys = new AttendantSystem(attendants);	
+			int stationNum = sys.register(c);
+			sys.login(num,2002);
+			Banknote bill = new Banknote(5, Currency.getInstance("CAD"));
+			java.util.List<Banknote> Banknotes = new ArrayList<Banknote>();
+			Banknotes.add(bill);
+			while (i<150) {c.refillBanknoteDispenser(Banknotes); i++; }	
+			java.util.List<Banknote> unadded = c.refillBanknoteDispenser(Banknotes);
+			assertEquals("[5 CAD]",unadded.toString());
+		}
+	}
 }
