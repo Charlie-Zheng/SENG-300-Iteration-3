@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantLogInData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
@@ -155,8 +156,13 @@ public class AttendantLogInState implements GUIState, ActionListener {
 
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {
 				activeTextField = employeeNumber;
+				GUIUtils.begin(activeTextField)
+					.setBgColor(new Color(80, 255, 80))
+					.waitFor(0.3f)
+					.setBgColor(Color.white)
+					.execute();
 				
 			}
 			
@@ -176,9 +182,13 @@ public class AttendantLogInState implements GUIState, ActionListener {
 
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {
 				activeTextField = pin;
-				
+				GUIUtils.begin(activeTextField)
+				.setBgColor(new Color(80, 255, 80))
+				.waitFor(0.3f)
+				.setBgColor(Color.white)
+				.execute();
 			}
 			
 		});
