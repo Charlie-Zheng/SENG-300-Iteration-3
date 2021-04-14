@@ -101,6 +101,7 @@ public class PaperInkTest extends BaseTest {
 				
 				
 				c.enterPLUCode(new PriceLookupCode("12345"));
+				c.addItemToBaggingArea(item1);
 				c.removeItemFromScale(item1);
 				
 				c.startPayment(PayingState.Gift);
