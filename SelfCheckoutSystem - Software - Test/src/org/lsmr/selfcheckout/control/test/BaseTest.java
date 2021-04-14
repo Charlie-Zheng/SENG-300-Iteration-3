@@ -5,11 +5,14 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Currency;
+import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.PriceLookupCode;
+import org.lsmr.selfcheckout.control.Attendant;
+import org.lsmr.selfcheckout.control.AttendantSystem;
 import org.lsmr.selfcheckout.control.Checkout;
 import org.lsmr.selfcheckout.control.MembershipCardDatabase;
 import org.lsmr.selfcheckout.control.ProductWeightDatabase;
@@ -34,7 +37,7 @@ public abstract class BaseTest {
 	protected int successfulTests;
 	protected final int REPEAT = 100;
 	protected Checkout c;
-
+	protected AttendantSystem sys;
 	/**
 	 * Setup method that is invoked before each test method, initializing product
 	 * database. Resets the number of successful and total tests
@@ -44,6 +47,11 @@ public abstract class BaseTest {
 	@Before
 	public void setUp() throws Exception {
 		c = makeNewDefaultCheckout();
+		
+		Attendant br = new Attendant(1019, "Brian",2002);
+		HashMap<Integer, Attendant> attendants = new HashMap<Integer,Attendant>(){{put(1019, br);}};
+		sys = new AttendantSystem(attendants);	
+		sys.startUp(sys.register(c));
 		initBarcodeProductDatabase();
 		initMembershipCardDatabase();
 		initPLUProductDatabase();
@@ -167,10 +175,11 @@ public abstract class BaseTest {
 		}
 		totalTests++;
 	}
-	 /**
-	 * Check if the actual is equal to the excepted using the
-	 * String.compareTo() method. If it is equal, a successful test is
-	 * declared, otherwise a failed test is declared
+
+	/**
+	 * Check if the actual is equal to the excepted using the String.compareTo()
+	 * method. If it is equal, a successful test is declared, otherwise a failed
+	 * test is declared
 	 * 
 	 * @param expected
 	 *            The expected value
@@ -178,11 +187,12 @@ public abstract class BaseTest {
 	 *            The actual value
 	 */
 	protected void multiTestAssertEquals(String expected, String actual) {
-		if(expected.compareTo(actual) == 0){
+		if (expected.compareTo(actual) == 0) {
 			successfulTests++;
 		}
 		totalTests++;
 	}
+
 	/**
 	 * Declares a successful test
 	 */
@@ -231,28 +241,28 @@ public abstract class BaseTest {
 	}
 
 	/**
-	 * Clears the product database and initializes it with 3 products
-	 * and their PLUCode.
+	 * Clears the product database and initializes it with 3 products and their
+	 * PLUCode.
 	 * <p>
 	 * The prices are exact.
 	 */
 	protected void initPLUProductDatabase() {
-        PriceLookupCode temp;
-        ProductDatabases.PLU_PRODUCT_DATABASE.clear();
+		PriceLookupCode temp;
+		ProductDatabases.PLU_PRODUCT_DATABASE.clear();
 
-        // An product with a PLUCode of 12345 and price $123.45 per kg
-        ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("12345"),
-                new PLUCodedProduct(temp, "Product with barcode of 12345 and price $123.45", new BigDecimal("123.45")));
+		// An product with a PLUCode of 12345 and price $123.45 per kg
+		ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("12345"),
+				new PLUCodedProduct(temp, "Product with barcode of 12345 and price $123.45", new BigDecimal("123.45")));
 
-        // A product with a PLUCode of 98765 and price $98.76 per kg
-        ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("98765"), new PLUCodedProduct(temp,
-                "Product with barcode of 98765 and price $98.76", new BigDecimal("98.76")));
+		// A product with a PLUCode of 98765 and price $98.76 per kg
+		ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("98765"),
+				new PLUCodedProduct(temp, "Product with barcode of 98765 and price $98.76", new BigDecimal("98.76")));
 
-        // A product with a PLUCode of 30040 and price $3.97 per kg
-        ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("30040"),
-                new PLUCodedProduct(temp, "Product with barcode of 30040 and price $3.97", new BigDecimal("3.97")));
-    } 
-	
+		// A product with a PLUCode of 30040 and price $3.97 per kg
+		ProductDatabases.PLU_PRODUCT_DATABASE.put(temp = new PriceLookupCode("30040"),
+				new PLUCodedProduct(temp, "Product with barcode of 30040 and price $3.97", new BigDecimal("3.97")));
+	}
+
 	/**
 	 * Clears the membership card database and initializes it with the following 3
 	 * membership numbers

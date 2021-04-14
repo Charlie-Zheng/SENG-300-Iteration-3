@@ -60,12 +60,8 @@ import org.lsmr.selfcheckout.products.Product;
  */
 public class Checkout {
 	private enum CheckoutState {
-		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done, On, Off
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done, Off
 	};
-
-	private enum PowerState {
-		On, Off
-	}
 
 	public enum PayingState {
 		Cash, Credit, Debit, Gift
@@ -90,7 +86,6 @@ public class Checkout {
 	private String loggedInMemberName;
 	private String loggedInMemberNumber;
 	private CheckoutState state;
-	private PowerState pState;
 	private double weightOnBaggingArea;
 	private double weightOnScanScale;
 	private AttendantSystem attendantSystem;
@@ -1280,7 +1275,11 @@ public class Checkout {
 	}
 
 	public String getpState() {
-		return this.pState.toString();
+		if (state == CheckoutState.Off) {
+			return "Off";
+		} else {
+			return "On";
+		}
 	}
 
 	public int getPaperTotal() {
@@ -1300,11 +1299,11 @@ public class Checkout {
 	}
 
 	protected void shutDown() {
-		this.pState = PowerState.Off;
+		state = CheckoutState.Off;
 	}
 
 	protected void powerOn() {
-		this.pState = PowerState.On;
+		state = CheckoutState.Scanning;
 	}
 
 	protected void approveWeightDiscrepency() {
