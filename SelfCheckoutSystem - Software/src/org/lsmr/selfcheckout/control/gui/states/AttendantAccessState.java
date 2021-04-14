@@ -395,7 +395,7 @@ public class AttendantAccessState implements GUIState, ActionListener {
 			stateController.setState(new BlockState());
 			
 		} else if(button == unblock) {
-			stateController.setState(new BlockState());
+			stateController.setState(new StartState());
 			
 		} else if (button == look) {
 			stateController.setState(new AttendantLookUpState());
