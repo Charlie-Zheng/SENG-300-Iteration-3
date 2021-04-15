@@ -147,7 +147,7 @@ public class EndState implements GUIState {
 		mainPanel.add(removePanel);
 		mainPanel.add(thanksPanel);
 		mainPanel.add(duePanel);
-		mainPanel.add(paidPanel);
+	//	mainPanel.add(paidPanel);
 
 		// request balance
 		stateController.notifyListeners(new BalanceStateData());

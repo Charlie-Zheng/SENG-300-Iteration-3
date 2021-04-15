@@ -23,6 +23,7 @@ public class BagItemState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
 	private JButton skipBag;
+	private JButton logIn;
 
 	/**
 	 * 
@@ -105,11 +106,23 @@ public class BagItemState implements GUIState, ActionListener {
 		skipBag.setMinimumSize(skipSize);
 		skipBag.setMaximumSize(skipSize);
 		skipBagPanel.add(skipBag, BorderLayout.EAST);
+		
+		Dimension buttonSize = new Dimension(250, 75);
+		JPanel logInPanel = new JPanel();
+		logInPanel.setLayout(new BorderLayout());
+		logIn = new JButton("Log In");
+		logIn.setFont(new Font("Arial", Font.BOLD, 40));
+		logIn.addActionListener(this);
+		logIn.setSize(buttonSize);
+		logIn.setPreferredSize(buttonSize);
+		logIn.setMinimumSize(buttonSize);
+		logIn.setMaximumSize(buttonSize);
+		logInPanel.add(logIn, BorderLayout.EAST);
 
 		mainPanel.add(topPanel);
 		mainPanel.add(wordPanel);
 		mainPanel.add(baggingPanel);
-		//	mainPanel.add(skipBagPanel, BorderLayout.EAST);
+		mainPanel.add(logInPanel, BorderLayout.EAST);
 
 		return mainPanel;
 	}
@@ -136,6 +149,8 @@ public class BagItemState implements GUIState, ActionListener {
 		if (button == skipBag) {
 			//where we have to connect to code for scale weight??
 			stateController.setState(new BuyingState());
+		} else if(button == logIn) {
+			stateController.setState(new AttendantLogInState());
 		}
 	}
 
