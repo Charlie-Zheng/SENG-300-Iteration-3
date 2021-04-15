@@ -296,7 +296,17 @@ public class AttendantLogInState implements GUIState, ActionListener {
 				activeTextField.setText(activeTextField.getText() + buttonText);
 				
 			} else if (buttonText.equals("OK")) {
-				stateController.notifyListeners(new AttendantLogInData(Integer.parseInt(employeeNumber.getText()), Integer.parseInt(pin.getText())));
+				String numberStr = employeeNumber.getText();
+				String pinStr = pin.getText();
+
+				// -1 because this value isn't possible in the sign in
+				if (numberStr.length() == 0) {
+					numberStr = "-1";
+				}
+				if (pinStr.length() == 0) {
+					pinStr = "-1";
+				}
+				stateController.notifyListeners(new AttendantLogInData(Integer.parseInt(numberStr), Integer.parseInt(pinStr)));
 
 				//else pop up screen with wrong pin message?
 			
