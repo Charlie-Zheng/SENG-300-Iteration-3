@@ -1,5 +1,7 @@
 package org.lsmr.selfcheckout.control;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -172,6 +174,14 @@ public class GUIMainClass {
 		GUIController guiController = new GUIController(station.screen.getFrame());
 		guiController.addStateUpdateListener(guiUpdateListener); // so the checkout station can know of any GUI updates
 		guiController.setState(new AttendantLogInState());
+
+		// setup frame to terminate the whole program when closed
+		station.screen.getFrame().addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
 
 		c.guiController = guiController;
 
