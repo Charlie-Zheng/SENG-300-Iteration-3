@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import org.lsmr.selfcheckout.control.GUIPhysicalAttendantSimulatorWindow;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.AttendantLogInData;
+import org.lsmr.selfcheckout.control.gui.statedata.BlockStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class BlockState implements GUIState, ActionListener {
@@ -32,8 +33,7 @@ public class BlockState implements GUIState, ActionListener {
 	@Override
 	public void init(StateHandler<GUIState> stateController, ReducedState reducedState) {
 		this.stateController = stateController;
-		attendantWindow = new GUIPhysicalAttendantSimulatorWindow();
-		attendantWindow.createWindow();
+		stateController.notifyListeners(new BlockStateData(true));
 	}
 
 	/**
@@ -99,6 +99,7 @@ public class BlockState implements GUIState, ActionListener {
 		JButton button = (JButton) arg0.getSource();
 		
 		if(button == logIn) {
+			stateController.notifyListeners(new BlockStateData(false));
 			stateController.setState(new AttendantLogInState());
 		}
 		

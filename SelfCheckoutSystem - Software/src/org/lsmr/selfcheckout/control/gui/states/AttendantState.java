@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -26,14 +27,17 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 
 import org.lsmr.selfcheckout.control.ProductTableModel;
+import org.lsmr.selfcheckout.control.ReceiptItem;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.ScannedItemsRequestData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class AttendantState implements GUIState, ActionListener {
 
 	private StateHandler<GUIState> stateController;
 
-	private ProductTableModel tableModel;
+	private ProductTableModel tableModel = new ProductTableModel();
 	//	JButton tableButton;
 	private JButton logOut;
 
@@ -56,8 +60,10 @@ public class AttendantState implements GUIState, ActionListener {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		// TODO Auto-generated method stub
-
+		if (data instanceof ListProductStateData) {
+			List<ReceiptItem> items = ((ListProductStateData) data).obtain();
+			tableModel.setProductScannedList(items);
+		}
 	}
 
 	/**
@@ -86,7 +92,7 @@ public class AttendantState implements GUIState, ActionListener {
 		words.setBorder(new LineBorder(Color.RED.darker()));
 		wordPanel.add(words);
 
-		Dimension tableSize = new Dimension(394, 130);
+		Dimension tableSize = new Dimension(900, 130);
 
 		JPanel stationsPanel = new JPanel();
 		stationsPanel.setLayout(new GridLayout(3, 2, 150, 30));
@@ -129,6 +135,7 @@ public class AttendantState implements GUIState, ActionListener {
 
 			tableButton.add(buttonLabel, BorderLayout.NORTH);
 			if(activeMachines[i]) {
+				// wrap it in a container so the table can be resized
 				tableButton.add(new JScrollPane(scannedTable), BorderLayout.SOUTH);
 			} else {
 				tableButton.add(disabledImgLabel, BorderLayout.SOUTH);
@@ -172,6 +179,10 @@ public class AttendantState implements GUIState, ActionListener {
 		mainPanel.add(stationsPanel, BorderLayout.CENTER);
 		mainPanel.add(logOutPanel, BorderLayout.PAGE_END);
 
+
+		// data update
+		stateController.notifyListeners(new ScannedItemsRequestData());
+
 		return mainPanel;
 	}
 
@@ -179,13 +190,11 @@ public class AttendantState implements GUIState, ActionListener {
 	private JComponent getProductPanel(Dimension tableSize, int rowHeight) {
 		final int scrollBarWidth = 10;
 
-		tableModel = new ProductTableModel();
-
 		// table
 		JTable scannedTable = new JTable(tableModel);
 
 		scannedTable.setRowHeight(rowHeight);
-		scannedTable.setPreferredScrollableViewportSize(scannedTable.getPreferredSize());
+		//scannedTable.setPreferredScrollableViewportSize(scannedTable.getPreferredSize());
 		scannedTable.setFillsViewportHeight(true);
 		scannedTable.setPreferredSize(tableSize);
 		scannedTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

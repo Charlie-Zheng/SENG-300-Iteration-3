@@ -37,6 +37,7 @@ import org.lsmr.selfcheckout.control.gui.statedata.BooleanStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.MemberStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.PurchaseCompleteData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
@@ -124,8 +125,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		this.stateHandler = s;
 	}
 
-	public void createWindow() {
-		frame = new JFrame("Simulator");
+	public JPanel createGUI() {
 		// the main panel
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 30));
@@ -538,69 +538,69 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		Image newMinusImg = minusImg.getScaledInstance(25, 6, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon minusImgResized = new ImageIcon(newMinusImg);
 
-//		minus1g = new JButton();
-//		minus1g.setLayout(new BorderLayout());
-//		JLabel minus1Icon = new JLabel(minusImgResized);
-//		JLabel minus1Label = new JLabel("Remove 1g from Scale", SwingConstants.CENTER);
-//		minus1Label.setFont(new Font("Arial", Font.BOLD, 16));
-//		minus1g.add(minus1Label, BorderLayout.CENTER);
-//		minus1g.add(minus1Icon, BorderLayout.WEST);
-//		minus1g.setSize(buttonSize);
-//		minus1g.setPreferredSize(buttonSize);
-//		minus1g.setMinimumSize(buttonSize);
-//		minus1g.setMaximumSize(buttonSize);
-//		minus1g.addActionListener(this);
-//		JPanel minus1Panel = new JPanel();
-//		minus1Panel.add(minus1g);
-//		removeWeightPanel.add(minus1Panel);
+//				minus1g = new JButton();
+//				minus1g.setLayout(new BorderLayout());
+//				JLabel minus1Icon = new JLabel(minusImgResized);
+//				JLabel minus1Label = new JLabel("Remove 1g from Scale", SwingConstants.CENTER);
+//				minus1Label.setFont(new Font("Arial", Font.BOLD, 16));
+//				minus1g.add(minus1Label, BorderLayout.CENTER);
+//				minus1g.add(minus1Icon, BorderLayout.WEST);
+//				minus1g.setSize(buttonSize);
+//				minus1g.setPreferredSize(buttonSize);
+//				minus1g.setMinimumSize(buttonSize);
+//				minus1g.setMaximumSize(buttonSize);
+//				minus1g.addActionListener(this);
+//				JPanel minus1Panel = new JPanel();
+//				minus1Panel.add(minus1g);
+//				removeWeightPanel.add(minus1Panel);
 //
-//		minus5g = new JButton();
-//		minus5g.setLayout(new BorderLayout());
-//		JLabel minus5Icon = new JLabel(minusImgResized);
-//		JLabel minus5Label = new JLabel("Remove 5g from Scale", SwingConstants.CENTER);
-//		minus5Label.setFont(new Font("Arial", Font.BOLD, 16));
-//		minus5g.add(minus5Label, BorderLayout.CENTER);
-//		minus5g.add(minus5Icon, BorderLayout.WEST);
-//		minus5g.setSize(buttonSize);
-//		minus5g.setPreferredSize(buttonSize);
-//		minus5g.setMinimumSize(buttonSize);
-//		minus5g.setMaximumSize(buttonSize);
-//		minus5g.addActionListener(this);
-//		JPanel minus5Panel = new JPanel();
-//		minus5Panel.add(minus5g);
-//		removeWeightPanel.add(minus5Panel);
+//				minus5g = new JButton();
+//				minus5g.setLayout(new BorderLayout());
+//				JLabel minus5Icon = new JLabel(minusImgResized);
+//				JLabel minus5Label = new JLabel("Remove 5g from Scale", SwingConstants.CENTER);
+//				minus5Label.setFont(new Font("Arial", Font.BOLD, 16));
+//				minus5g.add(minus5Label, BorderLayout.CENTER);
+//				minus5g.add(minus5Icon, BorderLayout.WEST);
+//				minus5g.setSize(buttonSize);
+//				minus5g.setPreferredSize(buttonSize);
+//				minus5g.setMinimumSize(buttonSize);
+//				minus5g.setMaximumSize(buttonSize);
+//				minus5g.addActionListener(this);
+//				JPanel minus5Panel = new JPanel();
+//				minus5Panel.add(minus5g);
+//				removeWeightPanel.add(minus5Panel);
 //
-//		minus10g = new JButton();
-//		minus10g.setLayout(new BorderLayout());
-//		JLabel minus10Icon = new JLabel(minusImgResized);
-//		JLabel minus10Label = new JLabel("Remove 10g from Scale", SwingConstants.CENTER);
-//		minus10Label.setFont(new Font("Arial", Font.BOLD, 16));
-//		minus10g.add(minus10Label, BorderLayout.CENTER);
-//		minus10g.add(minus10Icon, BorderLayout.WEST);
-//		minus10g.setSize(buttonSize);
-//		minus10g.setPreferredSize(buttonSize);
-//		minus10g.setMinimumSize(buttonSize);
-//		minus10g.setMaximumSize(buttonSize);
-//		minus10g.addActionListener(this);
-//		JPanel minus10Panel = new JPanel();
-//		minus10Panel.add(minus10g);
-//		removeWeightPanel.add(minus10Panel);
+//				minus10g = new JButton();
+//				minus10g.setLayout(new BorderLayout());
+//				JLabel minus10Icon = new JLabel(minusImgResized);
+//				JLabel minus10Label = new JLabel("Remove 10g from Scale", SwingConstants.CENTER);
+//				minus10Label.setFont(new Font("Arial", Font.BOLD, 16));
+//				minus10g.add(minus10Label, BorderLayout.CENTER);
+//				minus10g.add(minus10Icon, BorderLayout.WEST);
+//				minus10g.setSize(buttonSize);
+//				minus10g.setPreferredSize(buttonSize);
+//				minus10g.setMinimumSize(buttonSize);
+//				minus10g.setMaximumSize(buttonSize);
+//				minus10g.addActionListener(this);
+//				JPanel minus10Panel = new JPanel();
+//				minus10Panel.add(minus10g);
+//				removeWeightPanel.add(minus10Panel);
 //
-//		minus20g = new JButton();
-//		minus20g.setLayout(new BorderLayout());
-//		JLabel minus20Icon = new JLabel(minusImgResized);
-//		JLabel minus20Label = new JLabel("Remove 20g from Scale", SwingConstants.CENTER);
-//		minus20Label.setFont(new Font("Arial", Font.BOLD, 16));
-//		minus20g.add(minus20Label, BorderLayout.CENTER);
-//		minus20g.add(minus20Icon, BorderLayout.WEST);
-//		minus20g.setSize(buttonSize);
-//		minus20g.setPreferredSize(buttonSize);
-//		minus20g.setMinimumSize(buttonSize);
-//		minus20g.setMaximumSize(buttonSize);
-//		minus20g.addActionListener(this);
-//		JPanel minus20Panel = new JPanel();
-//		minus20Panel.add(minus20g);
-//		removeWeightPanel.add(minus20Panel);
+//				minus20g = new JButton();
+//				minus20g.setLayout(new BorderLayout());
+//				JLabel minus20Icon = new JLabel(minusImgResized);
+//				JLabel minus20Label = new JLabel("Remove 20g from Scale", SwingConstants.CENTER);
+//				minus20Label.setFont(new Font("Arial", Font.BOLD, 16));
+//				minus20g.add(minus20Label, BorderLayout.CENTER);
+//				minus20g.add(minus20Icon, BorderLayout.WEST);
+//				minus20g.setSize(buttonSize);
+//				minus20g.setPreferredSize(buttonSize);
+//				minus20g.setMinimumSize(buttonSize);
+//				minus20g.setMaximumSize(buttonSize);
+//				minus20g.addActionListener(this);
+//				JPanel minus20Panel = new JPanel();
+//				minus20Panel.add(minus20g);
+//				removeWeightPanel.add(minus20Panel);
 
 		takeChange = new JButton();
 		takeChange.setLayout(new BorderLayout());
@@ -880,9 +880,16 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		mainPanel.add(topPanel);
 		mainPanel.add(middlePanel);
 
+		return mainPanel;
+	}
+
+	public void createWindow() {
+		frame = new JFrame("Simulator");
+		JPanel mainPanel = createGUI();
 		frame.setContentPane(mainPanel);
 		frame.pack();
 		frame.setAlwaysOnTop(true);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setVisible(true);
 	}
 
@@ -1106,8 +1113,15 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			weight -= 0.020;
 
 		} else if (button == takeChange) {
-			checkout.getChangeFromCoinTray();
-			checkout.getChangeFromBanknoteSlots();
+			if (!checkout.isScanning() && !checkout.isPaying()) {
+				checkout.getChangeFromCoinTray();
+				checkout.getChangeFromBanknoteSlots();
+
+				// shortcut so we don't route through checkout
+				//stateHandler.notifyDataUpdate(new PurchaseCompleteData());
+			} else {
+				GUIUtils.flashError(button);
+			}
 		} else if (button == takeReceipt) {
 			try {
 				checkout.printReceipt();

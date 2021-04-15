@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
 import org.lsmr.selfcheckout.control.gui.statedata.BalanceStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.EmitChangeStateData;
+import org.lsmr.selfcheckout.control.gui.statedata.PurchaseCompleteData;
 import org.lsmr.selfcheckout.control.gui.statedata.StateData;
 
 public class EndState implements GUIState {
@@ -37,9 +38,26 @@ public class EndState implements GUIState {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-		if (data instanceof BalanceStateData) {
-			duePrintOut.setText(String.format("Change Due: $%.2f", - ((float) data.obtain())));
-		}
+//		if (data instanceof BalanceStateData) {
+//			float balance = - (float) data.obtain();
+//			if (balance > 0) {
+//				duePrintOut.setText(String.format("Change Due: $%.2f", balance));
+//			} else {
+//				// wait then swap back
+//				new Thread(new Runnable() {
+//					@Override
+//					public void run() {
+//						try {
+//							Thread.sleep(2000);
+//						} catch (InterruptedException e) {
+//						}
+//						stateController.setState(new StartState());
+//					}
+//				}).start();
+//			}
+//		} else if (data instanceof PurchaseCompleteData) {
+//			stateController.setState(new StartState());
+//		}
 	}
 
 	/**
@@ -108,7 +126,7 @@ public class EndState implements GUIState {
 		paidPrintOut.setText("Amount Paid: $0.00");
 		paidPrintOut.setFont(new Font("Arial", Font.BOLD, 30));
 		JPanel paidPanel = new JPanel();
-		paidPanel.add(paidPrintOut);
+		//paidPanel.add(paidPrintOut);
 
 
 		mainPanel.add(topPanel);

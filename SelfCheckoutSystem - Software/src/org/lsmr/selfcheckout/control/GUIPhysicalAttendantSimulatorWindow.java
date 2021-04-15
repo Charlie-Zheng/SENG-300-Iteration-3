@@ -10,6 +10,9 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -22,12 +25,16 @@ import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 import javax.swing.SwingConstants;
 
+import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.control.gui.GUIController;
+import org.lsmr.selfcheckout.control.gui.GUIUtils;
 import org.lsmr.selfcheckout.control.gui.StateHandler;
+import org.lsmr.selfcheckout.control.gui.StateHandler.StateUpdateListener;
 import org.lsmr.selfcheckout.control.gui.statedata.BaggingAreaWeightData;
+import org.lsmr.selfcheckout.control.gui.statedata.BlockStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.KeypadStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ListProductStateData;
 import org.lsmr.selfcheckout.control.gui.statedata.ScaleStateData;
@@ -36,11 +43,9 @@ import org.lsmr.selfcheckout.control.gui.states.BlockState;
 import org.lsmr.selfcheckout.control.gui.states.GUIState;
 import org.lsmr.selfcheckout.devices.OverloadException;
 
-public class GUIPhysicalAttendantSimulatorWindow implements ActionListener {
+public class GUIPhysicalAttendantSimulatorWindow implements ActionListener, StateUpdateListener {
 
 	private Checkout checkout;
-	private GUIController stateHandler;
-	StateHandler<GUIState> stateController;
 	
 	// attendant refills banknote dispenser
 	private JButton refill5;
@@ -72,16 +77,11 @@ public class GUIPhysicalAttendantSimulatorWindow implements ActionListener {
 
 	private JFrame frame;
 
-	public GUIPhysicalAttendantSimulatorWindow(Checkout c, GUIController s) {
+	public GUIPhysicalAttendantSimulatorWindow(Checkout c) {
 		this.checkout = c;
-		this.stateHandler = s;
 	}
 	
-	public GUIPhysicalAttendantSimulatorWindow() {
-		
-	}
-
-	public void createWindow() {
+	public void setupWindow() {
 
 		frame = new JFrame("Simulator");
 		JPanel mainPanel = new JPanel();
@@ -768,9 +768,13 @@ public class GUIPhysicalAttendantSimulatorWindow implements ActionListener {
 
 		frame.setContentPane(mainPanel);
 		frame.pack();
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setAlwaysOnTop(true);
-		frame.setVisible(true);
 	}
+
+	private final ArrayList<Banknote> notesToRefill = new ArrayList<>();
+	private final ArrayList<Coin> coinsToRefill = new ArrayList<>();
+	private Currency cad = Currency.getInstance("CAD");
 
 	/**
 	 * Receives button click events and forwards it to the checkout
@@ -787,17 +791,59 @@ public class GUIPhysicalAttendantSimulatorWindow implements ActionListener {
 		//** the buttons with refill<type of banknote> will add list
 		// the refillBanknotes button will call to refill with list as param
 		if(button == refill5) {
-
+			GUIUtils
+				.begin(button)
+				.setBgColor(Color.CYAN)
+				.waitFor(0.4f)
+				.restore()
+				.execute();
+			notesToRefill.add(new Banknote(5, cad));
 		} else if(button == refill10) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.MAGENTA)
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			notesToRefill.add(new Banknote(10, cad));
 		} else if(button == refill20) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.GREEN)
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			notesToRefill.add(new Banknote(20, cad));
 		} else if(button == refill50) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.pink)
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			notesToRefill.add(new Banknote(50, cad));
 		} else if(button == refill100) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(new Color(139, 69, 19))
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			notesToRefill.add(new Banknote(100, cad));
 		} else if(button == refillBanknotes) {
-			
+			int sum = 0;
+			for (Banknote b : notesToRefill) {
+				sum += b.getValue();
+			}
+			checkout.refillBanknoteDispenser(notesToRefill);
+			notesToRefill.clear();
+
+			GUIUtils
+			.begin(button)
+			.setText(String.format("$%.2f has been refilled", (float) sum))
+			.waitFor(1.0f)
+			.restore()
+			.execute();
 		}
 		
 
@@ -818,17 +864,58 @@ public class GUIPhysicalAttendantSimulatorWindow implements ActionListener {
 		// ** the buttons with refill<type of coin> should add to list
 		// refill coins will then call the refill button with the list as a param
 		else if(button == refillNickel) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.GREEN)
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			coinsToRefill.add(new Coin(new BigDecimal("0.05"), cad));
 		} else if(button == refillDime) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.GREEN)
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			coinsToRefill.add(new Coin(new BigDecimal("0.10"), cad));
 		} else if(button == refillQuarter) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.GREEN)
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			coinsToRefill.add(new Coin(new BigDecimal("0.25"), cad));
 		} else if(button == refillLoonie) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.GREEN)
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			coinsToRefill.add(new Coin(new BigDecimal("1.00"), cad));
 		} else if(button == refillTwoonie) {
-
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.GREEN)
+			.waitFor(0.4f)
+			.restore()
+			.execute();
+			coinsToRefill.add(new Coin(new BigDecimal("2.00"), cad));
 		} else if(button == refillCoins) {
-			
+			float sum = 0;
+			for (Coin c : coinsToRefill) {
+				sum += c.getValue().floatValue();
+			}
+			checkout.refillCoinDispenser(coinsToRefill);
+			coinsToRefill.clear();
+			GUIUtils
+			.begin(button)
+			.setText(String.format("$%.2f has been refilled", sum))
+			.waitFor(1.0f)
+			.restore()
+			.execute();
 		}
 
 		// for emptying coin storage unit
@@ -847,18 +934,50 @@ public class GUIPhysicalAttendantSimulatorWindow implements ActionListener {
 		//for emptying cash storage unit
 		// empty coins completely or banknotes completely no matter denomination
 		else if(button == emptyCoins) {
-			
+			checkout.emptyCoinStorage();
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.GREEN)
+			.waitFor(1.0f)
+			.restore()
+			.execute();
 		} else if(button == emptyBanknotes) {
-			
+			checkout.emptyBanknoteStorage();
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.GREEN)
+			.waitFor(1.0f)
+			.restore()
+			.execute();	
 		}
 		
 		// for refilling receipt printer
 		else if(button == refillInk) {
-
+			checkout.addInk(1);
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.green)
+			.waitFor(1.0f)
+			.restore()
+			.execute();	
 		} else if(button == refillPaper) {
-
+			checkout.addPaper(1);
+			GUIUtils
+			.begin(button)
+			.setBgColor(Color.green)
+			.waitFor(1.0f)
+			.restore()
+			.execute();		
 		} 
 
+	}
+
+	@Override
+	public void onStateUpdate(StateData<?> stateData) {
+		if (stateData instanceof BlockStateData) {
+			frame.setVisible((boolean) stateData.obtain());
+		}
+		
 	}
 
 }

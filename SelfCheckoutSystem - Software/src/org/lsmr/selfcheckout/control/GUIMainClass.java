@@ -190,5 +190,8 @@ public class GUIMainClass {
 		GUIPhysicalSimulatorWindow window = new GUIPhysicalSimulatorWindow(c, guiController);
 		window.createWindow();
 
+		GUIPhysicalAttendantSimulatorWindow attWindow = new GUIPhysicalAttendantSimulatorWindow(c);
+		attWindow.setupWindow();
+		guiController.addStateUpdateListener(attWindow);
 	}
 }

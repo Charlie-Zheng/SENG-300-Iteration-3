@@ -9,6 +9,7 @@ import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,7 +31,7 @@ public class GUIUtils {
 	private JComponent view;
 
 	public enum Property {
-		BACKGROUND_COLOR, LABEL,
+		BACKGROUND_COLOR, TEXT,
 
 		RESTORE_RECENT, RESTORE_OLDEST, WAIT
 	}
@@ -87,7 +88,7 @@ public class GUIUtils {
 	 * @return
 	 */
 	public GUIUtils setText(String text) {
-		queueSetProperty(Property.LABEL, text);
+		queueSetProperty(Property.TEXT, text);
 
 		return this;
 	}
@@ -204,12 +205,15 @@ public class GUIUtils {
 		case BACKGROUND_COLOR:
 			view.setBackground((Color) item);
 			break;
-		case LABEL:
+		case TEXT:
 			if (view instanceof JLabel) {
 				((JLabel) view).setText((String) item);
 			} else if (view instanceof JTextField) {
 				((JTextField) view).setText((String) item);
-				
+			} else if (view instanceof JButton) {
+				((JButton) view).setText((String) item);
+			} else {
+				System.err.println("Attempted to text on view " + item);
 			}
 		default:
 			break;
@@ -221,11 +225,15 @@ public class GUIUtils {
 		switch(section) {
 		case BACKGROUND_COLOR:
 			return view.getBackground();
-		case LABEL:
+		case TEXT:
 			if (view instanceof JLabel) {
 				return ((JLabel) view).getText();
 			} else if (view instanceof JTextField) {
 				return ((JTextField) view).getText();
+			} else if (view instanceof JButton) {
+				return ((JButton) view).getText();
+			} else {
+				System.err.println("Attempted to retrieve text on view " + view);
 			}
 		default:
 			return null;
