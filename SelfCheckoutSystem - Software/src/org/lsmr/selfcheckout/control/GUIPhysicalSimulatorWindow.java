@@ -573,21 +573,21 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		addPearsPanel.add(addPears);
 		addWeightPanel.add(addPearsPanel);
 
-		add10g = new JButton();
-		add10g.setLayout(new BorderLayout());
-		JLabel add10Icon = new JLabel(plusImgResized);
-		JLabel add10Label = new JLabel("Add 10g to Scale", SwingConstants.CENTER);
-		add10Label.setFont(new Font("Arial", Font.BOLD, 20));
-		add10g.add(add10Label, BorderLayout.CENTER);
-		add10g.add(add10Icon, BorderLayout.WEST);
-		add10g.setSize(buttonSize);
-		add10g.setPreferredSize(buttonSize);
-		add10g.setMinimumSize(buttonSize);
-		add10g.setMaximumSize(buttonSize);
-		add10g.addActionListener(this);
-		JPanel add10Panel = new JPanel();
-		add10Panel.add(add10g);
-		addWeightPanel.add(add10Panel);
+//		add10g = new JButton();
+//		add10g.setLayout(new BorderLayout());
+//		JLabel add10Icon = new JLabel(plusImgResized);
+//		JLabel add10Label = new JLabel("Add 10g to Scale", SwingConstants.CENTER);
+//		add10Label.setFont(new Font("Arial", Font.BOLD, 20));
+//		add10g.add(add10Label, BorderLayout.CENTER);
+//		add10g.add(add10Icon, BorderLayout.WEST);
+//		add10g.setSize(buttonSize);
+//		add10g.setPreferredSize(buttonSize);
+//		add10g.setMinimumSize(buttonSize);
+//		add10g.setMaximumSize(buttonSize);
+//		add10g.addActionListener(this);
+//		JPanel add10Panel = new JPanel();
+//		add10Panel.add(add10g);
+//		addWeightPanel.add(add10Panel);
 
 //				minus1g = new JButton();
 //				minus1g.setLayout(new BorderLayout());
@@ -1175,9 +1175,9 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			if (!checkout.isScanning() && !checkout.isPaying()) {
 				checkout.getChangeFromCoinTray();
 				checkout.getChangeFromBanknoteSlots();
-
+				checkout.reset();
 				// shortcut so we don't route through checkout
-				//stateHandler.notifyDataUpdate(new PurchaseCompleteData());
+				stateHandler.notifyDataUpdate(new PurchaseCompleteData());
 			} else {
 				GUIUtils.flashError(button);
 			}

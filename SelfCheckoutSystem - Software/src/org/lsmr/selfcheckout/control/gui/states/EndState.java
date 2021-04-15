@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -23,7 +25,7 @@ public class EndState implements GUIState {
 	private StateHandler<GUIState> stateController;
 	private JLabel duePrintOut;
 	private JLabel paidPrintOut;
-
+	Timer timer = new Timer();
 	/**
 	 * 
 	 */
@@ -38,11 +40,11 @@ public class EndState implements GUIState {
 	 */
 	@Override
 	public void onDataUpdate(StateData<?> data) {
-//		if (data instanceof BalanceStateData) {
-//			float balance = - (float) data.obtain();
-//			if (balance > 0) {
-//				duePrintOut.setText(String.format("Change Due: $%.2f", balance));
-//			} else {
+		if (data instanceof BalanceStateData) {
+			float balance = - (float) data.obtain();
+			if (balance > 0) {
+				duePrintOut.setText(String.format("Change Due: $%.2f", balance));
+			} else {
 //				// wait then swap back
 //				new Thread(new Runnable() {
 //					@Override
@@ -54,10 +56,21 @@ public class EndState implements GUIState {
 //						stateController.setState(new StartState());
 //					}
 //				}).start();
-//			}
-//		} else if (data instanceof PurchaseCompleteData) {
-//			stateController.setState(new StartState());
-//		}
+			}
+		} else if (data instanceof PurchaseCompleteData) {
+			TimerTask switchToStart = new TimerTask() {
+
+				@Override
+				public void run() {
+					stateController.setState(new StartState());
+					this.cancel();
+				}
+				
+			};
+	
+			timer.scheduleAtFixedRate(switchToStart, 3000, 1000);
+		
+		}
 	}
 
 	/**
