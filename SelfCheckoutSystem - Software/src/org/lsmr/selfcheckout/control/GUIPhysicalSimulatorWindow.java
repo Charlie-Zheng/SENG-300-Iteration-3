@@ -529,11 +529,13 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		removeWeighTPanel.add(removeWeightLabel);
 		addWeightPanel.add(removeWeighTPanel);
 
-	/*	ImageIcon minus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/minus.png");
-		Image minusImg = minus.getImage();
-		Image newMinusImg = minusImg.getScaledInstance(25, 6, java.awt.Image.SCALE_SMOOTH);
-		ImageIcon minusImgResized = new ImageIcon(newMinusImg);
-		*/
+		/*
+		 * ImageIcon minus = new
+		 * ImageIcon("src/org/lsmr/selfcheckout/gui/icons/minus.png"); Image minusImg =
+		 * minus.getImage(); Image newMinusImg = minusImg.getScaledInstance(25, 6,
+		 * java.awt.Image.SCALE_SMOOTH); ImageIcon minusImgResized = new
+		 * ImageIcon(newMinusImg);
+		 */
 		// image for both plus sign and minus sign downloaded from website below - cropped the image
 		// https://www.pngitem.com/download/ibbmhT_plus-sign-minus-symbol-math-and-signs-computer/
 		ImageIcon plus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/plus.png");
@@ -573,87 +575,86 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		addPearsPanel.add(addPears);
 		addWeightPanel.add(addPearsPanel);
 
-//		add10g = new JButton();
-//		add10g.setLayout(new BorderLayout());
-//		JLabel add10Icon = new JLabel(plusImgResized);
-//		JLabel add10Label = new JLabel("Add 10g to Scale", SwingConstants.CENTER);
-//		add10Label.setFont(new Font("Arial", Font.BOLD, 20));
-//		add10g.add(add10Label, BorderLayout.CENTER);
-//		add10g.add(add10Icon, BorderLayout.WEST);
-//		add10g.setSize(buttonSize);
-//		add10g.setPreferredSize(buttonSize);
-//		add10g.setMinimumSize(buttonSize);
-//		add10g.setMaximumSize(buttonSize);
-//		add10g.addActionListener(this);
-//		JPanel add10Panel = new JPanel();
-//		add10Panel.add(add10g);
-//		addWeightPanel.add(add10Panel);
+		//		add10g = new JButton();
+		//		add10g.setLayout(new BorderLayout());
+		//		JLabel add10Icon = new JLabel(plusImgResized);
+		//		JLabel add10Label = new JLabel("Add 10g to Scale", SwingConstants.CENTER);
+		//		add10Label.setFont(new Font("Arial", Font.BOLD, 20));
+		//		add10g.add(add10Label, BorderLayout.CENTER);
+		//		add10g.add(add10Icon, BorderLayout.WEST);
+		//		add10g.setSize(buttonSize);
+		//		add10g.setPreferredSize(buttonSize);
+		//		add10g.setMinimumSize(buttonSize);
+		//		add10g.setMaximumSize(buttonSize);
+		//		add10g.addActionListener(this);
+		//		JPanel add10Panel = new JPanel();
+		//		add10Panel.add(add10g);
+		//		addWeightPanel.add(add10Panel);
 
-//				minus1g = new JButton();
-//				minus1g.setLayout(new BorderLayout());
-//				JLabel minus1Icon = new JLabel(minusImgResized);
-//				JLabel minus1Label = new JLabel("Remove 1g from Scale", SwingConstants.CENTER);
-//				minus1Label.setFont(new Font("Arial", Font.BOLD, 16));
-//				minus1g.add(minus1Label, BorderLayout.CENTER);
-//				minus1g.add(minus1Icon, BorderLayout.WEST);
-//				minus1g.setSize(buttonSize);
-//				minus1g.setPreferredSize(buttonSize);
-//				minus1g.setMinimumSize(buttonSize);
-//				minus1g.setMaximumSize(buttonSize);
-//				minus1g.addActionListener(this);
-//				JPanel minus1Panel = new JPanel();
-//				minus1Panel.add(minus1g);
-//				removeWeightPanel.add(minus1Panel);
-//
-//				minus5g = new JButton();
-//				minus5g.setLayout(new BorderLayout());
-//				JLabel minus5Icon = new JLabel(minusImgResized);
-//				JLabel minus5Label = new JLabel("Remove 5g from Scale", SwingConstants.CENTER);
-//				minus5Label.setFont(new Font("Arial", Font.BOLD, 16));
-//				minus5g.add(minus5Label, BorderLayout.CENTER);
-//				minus5g.add(minus5Icon, BorderLayout.WEST);
-//				minus5g.setSize(buttonSize);
-//				minus5g.setPreferredSize(buttonSize);
-//				minus5g.setMinimumSize(buttonSize);
-//				minus5g.setMaximumSize(buttonSize);
-//				minus5g.addActionListener(this);
-//				JPanel minus5Panel = new JPanel();
-//				minus5Panel.add(minus5g);
-//				removeWeightPanel.add(minus5Panel);
-//
-//				minus10g = new JButton();
-//				minus10g.setLayout(new BorderLayout());
-//				JLabel minus10Icon = new JLabel(minusImgResized);
-//				JLabel minus10Label = new JLabel("Remove 10g from Scale", SwingConstants.CENTER);
-//				minus10Label.setFont(new Font("Arial", Font.BOLD, 16));
-//				minus10g.add(minus10Label, BorderLayout.CENTER);
-//				minus10g.add(minus10Icon, BorderLayout.WEST);
-//				minus10g.setSize(buttonSize);
-//				minus10g.setPreferredSize(buttonSize);
-//				minus10g.setMinimumSize(buttonSize);
-//				minus10g.setMaximumSize(buttonSize);
-//				minus10g.addActionListener(this);
-//				JPanel minus10Panel = new JPanel();
-//				minus10Panel.add(minus10g);
-//				removeWeightPanel.add(minus10Panel);
-//
-//				minus20g = new JButton();
-//				minus20g.setLayout(new BorderLayout());
-//				JLabel minus20Icon = new JLabel(minusImgResized);
-//				JLabel minus20Label = new JLabel("Remove 20g from Scale", SwingConstants.CENTER);
-//				minus20Label.setFont(new Font("Arial", Font.BOLD, 16));
-//				minus20g.add(minus20Label, BorderLayout.CENTER);
-//				minus20g.add(minus20Icon, BorderLayout.WEST);
-//				minus20g.setSize(buttonSize);
-//				minus20g.setPreferredSize(buttonSize);
-//				minus20g.setMinimumSize(buttonSize);
-//				minus20g.setMaximumSize(buttonSize);
-//				minus20g.addActionListener(this);
-//				JPanel minus20Panel = new JPanel();
-//				minus20Panel.add(minus20g);
-//				removeWeightPanel.add(minus20Panel);
+		//				minus1g = new JButton();
+		//				minus1g.setLayout(new BorderLayout());
+		//				JLabel minus1Icon = new JLabel(minusImgResized);
+		//				JLabel minus1Label = new JLabel("Remove 1g from Scale", SwingConstants.CENTER);
+		//				minus1Label.setFont(new Font("Arial", Font.BOLD, 16));
+		//				minus1g.add(minus1Label, BorderLayout.CENTER);
+		//				minus1g.add(minus1Icon, BorderLayout.WEST);
+		//				minus1g.setSize(buttonSize);
+		//				minus1g.setPreferredSize(buttonSize);
+		//				minus1g.setMinimumSize(buttonSize);
+		//				minus1g.setMaximumSize(buttonSize);
+		//				minus1g.addActionListener(this);
+		//				JPanel minus1Panel = new JPanel();
+		//				minus1Panel.add(minus1g);
+		//				removeWeightPanel.add(minus1Panel);
+		//
+		//				minus5g = new JButton();
+		//				minus5g.setLayout(new BorderLayout());
+		//				JLabel minus5Icon = new JLabel(minusImgResized);
+		//				JLabel minus5Label = new JLabel("Remove 5g from Scale", SwingConstants.CENTER);
+		//				minus5Label.setFont(new Font("Arial", Font.BOLD, 16));
+		//				minus5g.add(minus5Label, BorderLayout.CENTER);
+		//				minus5g.add(minus5Icon, BorderLayout.WEST);
+		//				minus5g.setSize(buttonSize);
+		//				minus5g.setPreferredSize(buttonSize);
+		//				minus5g.setMinimumSize(buttonSize);
+		//				minus5g.setMaximumSize(buttonSize);
+		//				minus5g.addActionListener(this);
+		//				JPanel minus5Panel = new JPanel();
+		//				minus5Panel.add(minus5g);
+		//				removeWeightPanel.add(minus5Panel);
+		//
+		//				minus10g = new JButton();
+		//				minus10g.setLayout(new BorderLayout());
+		//				JLabel minus10Icon = new JLabel(minusImgResized);
+		//				JLabel minus10Label = new JLabel("Remove 10g from Scale", SwingConstants.CENTER);
+		//				minus10Label.setFont(new Font("Arial", Font.BOLD, 16));
+		//				minus10g.add(minus10Label, BorderLayout.CENTER);
+		//				minus10g.add(minus10Icon, BorderLayout.WEST);
+		//				minus10g.setSize(buttonSize);
+		//				minus10g.setPreferredSize(buttonSize);
+		//				minus10g.setMinimumSize(buttonSize);
+		//				minus10g.setMaximumSize(buttonSize);
+		//				minus10g.addActionListener(this);
+		//				JPanel minus10Panel = new JPanel();
+		//				minus10Panel.add(minus10g);
+		//				removeWeightPanel.add(minus10Panel);
+		//
+		//				minus20g = new JButton();
+		//				minus20g.setLayout(new BorderLayout());
+		//				JLabel minus20Icon = new JLabel(minusImgResized);
+		//				JLabel minus20Label = new JLabel("Remove 20g from Scale", SwingConstants.CENTER);
+		//				minus20Label.setFont(new Font("Arial", Font.BOLD, 16));
+		//				minus20g.add(minus20Label, BorderLayout.CENTER);
+		//				minus20g.add(minus20Icon, BorderLayout.WEST);
+		//				minus20g.setSize(buttonSize);
+		//				minus20g.setPreferredSize(buttonSize);
+		//				minus20g.setMinimumSize(buttonSize);
+		//				minus20g.setMaximumSize(buttonSize);
+		//				minus20g.addActionListener(this);
+		//				JPanel minus20Panel = new JPanel();
+		//				minus20Panel.add(minus20g);
+		//				removeWeightPanel.add(minus20Panel);
 
-	
 		JPanel actionsPanel = new JPanel();
 		actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
 		actionsPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
@@ -835,7 +836,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		JPanel enterPinPanel = new JPanel();
 		enterPinPanel.add(enterPin);
 		payPanel.add(enterPinPanel);
-		
+
 		JPanel endPanel = new JPanel();
 		endPanel.setLayout(new BoxLayout(endPanel, BoxLayout.Y_AXIS));
 		//endPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 75, 0));
@@ -844,7 +845,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		JPanel enDPanel = new JPanel();
 		enDPanel.add(endLabel);
 		endPanel.add(enDPanel);
-		
+
 		takeChange = new JButton();
 		takeChange.setLayout(new BorderLayout());
 		//JLabel takeChangeIcon = new JLabel(minusImgResized);
@@ -887,52 +888,38 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		leftPanel.add(actionsPanel);
 		leftPanel.add(payPanel);
 		leftPanel.add(endPanel);
-		
+
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 35, 0));
 		centerPanel.add(bagItemsPanel);
 		centerPanel.add(banknotePanel);
-		
+
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 35, 0));
 		rightPanel.add(addWeightPanel);
 		rightPanel.add(coinPanel);
-		
+
 		middlePanel.add(leftPanel);
 		middlePanel.add(centerPanel);
 		middlePanel.add(rightPanel);
-		
-/*		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.weighty = 0.2;
-		middlePanel.add(actionsPanel, constraints);
-		constraints.gridx = 1;
-		constraints.gridy = 0;
-		constraints.weighty = 0.5;
-		middlePanel.add(bagItemsPanel, constraints);
-		constraints.gridx = 2;
-		constraints.gridy = 0;
-		constraints.weighty = 0.5;
-		middlePanel.add(addWeightPanel, constraints);
-		constraints.gridx = 0;
-		constraints.gridy = 1;
-		constraints.weighty = 0.2;
-		middlePanel.add(payPanel, constraints);
-		constraints.gridx = 0;
-		constraints.gridy = 2;
-		constraints.weighty = 0.6;
-		middlePanel.add(endPanel, constraints);
-		constraints.gridx = 1;
-		constraints.gridy = 1;
-		constraints.weighty = 0.5;
-		middlePanel.add(banknotePanel, constraints);
-		constraints.gridx = 2;
-		constraints.gridy = 1;
-		constraints.weighty = 0.5;
-		middlePanel.add(coinPanel, constraints);
-*/
+
+		/*
+		 * constraints.gridx = 0; constraints.gridy = 0; constraints.weighty = 0.2;
+		 * middlePanel.add(actionsPanel, constraints); constraints.gridx = 1;
+		 * constraints.gridy = 0; constraints.weighty = 0.5;
+		 * middlePanel.add(bagItemsPanel, constraints); constraints.gridx = 2;
+		 * constraints.gridy = 0; constraints.weighty = 0.5;
+		 * middlePanel.add(addWeightPanel, constraints); constraints.gridx = 0;
+		 * constraints.gridy = 1; constraints.weighty = 0.2; middlePanel.add(payPanel,
+		 * constraints); constraints.gridx = 0; constraints.gridy = 2;
+		 * constraints.weighty = 0.6; middlePanel.add(endPanel, constraints);
+		 * constraints.gridx = 1; constraints.gridy = 1; constraints.weighty = 0.5;
+		 * middlePanel.add(banknotePanel, constraints); constraints.gridx = 2;
+		 * constraints.gridy = 1; constraints.weighty = 0.5; middlePanel.add(coinPanel,
+		 * constraints);
+		 */
 		mainPanel.add(topPanel);
 		mainPanel.add(middlePanel);
 
@@ -1175,20 +1162,17 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			if (!checkout.isScanning() && !checkout.isPaying()) {
 				checkout.getChangeFromCoinTray();
 				checkout.getChangeFromBanknoteSlots();
-				checkout.reset();
+				try {
+					checkout.printReceipt();
+				} catch (CheckoutException e) {
+				}
 				// shortcut so we don't route through checkout
 				stateHandler.notifyDataUpdate(new PurchaseCompleteData());
 			} else {
 				GUIUtils.flashError(button);
 			}
 		} else if (button == takeReceipt) {
-			try {
-				checkout.printReceipt();
-				System.out.println(checkout.removeReceipt());
-			} catch (CheckoutException e) {
-				e.printStackTrace();
-				GUIUtils.flashError(button);
-			}
+			System.out.println(checkout.removeReceipt());
 
 		}
 
@@ -1200,7 +1184,12 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			try {
 				checkout.payBySwipingCard(giftCard, null);
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
-
+				try {
+					checkout.printReceipt();
+				} catch (CheckoutException e) {
+				}
+				// shortcut so we don't route through checkout
+				stateHandler.notifyDataUpdate(new PurchaseCompleteData());
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
@@ -1208,7 +1197,12 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			try {
 				checkout.payByTappingCard(debitCard);
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
-
+				try {
+					checkout.printReceipt();
+				} catch (CheckoutException e) {
+				}
+				// shortcut so we don't route through checkout
+				stateHandler.notifyDataUpdate(new PurchaseCompleteData());
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}
@@ -1216,7 +1210,12 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			try {
 				checkout.payByInsertingCard(creditCard, "0909");
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
-
+				try {
+					checkout.printReceipt();
+				} catch (CheckoutException e) {
+				}
+				// shortcut so we don't route through checkout
+				stateHandler.notifyDataUpdate(new PurchaseCompleteData());
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
 			}

@@ -77,7 +77,7 @@ import org.lsmr.selfcheckout.products.Product;
  */
 public class Checkout {
 	private enum CheckoutState {
-		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Done, Off
+		Scanning, Paused, Paying_Cash, Paying_Credit, Paying_Debit, Paying_Gift, GivingChange, PrintingReceipt, Off
 	};
 
 	public enum PayingState {
@@ -358,7 +358,7 @@ public class Checkout {
 			}
 		}
 		itemsAdded.clear();
-		if (state == CheckoutState.Done) {
+		if (state == CheckoutState.Scanning) {
 			expectedWeightOnBaggingArea = 0;
 			state = CheckoutState.Scanning;
 		}
@@ -952,7 +952,7 @@ public class Checkout {
 				}
 			}
 			checkoutStation.printer.cutPaper();
-			state = CheckoutState.Done;
+			state = CheckoutState.Scanning;
 			currentBalance = new BigDecimal(0);
 			customerBag = false;
 			paidCash = false;
@@ -971,7 +971,7 @@ public class Checkout {
 	 * The user chooses to not print a receipt.
 	 */
 	public void doNotPrintReceipt() {
-		state = CheckoutState.Done;
+		state = CheckoutState.Scanning;
 		currentBalance = new BigDecimal(0);
 		customerBag = false;
 		paidCash = false;
