@@ -149,7 +149,7 @@ public class BagItemState implements GUIState, ActionListener {
 		if (button == skipBag) {
 			//where we have to connect to code for scale weight??
 			stateController.setState(new BuyingState());
-		} else if(button == skipBag) {
+		} else if(button == logIn) {
 			stateController.setState(new AttendantLogInState());
 		}
 	}

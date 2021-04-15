@@ -1178,6 +1178,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 				checkout.reset();
 				// shortcut so we don't route through checkout
 				stateHandler.notifyDataUpdate(new PurchaseCompleteData());
+					reset();
 			} else {
 				GUIUtils.flashError(button);
 			}
@@ -1200,6 +1201,9 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			try {
 				checkout.payBySwipingCard(giftCard, null);
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+				if (checkout.getBalance().floatValue() < 0) {
+					reset();
+				}
 
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
@@ -1208,6 +1212,9 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			try {
 				checkout.payByTappingCard(debitCard);
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+				if (checkout.getBalance().floatValue() < 0) {
+					reset();
+				}
 
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
@@ -1216,6 +1223,9 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			try {
 				checkout.payByInsertingCard(creditCard, "0909");
 				stateHandler.notifyDataUpdate(new BalanceStateData(checkout.getBalance().floatValue()));
+				if (checkout.getBalance().floatValue() < 0) {
+					reset();
+				}
 
 			} catch (CheckoutException e) {
 				GUIUtils.flashError(button);
@@ -1233,6 +1243,11 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 			}
 		}
 
+	}
+	
+	public void reset() {
+		frame.setContentPane(createGUI());
+		
 	}
 
 }
