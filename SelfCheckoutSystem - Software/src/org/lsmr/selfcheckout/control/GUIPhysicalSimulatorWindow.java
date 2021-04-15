@@ -521,7 +521,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		bagItemsPanel.add(bagPlayStationPanel);
 
 		JPanel addWeightPanel = new JPanel();
-		addWeightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 125, 0));
+		addWeightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 170, 0));
 		addWeightPanel.setLayout(new BoxLayout(addWeightPanel, BoxLayout.Y_AXIS));
 		JLabel removeWeightLabel = new JLabel("Add Weight to Scanner Scale");
 		removeWeightLabel.setFont(new Font("Arial", Font.BOLD, 26));
