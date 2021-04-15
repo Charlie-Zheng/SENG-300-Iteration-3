@@ -92,7 +92,7 @@ public class AttendantState implements GUIState, ActionListener {
 		words.setBorder(new LineBorder(Color.RED.darker()));
 		wordPanel.add(words);
 
-		Dimension tableSize = new Dimension(900, 130);
+		Dimension tableSize = new Dimension(394, 130);
 
 		JPanel stationsPanel = new JPanel();
 		stationsPanel.setLayout(new GridLayout(3, 2, 150, 30));
