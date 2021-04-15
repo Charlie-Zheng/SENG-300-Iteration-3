@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -143,13 +145,15 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		ImageIcon coOpImgResized = new ImageIcon(newCoOpImg);
 		JLabel coOpLogo = new JLabel(coOpImgResized);
 		topStatement.setFont(new Font("Arial", Font.BOLD, 60));
-		topPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 10, 30));
+		topPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 5, 30));
 		topPanel.add(topStatement, BorderLayout.CENTER);
 		topPanel.add(coOpLogo, BorderLayout.EAST);
 
 		JPanel middlePanel = new JPanel();
-		middlePanel.setLayout(new GridLayout(2, 3, 20, 0));
-		middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		middlePanel.setLayout(new GridLayout(0, 3, 20, 0));
+		//middlePanel.setLayout(new GridBagLayout());
+		//GridBagConstraints constraints = new GridBagConstraints();
+		middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 50, 0));
 
 		// panel for put item on scale image
 		JPanel imagePanel = new JPanel();
@@ -166,7 +170,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 
 		JPanel banknotePanel = new JPanel();
 		banknotePanel.setLayout(new BoxLayout(banknotePanel, BoxLayout.Y_AXIS));
-		banknotePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 80, 0));
+		banknotePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
 		JLabel banknoteLabel = new JLabel("Insert Banknote");
 		banknoteLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel bankNotePanel = new JPanel();
@@ -289,7 +293,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 
 		JPanel coinPanel = new JPanel();
 		coinPanel.setLayout(new BoxLayout(coinPanel, BoxLayout.Y_AXIS));
-		coinPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 80, 0));
+		coinPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
 		JLabel coinLabel = new JLabel("Insert Coin");
 		coinLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel coiNPanel = new JPanel();
@@ -411,70 +415,15 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		insertTwooniePanel.add(insertTwoonie);
 		coinPanel.add(insertTwooniePanel);
 
-		JPanel addWeightPanel = new JPanel();
-		addWeightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
-		addWeightPanel.setLayout(new BoxLayout(addWeightPanel, BoxLayout.Y_AXIS));
-		JLabel addWeightLabel = new JLabel("Add Weight to Scale");
+		JPanel bagItemsPanel = new JPanel();
+		//bagItemsPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+		bagItemsPanel.setLayout(new BoxLayout(bagItemsPanel, BoxLayout.Y_AXIS));
+		JLabel addWeightLabel = new JLabel("Place Item in Bagging Area");
 		addWeightLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel addWeighTPanel = new JPanel();
 		addWeighTPanel.add(addWeightLabel);
-		addWeightPanel.add(addWeighTPanel);
+		bagItemsPanel.add(addWeighTPanel);
 		weight = (float) 0.000;
-
-		// image for both plus sign and minus sign downloaded from website below - cropped the image
-		// https://www.pngitem.com/download/ibbmhT_plus-sign-minus-symbol-math-and-signs-computer/
-		ImageIcon plus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/plus.png");
-		Image plusImg = plus.getImage();
-		Image newPlusImg = plusImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
-		ImageIcon plusImgResized = new ImageIcon(newPlusImg);
-
-		addApples = new JButton();
-		addApples.setLayout(new BorderLayout());
-		JLabel addApplesIcon = new JLabel(plusImgResized);
-		addApplesLabel = new JLabel("Add " + apples.getWeight() + "g of Apples", SwingConstants.CENTER);
-		addApplesLabel.setFont(new Font("Arial", Font.BOLD, 15));
-		addApples.add(addApplesLabel, BorderLayout.CENTER);
-		addApples.add(addApplesIcon, BorderLayout.WEST);
-		addApples.setSize(buttonSize);
-		addApples.setPreferredSize(buttonSize);
-		addApples.setMinimumSize(buttonSize);
-		addApples.setMaximumSize(buttonSize);
-		addApples.addActionListener(this);
-		JPanel addApplesPanel = new JPanel();
-		addApplesPanel.add(addApples);
-		addWeightPanel.add(addApplesPanel);
-
-		addPears = new JButton();
-		addPears.setLayout(new BorderLayout());
-		JLabel addPearsIcon = new JLabel(plusImgResized);
-		addPearsLabel = new JLabel("Add " + pears.getWeight() + "g of Pears", SwingConstants.CENTER);
-		addPearsLabel.setFont(new Font("Arial", Font.BOLD, 15));
-		addPears.add(addPearsLabel, BorderLayout.CENTER);
-		addPears.add(addPearsIcon, BorderLayout.WEST);
-		addPears.setSize(buttonSize);
-		addPears.setPreferredSize(buttonSize);
-		addPears.setMinimumSize(buttonSize);
-		addPears.setMaximumSize(buttonSize);
-		addPears.addActionListener(this);
-		JPanel addPearsPanel = new JPanel();
-		addPearsPanel.add(addPears);
-		addWeightPanel.add(addPearsPanel);
-
-		add10g = new JButton();
-		add10g.setLayout(new BorderLayout());
-		JLabel add10Icon = new JLabel(plusImgResized);
-		JLabel add10Label = new JLabel("Add 10g to Scale", SwingConstants.CENTER);
-		add10Label.setFont(new Font("Arial", Font.BOLD, 22));
-		add10g.add(add10Label, BorderLayout.CENTER);
-		add10g.add(add10Icon, BorderLayout.WEST);
-		add10g.setSize(buttonSize);
-		add10g.setPreferredSize(buttonSize);
-		add10g.setMinimumSize(buttonSize);
-		add10g.setMaximumSize(buttonSize);
-		add10g.addActionListener(this);
-		JPanel add10Panel = new JPanel();
-		add10Panel.add(add10g);
-		addWeightPanel.add(add10Panel);
 
 		addOwnBag = new JButton();
 		addOwnBag.setLayout(new BorderLayout());
@@ -490,7 +439,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		addOwnBag.addActionListener(this);
 		JPanel addOwnBAgPanel = new JPanel();
 		addOwnBAgPanel.add(addOwnBag);
-		addWeightPanel.add(addOwnBAgPanel);
+		bagItemsPanel.add(addOwnBAgPanel);
 
 		bagApples = new JButton();
 		bagApples.setLayout(new BorderLayout());
@@ -506,7 +455,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		bagApples.addActionListener(this);
 		JPanel bagApplesPanel = new JPanel();
 		bagApplesPanel.add(bagApples);
-		addWeightPanel.add(bagApplesPanel);
+		bagItemsPanel.add(bagApplesPanel);
 
 		bagPears = new JButton();
 		bagPears.setLayout(new BorderLayout());
@@ -522,21 +471,123 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		bagPears.addActionListener(this);
 		JPanel bagPearsPanel = new JPanel();
 		bagPearsPanel.add(bagPears);
-		addWeightPanel.add(bagPearsPanel);
+		bagItemsPanel.add(bagPearsPanel);
+		bagToy = new JButton();
+		bagToy.setLayout(new BorderLayout());
+		JLabel bagToyIcon = new JLabel(bagImgResized);
+		bagToyLabel = new JLabel("Bag Toy", SwingConstants.CENTER);
+		bagToyLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		bagToy.add(bagToyLabel, BorderLayout.CENTER);
+		bagToy.add(bagToyIcon, BorderLayout.WEST);
+		bagToy.setSize(buttonSize);
+		bagToy.setPreferredSize(buttonSize);
+		bagToy.setMinimumSize(buttonSize);
+		bagToy.setMaximumSize(buttonSize);
+		bagToy.addActionListener(this);
+		JPanel bagToyPanel = new JPanel();
+		bagToyPanel.add(bagToy);
+		bagItemsPanel.add(bagToyPanel);
 
-		JPanel removeWeightPanel = new JPanel();
-		removeWeightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
-		removeWeightPanel.setLayout(new BoxLayout(removeWeightPanel, BoxLayout.Y_AXIS));
-		JLabel removeWeightLabel = new JLabel("Remove Weight from Scale");
+		bagPiano = new JButton();
+		bagPiano.setLayout(new BorderLayout());
+		JLabel bagPianoIcon = new JLabel(bagImgResized);
+		bagPianoLabel = new JLabel("Bag Piano", SwingConstants.CENTER);
+		bagPianoLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		bagPiano.add(bagPianoLabel, BorderLayout.CENTER);
+		bagPiano.add(bagPianoIcon, BorderLayout.WEST);
+		bagPiano.setSize(buttonSize);
+		bagPiano.setPreferredSize(buttonSize);
+		bagPiano.setMinimumSize(buttonSize);
+		bagPiano.setMaximumSize(buttonSize);
+		bagPiano.addActionListener(this);
+		JPanel bagPianoPanel = new JPanel();
+		bagPianoPanel.add(bagPiano);
+		bagItemsPanel.add(bagPianoPanel);
+
+		bagPlayStation = new JButton();
+		bagPlayStation.setLayout(new BorderLayout());
+		JLabel bagPlayStationIcon = new JLabel(bagImgResized);
+		bagPlayStationLabel = new JLabel("Bag PlayStation", SwingConstants.CENTER);
+		bagPlayStationLabel.setFont(new Font("Arial", Font.BOLD, 20));
+		bagPlayStation.add(bagPlayStationLabel, BorderLayout.CENTER);
+		bagPlayStation.add(bagPlayStationIcon, BorderLayout.WEST);
+		bagPlayStation.setSize(buttonSize);
+		bagPlayStation.setPreferredSize(buttonSize);
+		bagPlayStation.setMinimumSize(buttonSize);
+		bagPlayStation.setMaximumSize(buttonSize);
+		bagPlayStation.addActionListener(this);
+		JPanel bagPlayStationPanel = new JPanel();
+		bagPlayStationPanel.add(bagPlayStation);
+		bagItemsPanel.add(bagPlayStationPanel);
+
+		JPanel addWeightPanel = new JPanel();
+		addWeightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 125, 0));
+		addWeightPanel.setLayout(new BoxLayout(addWeightPanel, BoxLayout.Y_AXIS));
+		JLabel removeWeightLabel = new JLabel("Add Weight to Scanner Scale");
 		removeWeightLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel removeWeighTPanel = new JPanel();
 		removeWeighTPanel.add(removeWeightLabel);
-		removeWeightPanel.add(removeWeighTPanel);
+		addWeightPanel.add(removeWeighTPanel);
 
-		ImageIcon minus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/minus.png");
+	/*	ImageIcon minus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/minus.png");
 		Image minusImg = minus.getImage();
 		Image newMinusImg = minusImg.getScaledInstance(25, 6, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon minusImgResized = new ImageIcon(newMinusImg);
+		*/
+		// image for both plus sign and minus sign downloaded from website below - cropped the image
+		// https://www.pngitem.com/download/ibbmhT_plus-sign-minus-symbol-math-and-signs-computer/
+		ImageIcon plus = new ImageIcon("src/org/lsmr/selfcheckout/gui/icons/plus.png");
+		Image plusImg = plus.getImage();
+		Image newPlusImg = plusImg.getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
+		ImageIcon plusImgResized = new ImageIcon(newPlusImg);
+
+		addApples = new JButton();
+		addApples.setLayout(new BorderLayout());
+		JLabel addApplesIcon = new JLabel(plusImgResized);
+		addApplesLabel = new JLabel("Add " + apples.getWeight() + "g of Apples", SwingConstants.CENTER);
+		addApplesLabel.setFont(new Font("Arial", Font.BOLD, 14));
+		addApples.add(addApplesLabel, BorderLayout.CENTER);
+		addApples.add(addApplesIcon, BorderLayout.WEST);
+		addApples.setSize(buttonSize);
+		addApples.setPreferredSize(buttonSize);
+		addApples.setMinimumSize(buttonSize);
+		addApples.setMaximumSize(buttonSize);
+		addApples.addActionListener(this);
+		JPanel addApplesPanel = new JPanel();
+		addApplesPanel.add(addApples);
+		addWeightPanel.add(addApplesPanel);
+
+		addPears = new JButton();
+		addPears.setLayout(new BorderLayout());
+		JLabel addPearsIcon = new JLabel(plusImgResized);
+		addPearsLabel = new JLabel("Add " + pears.getWeight() + "g of Pears", SwingConstants.CENTER);
+		addPearsLabel.setFont(new Font("Arial", Font.BOLD, 16));
+		addPears.add(addPearsLabel, BorderLayout.CENTER);
+		addPears.add(addPearsIcon, BorderLayout.WEST);
+		addPears.setSize(buttonSize);
+		addPears.setPreferredSize(buttonSize);
+		addPears.setMinimumSize(buttonSize);
+		addPears.setMaximumSize(buttonSize);
+		addPears.addActionListener(this);
+		JPanel addPearsPanel = new JPanel();
+		addPearsPanel.add(addPears);
+		addWeightPanel.add(addPearsPanel);
+
+		add10g = new JButton();
+		add10g.setLayout(new BorderLayout());
+		JLabel add10Icon = new JLabel(plusImgResized);
+		JLabel add10Label = new JLabel("Add 10g to Scale", SwingConstants.CENTER);
+		add10Label.setFont(new Font("Arial", Font.BOLD, 20));
+		add10g.add(add10Label, BorderLayout.CENTER);
+		add10g.add(add10Icon, BorderLayout.WEST);
+		add10g.setSize(buttonSize);
+		add10g.setPreferredSize(buttonSize);
+		add10g.setMinimumSize(buttonSize);
+		add10g.setMaximumSize(buttonSize);
+		add10g.addActionListener(this);
+		JPanel add10Panel = new JPanel();
+		add10Panel.add(add10g);
+		addWeightPanel.add(add10Panel);
 
 //				minus1g = new JButton();
 //				minus1g.setLayout(new BorderLayout());
@@ -602,42 +653,11 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 //				minus20Panel.add(minus20g);
 //				removeWeightPanel.add(minus20Panel);
 
-		takeChange = new JButton();
-		takeChange.setLayout(new BorderLayout());
-		JLabel takeChangeIcon = new JLabel(minusImgResized);
-		JLabel takeChangeLabel = new JLabel("Take change", SwingConstants.CENTER);
-		takeChangeLabel.setFont(new Font("Arial", Font.BOLD, 16));
-		takeChange.add(takeChangeLabel, BorderLayout.CENTER);
-		takeChange.add(takeChangeIcon, BorderLayout.WEST);
-		takeChange.setSize(buttonSize);
-		takeChange.setPreferredSize(buttonSize);
-		takeChange.setMinimumSize(buttonSize);
-		takeChange.setMaximumSize(buttonSize);
-		takeChange.addActionListener(this);
-		JPanel takeChangePanel = new JPanel();
-		takeChangePanel.add(takeChange);
-		removeWeightPanel.add(takeChangePanel);
-
-		takeReceipt = new JButton();
-		takeReceipt.setLayout(new BorderLayout());
-		JLabel takeReceiptIcon = new JLabel(minusImgResized);
-		JLabel takeReceiptLabel = new JLabel("Take receipt", SwingConstants.CENTER);
-		takeReceiptLabel.setFont(new Font("Arial", Font.BOLD, 26));
-		takeReceipt.add(takeReceiptLabel, BorderLayout.CENTER);
-		takeReceipt.add(takeReceiptIcon, BorderLayout.WEST);
-		takeReceipt.setSize(buttonSize);
-		takeReceipt.setPreferredSize(buttonSize);
-		takeReceipt.setMinimumSize(buttonSize);
-		takeReceipt.setMaximumSize(buttonSize);
-		takeReceipt.addActionListener(this);
-		JPanel takeReceiptPanel = new JPanel();
-		takeReceiptPanel.add(takeReceipt);
-		removeWeightPanel.add(takeReceiptPanel);
-
+	
 		JPanel actionsPanel = new JPanel();
 		actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
-		//actionsPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 135, 0));
-		JLabel actionsLabel = new JLabel("Scan & Bag");
+		actionsPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+		JLabel actionsLabel = new JLabel("Use Scanner");
 		actionsLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel actionSPanel = new JPanel();
 		actionSPanel.add(actionsLabel);
@@ -702,7 +722,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		scanPlayStation.setLayout(new BorderLayout());
 		JLabel scanPlayStationIcon = new JLabel(scanImgResized);
 		JLabel scanPlayStationLabel = new JLabel("Scan PlayStation", SwingConstants.CENTER);
-		scanPlayStationLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		scanPlayStationLabel.setFont(new Font("Arial", Font.BOLD, 20));
 		scanPlayStation.add(scanPlayStationLabel, BorderLayout.CENTER);
 		scanPlayStation.add(scanPlayStationIcon, BorderLayout.WEST);
 		scanPlayStation.setSize(buttonSize);
@@ -714,57 +734,9 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		scanPlayStationPanel.add(scanPlayStation);
 		actionsPanel.add(scanPlayStationPanel);
 
-		bagToy = new JButton();
-		bagToy.setLayout(new BorderLayout());
-		JLabel bagToyIcon = new JLabel(bagImgResized);
-		bagToyLabel = new JLabel("Bag Toy", SwingConstants.CENTER);
-		bagToyLabel.setFont(new Font("Arial", Font.BOLD, 22));
-		bagToy.add(bagToyLabel, BorderLayout.CENTER);
-		bagToy.add(bagToyIcon, BorderLayout.WEST);
-		bagToy.setSize(buttonSize);
-		bagToy.setPreferredSize(buttonSize);
-		bagToy.setMinimumSize(buttonSize);
-		bagToy.setMaximumSize(buttonSize);
-		bagToy.addActionListener(this);
-		JPanel bagToyPanel = new JPanel();
-		bagToyPanel.add(bagToy);
-		actionsPanel.add(bagToyPanel);
-
-		bagPiano = new JButton();
-		bagPiano.setLayout(new BorderLayout());
-		JLabel bagPianoIcon = new JLabel(bagImgResized);
-		bagPianoLabel = new JLabel("Bag Piano", SwingConstants.CENTER);
-		bagPianoLabel.setFont(new Font("Arial", Font.BOLD, 22));
-		bagPiano.add(bagPianoLabel, BorderLayout.CENTER);
-		bagPiano.add(bagPianoIcon, BorderLayout.WEST);
-		bagPiano.setSize(buttonSize);
-		bagPiano.setPreferredSize(buttonSize);
-		bagPiano.setMinimumSize(buttonSize);
-		bagPiano.setMaximumSize(buttonSize);
-		bagPiano.addActionListener(this);
-		JPanel bagPianoPanel = new JPanel();
-		bagPianoPanel.add(bagPiano);
-		actionsPanel.add(bagPianoPanel);
-
-		bagPlayStation = new JButton();
-		bagPlayStation.setLayout(new BorderLayout());
-		JLabel bagPlayStationIcon = new JLabel(bagImgResized);
-		bagPlayStationLabel = new JLabel("Bag PlayStation", SwingConstants.CENTER);
-		bagPlayStationLabel.setFont(new Font("Arial", Font.BOLD, 22));
-		bagPlayStation.add(bagPlayStationLabel, BorderLayout.CENTER);
-		bagPlayStation.add(bagPlayStationIcon, BorderLayout.WEST);
-		bagPlayStation.setSize(buttonSize);
-		bagPlayStation.setPreferredSize(buttonSize);
-		bagPlayStation.setMinimumSize(buttonSize);
-		bagPlayStation.setMaximumSize(buttonSize);
-		bagPlayStation.addActionListener(this);
-		JPanel bagPlayStationPanel = new JPanel();
-		bagPlayStationPanel.add(bagPlayStation);
-		actionsPanel.add(bagPlayStationPanel);
-
 		JPanel payPanel = new JPanel();
 		payPanel.setLayout(new BoxLayout(payPanel, BoxLayout.Y_AXIS));
-		payPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 125, 0));
+		payPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		JLabel payLabel = new JLabel("Use PIN Pad");
 		payLabel.setFont(new Font("Arial", Font.BOLD, 26));
 		JPanel paYPanel = new JPanel();
@@ -828,7 +800,7 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		insertCard.setLayout(new BorderLayout());
 		JLabel insertCardIcon = new JLabel(insertImgResized);
 		JLabel insertCardLabel = new JLabel("Insert&Pin Credit Card", SwingConstants.CENTER);
-		insertCardLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		insertCardLabel.setFont(new Font("Arial", Font.BOLD, 16));
 		insertCard.add(insertCardLabel, BorderLayout.CENTER);
 		insertCard.add(insertCardIcon, BorderLayout.WEST);
 		insertCard.setSize(buttonSize);
@@ -863,17 +835,104 @@ public class GUIPhysicalSimulatorWindow implements ActionListener {
 		JPanel enterPinPanel = new JPanel();
 		enterPinPanel.add(enterPin);
 		payPanel.add(enterPinPanel);
+		
+		JPanel endPanel = new JPanel();
+		endPanel.setLayout(new BoxLayout(endPanel, BoxLayout.Y_AXIS));
+		//endPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 75, 0));
+		JLabel endLabel = new JLabel("End Transaction");
+		endLabel.setFont(new Font("Arial", Font.BOLD, 26));
+		JPanel enDPanel = new JPanel();
+		enDPanel.add(endLabel);
+		endPanel.add(enDPanel);
+		
+		takeChange = new JButton();
+		takeChange.setLayout(new BorderLayout());
+		//JLabel takeChangeIcon = new JLabel(minusImgResized);
+		JLabel takeChangeLabel = new JLabel("Take change", SwingConstants.CENTER);
+		takeChangeLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		takeChange.add(takeChangeLabel, BorderLayout.CENTER);
+		//takeChange.add(takeChangeIcon, BorderLayout.WEST);
+		takeChange.setSize(buttonSize);
+		takeChange.setPreferredSize(buttonSize);
+		takeChange.setMinimumSize(buttonSize);
+		takeChange.setMaximumSize(buttonSize);
+		takeChange.addActionListener(this);
+		JPanel takeChangePanel = new JPanel();
+		takeChangePanel.add(takeChange);
+		endPanel.add(takeChangePanel);
+
+		takeReceipt = new JButton();
+		takeReceipt.setLayout(new BorderLayout());
+		//JLabel takeReceiptIcon = new JLabel(minusImgResized);
+		JLabel takeReceiptLabel = new JLabel("Take receipt", SwingConstants.CENTER);
+		takeReceiptLabel.setFont(new Font("Arial", Font.BOLD, 22));
+		takeReceipt.add(takeReceiptLabel, BorderLayout.CENTER);
+		//takeReceipt.add(takeReceiptIcon, BorderLayout.WEST);
+		takeReceipt.setSize(buttonSize);
+		takeReceipt.setPreferredSize(buttonSize);
+		takeReceipt.setMinimumSize(buttonSize);
+		takeReceipt.setMaximumSize(buttonSize);
+		takeReceipt.addActionListener(this);
+		JPanel takeReceiptPanel = new JPanel();
+		takeReceiptPanel.add(takeReceipt);
+		endPanel.add(takeReceiptPanel);
+		//payPanel.add(endPanel);
 
 		buttonPanel.add(banknotePanel);
 		buttonPanel.add(coinPanel);
 
-		middlePanel.add(actionsPanel);
-		middlePanel.add(addWeightPanel);
-		middlePanel.add(removeWeightPanel);
-		middlePanel.add(payPanel);
-		middlePanel.add(banknotePanel);
-		middlePanel.add(coinPanel);
-
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+		leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 75, 0));
+		leftPanel.add(actionsPanel);
+		leftPanel.add(payPanel);
+		leftPanel.add(endPanel);
+		
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 35, 0));
+		centerPanel.add(bagItemsPanel);
+		centerPanel.add(banknotePanel);
+		
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+		rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 35, 0));
+		rightPanel.add(addWeightPanel);
+		rightPanel.add(coinPanel);
+		
+		middlePanel.add(leftPanel);
+		middlePanel.add(centerPanel);
+		middlePanel.add(rightPanel);
+		
+/*		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.weighty = 0.2;
+		middlePanel.add(actionsPanel, constraints);
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.weighty = 0.5;
+		middlePanel.add(bagItemsPanel, constraints);
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.weighty = 0.5;
+		middlePanel.add(addWeightPanel, constraints);
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.weighty = 0.2;
+		middlePanel.add(payPanel, constraints);
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.weighty = 0.6;
+		middlePanel.add(endPanel, constraints);
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.weighty = 0.5;
+		middlePanel.add(banknotePanel, constraints);
+		constraints.gridx = 2;
+		constraints.gridy = 1;
+		constraints.weighty = 0.5;
+		middlePanel.add(coinPanel, constraints);
+*/
 		mainPanel.add(topPanel);
 		mainPanel.add(middlePanel);
 
