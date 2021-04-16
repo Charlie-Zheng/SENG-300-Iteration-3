@@ -142,7 +142,7 @@ public class CashPaymentState implements GUIState, ActionListener {
 		mainPanel.add(wordPanel);
 		mainPanel.add(wordPanel2);
 		mainPanel.add(duePanel);
-		mainPanel.add(paidPanel);
+	//	mainPanel.add(paidPanel);
 		mainPanel.add(goBackPanel, BorderLayout.EAST);
 
 		stateController.notifyListeners(new BalanceStateData(0));

@@ -64,7 +64,7 @@ public class KeypadState implements GUIState, ActionListener {
 
 		} else if (data instanceof ScaleStateData) {
 			changeWeight = ((ScaleStateData) data).obtain();
-			weight.setText(String.format("$%.3f kg", changeWeight/1000));
+			weight.setText(String.format("%.3f kg", changeWeight/1000));
 		}
 	}
 
